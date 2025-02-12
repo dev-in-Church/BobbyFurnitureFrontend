@@ -46,6 +46,7 @@ const App = () => {
           <Route path="/contact-us" element={<ContactPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/help" element={<HelpPage />} />
+          <Route path="/upload-img" element={<UploadComponent />} />
           <Route path="*" element={<NotFoundPage />} />
 
           {/* <Route path="/admin/orders" element={<AdminOrderList />} /> */}
@@ -84,15 +85,6 @@ const App = () => {
             element={
               <ProtectedRoute role="admin">
                 <ManageUsers />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/upload-img"
-            element={
-              <ProtectedRoute role="admin">
-                <UploadComponent />
               </ProtectedRoute>
             }
           />

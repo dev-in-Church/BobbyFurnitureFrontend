@@ -50,6 +50,7 @@ const UploadComponent = () => {
     formData.append("api_key", apiKey);
     formData.append("timestamp", timestamp);
     formData.append("signature", signature);
+    formData.append("cloud_name", "cloudName");
 
     try {
       const response = await fetch(
