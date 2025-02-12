@@ -8,12 +8,12 @@ import AboutSection from "../components/AboutSection";
 
 const Home = () => {
   return (
-    <>
+    <main className="overflow-x-hidden">
       <HeroSection />
       <AboutSection />
       {/* <ProductShowcase /> */}
       {/* <TestimonialsSection /> */}
-    </>
+    </main>
   );
 };
 

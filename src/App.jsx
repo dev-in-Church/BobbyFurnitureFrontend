@@ -28,6 +28,8 @@ import AboutPage from "./pages/AboutPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NotFoundPage from "./pages/NotFoundPage";
+import { ReturnToTop } from "./components/LoadingReturnTop";
+import WhatsAppButton from "./components/WhatsAppButton";
 
 const App = () => {
   return (
@@ -115,6 +117,8 @@ const App = () => {
         </Routes>
       </main>
       <Footer />
+      <ReturnToTop />
+      <WhatsAppButton />
     </div>
   );
 };

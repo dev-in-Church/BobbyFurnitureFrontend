@@ -229,10 +229,10 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 px-2">
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg transition transform hover:scale-105 duration-300">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          Create Account 🚀
+          Create Account
         </h2>
 
         {error && (

@@ -15,7 +15,7 @@ import {
 
 const AboutPage = () => {
   return (
-    <main className="bg-gray-100">
+    <main className="bg-gray-100 overflow-hidden">
       {/* Hero Section */}
       <section
         className="relative w-full h-[60vh] flex items-center justify-center text-center bg-cover bg-center"

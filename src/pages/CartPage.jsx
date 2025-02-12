@@ -71,16 +71,19 @@ const CartPage = () => {
     navigate("/checkout");
   };
 
+  const handleContinueShopping = () => {
+    navigate("/products");
+  };
+
   return (
-    <div className="p-6 max-w-5xl mx-auto mt-20">
-      <h1 className="text-3xl font-bold mb-6 text-center dark:text-gray-300">
+    <div className="p-4 sm:p-6 max-w-5xl mx-auto mt-20">
+      <h1 className="text-2xl text-blue-600 sm:text-3xl font-bold mb-4 text-center dark:text-gray-300">
         Your Shopping Cart
       </h1>
 
       {cart.length === 0 ? (
-        // **Empty Cart UI**
         <div className="flex flex-col items-center justify-center text-center space-y-4">
-          <ShoppingCartIcon className="w-20 h-20 text-gray-400 dark:text-gray-500" />
+          <ShoppingCartIcon className="w-16 h-16 text-gray-400 dark:text-gray-500" />
           <p className="text-gray-600 dark:text-gray-300 text-lg">
             Your cart is empty. Start shopping now!
           </p>
@@ -93,15 +96,14 @@ const CartPage = () => {
           </a>
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-          {/* Cart Items */}
+        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-4 sm:p-6">
           <div className="space-y-4">
             {cart.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between border-b pb-4 last:border-none dark:border-gray-700"
+                className="flex flex-col sm:flex-row items-center justify-between border-b pb-4 last:border-none dark:border-gray-700"
               >
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-4 w-full sm:w-auto">
                   <img
                     src={item.images[0]}
                     alt={item.name}
@@ -118,8 +120,7 @@ const CartPage = () => {
                   </div>
                 </div>
 
-                {/* Quantity Controls */}
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 mt-2 sm:mt-0">
                   <button
                     onClick={() =>
                       handleQuantityChange(item.id, item.quantity - 1)
@@ -128,7 +129,7 @@ const CartPage = () => {
                   >
                     <MinusIcon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
                   </button>
-                  <span className="px-4 py-2 border rounded text-center dark:bg-gray-700 dark:text-gray-300">
+                  <span className="px-3 py-1 border rounded text-center dark:bg-gray-700 dark:text-gray-300">
                     {item.quantity}
                   </span>
                   <button
@@ -141,10 +142,9 @@ const CartPage = () => {
                   </button>
                 </div>
 
-                {/* Remove Button */}
                 <button
                   onClick={() => handleRemove(item.id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 flex items-center space-x-1"
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 flex items-center space-x-1 mt-2 sm:mt-0"
                 >
                   <TrashIcon className="w-5 h-5 text-white" />
                   <span>Remove</span>
@@ -153,32 +153,38 @@ const CartPage = () => {
             ))}
           </div>
 
-          {/* Undo & Checkout Section */}
           <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-lg font-semibold dark:text-gray-300 flex items-center space-x-1">
               <CurrencyDollarIcon className="w-6 h-6 text-green-500" />
               <span>Subtotal: Ksh.{total.toFixed(2)}</span>
             </p>
-            <div className="flex space-x-4">
+            <div className="flex flex-col sm:flex-row sm:space-x-4 w-full sm:w-auto">
               {lastRemoved && (
                 <button
                   onClick={handleUndo}
-                  className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 flex items-center space-x-2"
+                  className="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 flex items-center space-x-2 w-full sm:w-auto"
                 >
                   <ArrowUturnLeftIcon className="w-5 h-5 text-white" />
                   <span>Undo</span>
                 </button>
               )}
               <button
+                onClick={handleContinueShopping}
+                className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 flex items-center space-x-2 w-full sm:w-auto mt-2 sm:mt-0"
+              >
+                <ShoppingCartIcon className="w-5 h-5 text-white" />
+                <span>Continue Shopping</span>
+              </button>
+              <button
                 onClick={handleClearCart}
-                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 flex items-center space-x-2"
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 flex items-center space-x-2 w-full sm:w-auto mt-2 sm:mt-0"
               >
                 <TrashIcon className="w-5 h-5 text-white" />
                 <span>Clear Cart</span>
               </button>
               <button
                 onClick={handleCheckout}
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 flex items-center space-x-2"
+                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 flex items-center space-x-2 w-full sm:w-auto mt-2 sm:mt-0"
               >
                 <span>Proceed to Checkout</span>
               </button>
