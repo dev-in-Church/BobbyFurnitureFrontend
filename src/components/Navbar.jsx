@@ -152,7 +152,7 @@ const Navbar = () => {
         {/* User Authentication */}
         {/* User Dropdown */}
         {user ? (
-          <div className="relative">
+          <div className="relative flex lg:hidden">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               className="flex items-center space-x-1 transition-transform transform hover:scale-105"
