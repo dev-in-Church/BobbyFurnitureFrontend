@@ -113,6 +113,14 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
+                    <Link
+                      href="/orders"
+                      className="flex items-center px-4 py-2 hover:bg-gray-200"
+                    >
+                      <Boxes size={18} className="mr-2" /> My Orders
+                    </Link>
+                  </li>
+                  <li>
                     <button
                       onClick={logout}
                       className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-200"
@@ -162,38 +170,6 @@ const Navbar = () => {
                 Hi,<span className="p-1">{user.username}</span>
               </span>
             </button>
-            {isDropdownOpen && (
-              <ul
-                ref={dropdownRef}
-                className="absolute right-0 mt-5 bg-white text-black py-2 w-40 rounded shadow-lg"
-              >
-                <li>
-                  <Link
-                    to="/profile"
-                    className="flex items-center px-4 py-2 hover:bg-gray-200"
-                  >
-                    <User size={18} className="mr-2" /> Profile
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/orders"
-                    className="flex items-center px-4 py-2 hover:bg-gray-200"
-                  >
-                    <Boxes size={18} className="mr-2" />
-                    My Orders
-                  </Link>
-                </li>
-                <li>
-                  <button
-                    onClick={logout}
-                    className="flex items-center w-full px-4 py-2 text-left hover:bg-gray-200"
-                  >
-                    <LogOut size={18} className="mr-2" /> Logout
-                  </button>
-                </li>
-              </ul>
-            )}
           </div>
         ) : (
           <div className="relative flex lg:hidden">
