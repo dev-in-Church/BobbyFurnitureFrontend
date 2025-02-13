@@ -208,7 +208,27 @@ const OrderManagement = () => {
             <h3 className="text-lg font-bold">Order Details</h3>
             <p>Customer: {selectedOrder.customer_name}</p>
             <p>Phone: {selectedOrder.phone}</p>
+            <p>Delivery Location: {selectedOrder.address}</p>
             <p>Total: Ksh {selectedOrder.total_amount}</p>
+
+            {/* Order Items */}
+            {/* <div className="mt-4">
+              <p className="font-semibold text-gray-800">Items:</p>
+              <ul className="ml-4 list-disc text-gray-700">
+                {selectedOrder.items.map((item, index) => (
+                  <li key={index} className="mt-1">
+                    <span className="font-medium text-gray-900">
+                      {item.product_name}
+                    </span>{" "}
+                    -
+                    <span className="text-gray-600">
+                      {" "}
+                      {item.quantity} x Ksh {item.price}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div> */}
             <button
               className="mt-2 bg-gray-500 text-white px-4 py-2 rounded"
               onClick={() => setSelectedOrder(null)}
