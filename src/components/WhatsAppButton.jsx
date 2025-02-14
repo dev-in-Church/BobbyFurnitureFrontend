@@ -6,7 +6,7 @@ const WhatsAppButton = () => {
   const [hovered, setHovered] = useState(false);
 
   return (
-    <div className="fixed bottom-6 left-6 flex items-center">
+    <div className="fixed bottom-6 left-6 flex items-center z-50">
       {/* Tooltip - Appears on the right with a modern glowing effect */}
       <motion.div
         initial={{ opacity: 0, x: -10 }}

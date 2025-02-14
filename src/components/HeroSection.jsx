@@ -11,6 +11,7 @@ import {
   FaBoxOpen,
 } from "react-icons/fa"; // Importing icons
 import ProductShowcase from "./ProductsShowcase";
+import DiscountBanner from "./DiscountBanner";
 
 const images = [
   "/images/hero1.png",
@@ -41,7 +42,8 @@ const HeroSection = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative w-full h-screen flex items-center justify-center text-center overflow-hidden">
+      <section className="relative pt-12 w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden">
+        <DiscountBanner />
         {/* Background Image Animation */}
         <div className="absolute inset-0 w-full h-full">
           <AnimatePresence>

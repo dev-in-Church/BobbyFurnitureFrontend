@@ -13,6 +13,7 @@
     "@fontsource/dancing-script": "^5.1.1",
     "@fortawesome/fontawesome-free": "^6.7.2",
     "@heroicons/react": "^2.2.0",
+    "@lottiefiles/react-lottie-player": "^3.6.0",
     "animate.css": "^4.1.1",
     "aos": "^2.3.4",
     "axios": "^1.7.9",
