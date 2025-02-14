@@ -67,11 +67,11 @@ const HeroSection = () => {
         <div className="relative z-10 container mx-auto px-6 lg:px-20 py-20 flex flex-col lg:flex-row items-center">
           {/* Text Content */}
           <div className="lg:w-1/2 mb-10 lg:mb-0 text-center lg:text-left">
-            <h1 className="text-4xl lg:text-6xl font-extrabold text-white leading-tight drop-shadow-lg">
+            <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white leading-tight drop-shadow-lg">
               Elevate Your Home <br />
               <span className="text-blue-500">With Stunning Furniture</span>
             </h1>
-            <p className="mt-4 text-lg text-white drop-shadow-lg">
+            <p className="mt-4 text-sm sm:text-lg text-white drop-shadow-lg">
               Discover premium furniture designs tailored to match your style
               and comfort. Create the perfect ambiance for your living space.
             </p>
