@@ -43,6 +43,8 @@ const Navbar = () => {
     };
   }, []);
 
+  // console.log("hello", user.role);
+
   return (
     <nav className="fixed top-0 left-0 right-0 bg-blue-600 text-white px-6 py-4 z-50 shadow-md">
       <div className="flex justify-between items-center">
@@ -166,7 +168,7 @@ const Navbar = () => {
               className="flex items-center space-x-1 transition-transform transform hover:scale-105"
             >
               <User size={20} />
-              <span className="truncate max-w-32 " title={user.username}>
+              <span className="truncate max-w-20 " title={user.username}>
                 Hi,<span className="p-1">{user.username}</span>
               </span>
             </button>
@@ -269,15 +271,28 @@ const Navbar = () => {
           {/* User Authentication */}
           {user ? (
             <>
-              <li>
-                <Link
-                  to="/profile"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-3 transition-transform transform hover:scale-105"
-                >
-                  <User size={24} /> <span>Profile</span>
-                </Link>
-              </li>
+              {user.role === "admin" ? (
+                <li>
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center space-x-3 transition-transform transform hover:scale-105"
+                  >
+                    <User size={24} /> <span>Admin Dashboard</span>
+                  </Link>
+                </li>
+              ) : (
+                <li>
+                  <Link
+                    to="/profile"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="flex items-center space-x-3 transition-transform transform hover:scale-105"
+                  >
+                    <User size={24} /> <span>Profile</span>
+                  </Link>
+                </li>
+              )}
+
               <li>
                 <Link
                   to="/orders"

@@ -85,7 +85,7 @@ const ProductShowcase = () => {
     <div className="p-4 mt-14">
       {/* Section Title */}
       <h2 className="flex justify-center items-center space-x-4 text-blue-600 text-4xl font-bold  mb-6">
-        <FaBoxOpen size={45} /> <h2>Latest Products</h2>
+        <FaBoxOpen size={45} className="mr-4" /> Latest Products
       </h2>
 
       {/* Error Message */}
