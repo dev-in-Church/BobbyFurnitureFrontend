@@ -42,7 +42,7 @@ const HeroSection = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative pt-12 w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden">
+      <section className="relative py-12 mt-[60px]  w-full h-screen flex flex-col items-center justify-center text-center overflow-hidden">
         <DiscountBanner />
         {/* Background Image Animation */}
         <div className="absolute inset-0 w-full h-full">
@@ -142,40 +142,6 @@ const HeroSection = () => {
           </div>
         </div>
       </section>
-
-      {/* Testimonials Section */}
-      {/* <section className="py-16 bg-gray-200">
-        <div className="container mx-auto px-6 lg:px-20">
-          <h2 className="text-3xl lg:text-4xl font-bold text-center text-gray-800 mb-8">
-            What Our Customers Say
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-6 shadow-lg rounded-lg">
-              <p className="text-gray-600 italic">
-                "Absolutely love the furniture! The quality is outstanding and
-                delivery was seamless!"
-              </p>
-              <h4 className="text-gray-800 font-semibold mt-4">— Jane Doe</h4>
-            </div>
-            <div className="bg-white p-6 shadow-lg rounded-lg">
-              <p className="text-gray-600 italic">
-                "Stylish and comfortable. My living room has never looked
-                better!"
-              </p>
-              <h4 className="text-gray-800 font-semibold mt-4">— John Smith</h4>
-            </div>
-            <div className="bg-white p-6 shadow-lg rounded-lg">
-              <p className="text-gray-600 italic">
-                "Excellent customer service and fast shipping. Highly
-                recommend!"
-              </p>
-              <h4 className="text-gray-800 font-semibold mt-4">
-                — Emma Johnson
-              </h4>
-            </div>
-          </div>
-        </div>
-      </section> */}
 
       {/* Call to Action (CTA) */}
       <section
