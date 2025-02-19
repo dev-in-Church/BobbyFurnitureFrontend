@@ -66,7 +66,7 @@ const HeroSection = () => {
         {/* Hero Content */}
         <div className="relative z-10 container mx-auto px-6 lg:px-20 py-20 flex flex-col lg:flex-row items-center">
           {/* Text Content */}
-          <div className="lg:w-1/2 mb-10 lg:mb-0 text-center lg:text-left">
+          <div className="mb-10 lg:mb-0 text-center ">
             <h1 className="text-3xl sm:text-4xl lg:text-6xl font-extrabold text-white leading-tight drop-shadow-lg">
               Elevate Your Home <br />
               <span className="text-blue-500">With Stunning Furniture</span>
