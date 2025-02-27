@@ -5,7 +5,7 @@ import { useCart } from "../context/CartContext";
 import { Loading } from "../components/LoadingReturnTop";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaCheckCircle, FaExclamationTriangle } from "react-icons/fa"; // Import icons
+import { FaCheckCircle, FaExclamationTriangle, FaTag } from "react-icons/fa"; // Import icons
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -127,12 +127,13 @@ const ProductDetails = () => {
           <div>
             <h1 className="text-2xl font-bold">{product.name}</h1>
             <p className="text-gray-500 mt-2">{product.description}</p>
-            <p className="text-blue-600 font-bold text-lg mt-4">
-              Ksh. {product.price?.toLocaleString()}
+            <p className="text-blue-600 font-bold text-lg mt-4 flex items-center">
+              <FaTag className="mr-2 text-yellow-500" /> Ksh.{" "}
+              {product.price?.toLocaleString()}
             </p>
 
             {/* Stock Indicator */}
-            <p className="text-sm font-semibold mt-2">
+            {/* <p className="text-sm font-semibold mt-2">
               Stock:{" "}
               <span
                 className={
@@ -141,7 +142,7 @@ const ProductDetails = () => {
               >
                 {product.stock !== undefined ? product.stock : "N/A"}
               </span>
-            </p>
+            </p> */}
           </div>
 
           {/* Add to Cart Button */}

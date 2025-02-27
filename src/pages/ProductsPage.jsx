@@ -198,7 +198,7 @@ const ProductList = () => {
               </p>
 
               {/* Stock Indicator */}
-              <p className="text-sm font-semibold mt-1 flex items-center">
+              {/* <p className="text-sm font-semibold mt-1 flex items-center">
                 <FaBox
                   className={`mr-2 ${
                     product.stock > 0 ? "text-green-600" : "text-red-600"
@@ -212,7 +212,7 @@ const ProductList = () => {
                 >
                   {product.stock !== undefined ? product.stock : "N/A"}
                 </span>
-              </p>
+              </p> */}
 
               {/* Add to Cart Button */}
               <button
