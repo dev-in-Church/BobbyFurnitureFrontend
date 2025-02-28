@@ -203,10 +203,10 @@ const ProductList = () => {
                 <p className="text-blue-600 font-bold mt-2 flex items-center">
                   <FaTag className="mr-2 text-yellow-500" />
                   <span className="text-gray-500 line-through mr-2">
-                    Ksh. {product.price?.toLocaleString()}
+                    Ksh. {product.price.toLocaleString()}
                   </span>
                   <span className="text-red-600 font-extrabold text-lg">
-                    Ksh. {(product.price * 0.75).toLocaleString()}
+                    Ksh. {(product.price * 0.9).toLocaleString()}
                   </span>
                 </p>
 
