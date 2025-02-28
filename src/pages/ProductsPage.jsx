@@ -173,60 +173,57 @@ const ProductList = () => {
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-24">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mt-24 px-4">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="border p-4 rounded-lg shadow-lg cursor-pointer hover:shadow-xl transition duration-300 bg-white"
+              className="border p-5 rounded-lg shadow-lg cursor-pointer hover:shadow-2xl transition duration-300 bg-white"
               onClick={() => navigate(`/products/${product.id}`)}
             >
-              <img
-                src={product.images?.[0] || "https://via.placeholder.com/150"}
-                alt={product.name}
-                className="w-full h-40 object-cover rounded mb-4"
-              />
-              <h2 className="text-lg font-semibold">{product.name}</h2>
-              <p className="text-gray-500 text-sm truncate">
-                {product.description}
-              </p>
-
-              {/* Price */}
-              <p className="text-blue-600 font-bold mt-2 flex items-center">
-                <FaTag className="mr-2 text-yellow-500" /> Ksh.{" "}
-                {product.price?.toLocaleString()}
-              </p>
-
-              {/* Stock Indicator */}
-              {/* <p className="text-sm font-semibold mt-1 flex items-center">
-                <FaBox
-                  className={`mr-2 ${
-                    product.stock > 0 ? "text-green-600" : "text-red-600"
-                  }`}
+              {/* Product Image - Now More Portrait-Shaped */}
+              <div className="w-full h-64 overflow-hidden rounded-md bg-gray-100">
+                <img
+                  src={product.images?.[0] || "https://via.placeholder.com/200"}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
                 />
-                Stock:{" "}
-                <span
-                  className={
-                    product.stock > 0 ? "text-green-600" : "text-red-600"
-                  }
-                >
-                  {product.stock !== undefined ? product.stock : "N/A"}
-                </span>
-              </p> */}
+              </div>
 
-              {/* Add to Cart Button */}
-              <button
-                onClick={(e) => handleAddToCart(e, product)}
-                className={`mt-4 w-full py-2 px-4 rounded text-white transition flex items-center justify-center ${
-                  product.stock > 0
-                    ? "bg-blue-500 hover:bg-blue-600"
-                    : "bg-gray-400 cursor-not-allowed"
-                }`}
-                disabled={product.stock === 0}
-              >
-                <FaShoppingCart className="mr-2" />
-                {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
-              </button>
+              {/* Product Details */}
+              <div className="mt-4">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  {product.name}
+                </h2>
+                <p className="text-gray-500 text-sm truncate">
+                  {product.description}
+                </p>
+
+                {/* Price Section */}
+                <p className="text-blue-600 font-bold mt-2 flex items-center">
+                  <FaTag className="mr-2 text-yellow-500" />
+                  <span className="text-gray-500 line-through mr-2">
+                    Ksh. {product.price?.toLocaleString()}
+                  </span>
+                  <span className="text-red-600 font-extrabold text-lg">
+                    Ksh. {(product.price * 0.75).toLocaleString()}
+                  </span>
+                </p>
+
+                {/* Add to Cart Button */}
+                <button
+                  onClick={(e) => handleAddToCart(e, product)}
+                  className={`mt-4 w-full py-2 px-4 rounded-lg text-white transition flex items-center justify-center ${
+                    product.stock > 0
+                      ? "bg-blue-600 hover:bg-blue-700"
+                      : "bg-gray-400 cursor-not-allowed"
+                  }`}
+                  disabled={product.stock === 0}
+                >
+                  <FaShoppingCart className="mr-2" />
+                  {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                </button>
+              </div>
             </div>
           ))
         ) : (
