@@ -128,8 +128,12 @@ const ProductDetails = () => {
             <h1 className="text-2xl font-bold">{product.name}</h1>
             <p className="text-gray-500 mt-2">{product.description}</p>
             <p className="text-blue-600 font-bold text-lg mt-4 flex items-center">
-              <FaTag className="mr-2 text-yellow-500" /> Ksh.{" "}
-              {product.price?.toLocaleString()}
+              <FaTag className="mr-2 text-yellow-500" />
+              <span className="text-gray-500 line-through mr-2">
+                {" "}
+                Ksh. {(product.price * 1.1).toLocaleString()}
+              </span>
+              <span> Ksh. {(product.price * 1).toLocaleString()}</span>
             </p>
 
             {/* Stock Indicator */}
@@ -146,7 +150,7 @@ const ProductDetails = () => {
           </div>
 
           {/* Add to Cart Button */}
-          <button
+          {/* <button
             onClick={handleAddToCart}
             className={`mt-4 w-full py-3 px-4 text-lg rounded text-white transition ${
               product.stock > 0
@@ -157,6 +161,14 @@ const ProductDetails = () => {
             title={product.stock === 0 ? "This item is out of stock" : ""}
           >
             {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+          </button> */}
+          <button
+            onClick={handleAddToCart}
+            className="mt-4 w-full py-3 px-4 text-lg rounded text-white transition bg-blue-500 hover:bg-blue-600
+            "
+          >
+            {/* {product.stock > 0 ? "Add to Cart" : "Out of Stock"} */}
+            Add to Cart
           </button>
         </div>
       </div>

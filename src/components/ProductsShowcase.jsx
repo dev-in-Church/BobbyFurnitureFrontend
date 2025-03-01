@@ -117,9 +117,18 @@ const ProductShowcase = () => {
               </p>
 
               {/* Price */}
-              <p className="text-blue-600 font-bold mt-2 flex items-center">
+              {/* <p className="text-blue-600 font-bold mt-2 flex items-center">
                 <FaTag className="mr-2 text-yellow-500" /> Ksh.{" "}
                 {product.price?.toLocaleString()}
+              </p> */}
+              <p className="text-blue-600 font-bold mt-2 flex items-center">
+                <FaTag className="mr-2 text-yellow-500" />
+                <span className="text-gray-500 line-through mr-2">
+                  Ksh. {(product.price * 1.1).toLocaleString()}
+                </span>
+                <span className="text-red-600 font-extrabold text-lg">
+                  Ksh. {(product.price * 1).toLocaleString()}
+                </span>
               </p>
 
               {/* Stock Indicator */}
@@ -143,14 +152,11 @@ const ProductShowcase = () => {
               <button
                 onClick={() => handleAddToCart(product)}
                 disabled={product.stock === 0}
-                className={`mt-4 w-full py-2 px-4 rounded text-white transition flex items-center justify-center ${
-                  product.stock > 0
-                    ? "bg-blue-500 hover:bg-blue-600"
-                    : "bg-gray-400 cursor-not-allowed"
-                }`}
+                className="mt-4 w-full py-2 px-4 rounded text-white transition flex items-center justify-center bg-blue-500 hover:bg-blue-600"
               >
                 <FaShoppingCart className="mr-2" />
-                {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                {/* {product.stock > 0 ? "Add to Cart" : "Out of Stock"} */}
+                Add to Cart
               </button>
             </div>
           ))}

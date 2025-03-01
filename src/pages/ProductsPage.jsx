@@ -27,11 +27,13 @@ const ProductList = () => {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [sortOption, setSortOption] = useState("");
 
+  let discountedPrice;
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          "https://bobbyfurnitureonline.onrender.com/api/products"
+          "https://bobbyfurnitureonline.onrender.com/api/products" //"https://bobbyfurnitureonline.onrender.com/api/products"
         );
         setProducts(response.data);
         setFilteredProducts(response.data);
@@ -167,7 +169,7 @@ const ProductList = () => {
             <option value="">Sort By</option>
             <option value="price_low">Price: Low to High</option>
             <option value="price_high">Price: High to Low</option>
-            <option value="stock">Stock: High to Low</option>
+            {/* <option value="stock">Stock: High to Low</option> */}
           </select>
         </div>
       </div>
@@ -203,15 +205,15 @@ const ProductList = () => {
                 <p className="text-blue-600 font-bold mt-2 flex items-center">
                   <FaTag className="mr-2 text-yellow-500" />
                   <span className="text-gray-500 line-through mr-2">
-                    Ksh. {product.price.toLocaleString()}
+                    Ksh. {(product.price * 1.1).toLocaleString()}
                   </span>
                   <span className="text-red-600 font-extrabold text-lg">
-                    Ksh. {(product.price * 0.9).toLocaleString()}
+                    Ksh. {(product.price * 1).toLocaleString()}
                   </span>
                 </p>
 
                 {/* Add to Cart Button */}
-                <button
+                {/* <button
                   onClick={(e) => handleAddToCart(e, product)}
                   className={`mt-4 w-full py-2 px-4 rounded-lg text-white transition flex items-center justify-center ${
                     product.stock > 0
@@ -222,6 +224,16 @@ const ProductList = () => {
                 >
                   <FaShoppingCart className="mr-2" />
                   {product.stock > 0 ? "Add to Cart" : "Out of Stock"}
+                </button> */}
+                <button
+                  onClick={(e) => handleAddToCart(e, product)}
+                  className={
+                    "mt-4 w-full py-2 px-4 rounded-lg text-white transition flex items-center justify-center bg-blue-600 hover:bg-blue-700"
+                  }
+                >
+                  <FaShoppingCart className="mr-2" />
+                  {/* {product.stock > 0 ? "Add to Cart" : "Out of Stock"} */}
+                  Add to Cart
                 </button>
               </div>
             </div>
