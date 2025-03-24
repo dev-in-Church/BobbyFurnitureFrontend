@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
 
-const API_BASE_URL = "http://localhost:5000/api/orders"; //"https://bobbyfurnitureonline.onrender.com/api/orders"; // Change if needed
+const API_BASE_URL = "https://bobbyfurnitureonline.onrender.com/api/orders"; // Change if needed
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
