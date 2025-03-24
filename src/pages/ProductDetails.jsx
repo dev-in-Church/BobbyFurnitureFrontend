@@ -483,7 +483,7 @@ const ProductDetails = () => {
                   <FaTruck className="text-blue-600 mt-1 mr-3" />
                   <div>
                     <p className="font-medium text-gray-900">Free Delivery</p>
-                    <p className="text-gray-600">For orders over Ksh. 5,000</p>
+                    <p className="text-gray-600">within Nairobi</p>
                   </div>
                 </div>
 

@@ -227,8 +227,8 @@ export default function HeroSection() {
               </div>
               <h3 className="text-xl font-bold">Special Discount Event</h3>
               <p className="text-muted-foreground mt-2">
-                Enjoy 25% off on all furniture items. Use code{" "}
-                <span className="font-bold">FURNISH25</span> at checkout.
+                Enjoy 25% off on all furniture items.
+                {/* <span className="font-bold"></span> at checkout. */}
               </p>
               <Button variant="secondary" className="mt-4">
                 Claim Discount
@@ -250,9 +250,9 @@ export default function HeroSection() {
                   Premium Sofa Set
                 </p>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold">$1,499</span>
+                  <span className="text-xl font-bold">Ksh. 60,499</span>
                   <span className="text-sm line-through text-muted-foreground">
-                    $1,999
+                    Ksh. 54,449
                   </span>
                 </div>
               </div>
