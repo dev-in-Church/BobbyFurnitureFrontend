@@ -77,6 +77,7 @@ const OrdersPage = () => {
                   <p className="text-gray-600">
                     Date: {new Date(order.created_at).toLocaleDateString()}
                   </p>
+                  {/* <p>Name: {order}</p> */}
                   <p
                     className={`font-semibold flex items-center gap-1 ${
                       order.order_status === "Cancelled"

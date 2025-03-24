@@ -1,35 +1,44 @@
-import React from "react";
-import { Player } from "@lottiefiles/react-lottie-player";
-import discountAnimation from "../assets/discount.json"; // Ensure you have the JSON file in your assets folder
-import { FaShoppingCart, FaCouch, FaStar } from "react-icons/fa";
+// src/components/discount-banner.jsx
+import { Tag, ArrowRight } from "lucide-react";
+import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
-const DiscountBanner = () => {
+export default function DiscountBanner({
+  discountPercent = 25,
+  title = "Special Discount Event",
+  description = "Enjoy 25% off on all furniture items. Limited time offer.",
+  code = "FURNISH25",
+  bgColor = "bg-primary",
+  textColor = "text-primary-foreground",
+}) {
   return (
-    <div className="relative flex items-center mt-[160px]  sm:mt-20  justify-center mx-3 p-2 sm:px-16 bg-red-500 text-white rounded-2xl shadow-lg animate-fadeIn z-40">
-      {/* Animated Icon */}
-      <div className="absolute left-[-33px] bottom-3 w-[170px] h-[45px] mr-4">
-        <Player autoplay loop src={discountAnimation} className="w-[] h-md" />
-      </div>
+    <div className={`w-full ${bgColor} ${textColor} py-4 px-4 md:px-6`}>
+      <div className="container">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center bg-background text-foreground rounded-full h-10 w-10 md:h-12 md:w-12">
+              <Tag className="h-5 w-5 md:h-6 md:w-6" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg">{title}</h3>
+              <p className="text-sm md:text-base">{description}</p>
+            </div>
+          </div>
 
-      {/* Discount Message */}
-      <div className="text-center flex flex-col justify-center items-center py-2">
-        <h1 className="text-xl md:text-3xl flex font-bold">
-          <FaStar className="text-orange-400 m-2" /> 25% OFF on All Products!{" "}
-          <FaStar className="text-orange-400 m-2" />
-        </h1>
-        <p className="text-sm md:text-lg pt-2">
-          Limited time offer. Shop now and save big!
-        </p>
-        <a
-          href="/products"
-          className="mt-4 flex items-center bg-white w-[150px] text-red-500 px-6 py-2 rounded-lg font-semibold transition hover:bg-red-100"
-        >
-          <FaShoppingCart className="mr-2" />
-          Shop Now
-        </a>
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="bg-background/20 px-3 py-1.5 rounded-md backdrop-blur-sm">
+              <span className="font-mono font-bold">{code}</span>
+            </div>
+
+            <Link to="/sale">
+              <Button variant="secondary" className="whitespace-nowrap">
+                Shop Now
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
-};
-
-export default DiscountBanner;
+}

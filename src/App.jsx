@@ -30,6 +30,9 @@ import ResetPassword from "./pages/ResetPassword";
 import NotFoundPage from "./pages/NotFoundPage";
 import { ReturnToTop } from "./components/LoadingReturnTop";
 import WhatsAppButton from "./components/WhatsAppButton";
+import AllProductsPage from "./pages/AllProductsPage";
+import Wishlist from "./pages/wishlist";
+import CategoryPage from "./pages/category-page";
 
 const App = () => {
   return (
@@ -45,6 +48,9 @@ const App = () => {
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/contact-us" element={<ContactPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/category/:categorySlug" element={<CategoryPage />} />
+
           <Route path="/help" element={<HelpPage />} />
           <Route path="/upload-img" element={<UploadComponent />} />
           <Route path="*" element={<NotFoundPage />} />

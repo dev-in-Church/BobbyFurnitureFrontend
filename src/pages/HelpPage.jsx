@@ -6,6 +6,10 @@ import {
   FaRegEnvelope,
   FaHeadset,
   FaRegSmile,
+  FaAngleUp,
+  FaAngleDown,
+  FaBook,
+  FaHandsHelping,
 } from "react-icons/fa";
 
 const HelpPage = () => {
@@ -15,10 +19,46 @@ const HelpPage = () => {
 
   const faqData = [
     {
+      category: "General",
+      question: "What is Bobby Furniture?",
+      answer:
+        "Bobby Furniture  is a leading online furniture store that offers high-quality, stylish, and durable furniture for homes, offices, and commercial spaces. We provide a wide range of products, including sofas, tables, chairs, beds, wardrobes, and custom-made furniture.",
+    },
+    {
+      category: "General",
+      question: "Where is your store located?",
+      answer:
+        "Our main office and showroom are located at Kahawa Sukari, Nairobi, Kenya. However, we are primarily an online store, and you can conveniently shop through our website.",
+    },
+    {
+      category: "General",
+      question: "Do you offer custom furniture designs?",
+      answer:
+        "Yes! We allow customers to request custom furniture designs, including size, material, and color preferences. Contact our team for a consultation and quotation.",
+    },
+    {
+      category: "General",
+      question: "Do you provide interior design consultation services?",
+      answer:
+        "Yes, we offer interior design consultation to help you choose the perfect furniture that suits your space and style. Contact us for more details.",
+    },
+    {
+      category: "General",
+      question: "Are your products made from sustainable materials?",
+      answer:
+        "We prioritize sustainability and use responsibly sourced wood and eco-friendly materials wherever possible. Each product page provides information about the materials used.",
+    },
+    {
+      category: "General",
+      question: "How do I contact customer support?",
+      answer:
+        "You can contact us via: Phone: +254 712 345 678 Email:bobbyfurniture@gmail.com Live Chat: Visit our website and click on the chat icon in the bottom right corner.",
+    },
+    {
       category: "Orders",
       question: "How do I place an order?",
       answer:
-        "To place an order, browse our products, add them to the cart, and proceed to checkout.",
+        "To place an order,  browse our products, add them to the cart, and proceed to checkout's follow the steps to enter your shipping details and payment information.",
     },
     {
       category: "Payments",
@@ -49,15 +89,15 @@ const HelpPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
+    <div className="min-h-screen bg-gray-100 p-6 mt-16">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-          📖 Help Center
+        <h1 className="flex text-3xl font-bold text-center text-gray-800 mb-6 items-center justify-center">
+          <FaHandsHelping className="mr-7" /> Help Center
         </h1>
 
         {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-3 mb-6">
-          {["all", "Orders", "Payments", "Shipping", "Returns"].map(
+          {["all", "General", "Orders", "Payments", "Shipping", "Returns"].map(
             (category) => (
               <button
                 key={category}
@@ -78,7 +118,7 @@ const HelpPage = () => {
         <div className="relative mb-6">
           <input
             type="text"
-            className="w-full p-3 pl-10 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            className="w-full p-3 pl-10 rounded-3xl border border-gray-300 shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
             placeholder="Search FAQs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -87,12 +127,12 @@ const HelpPage = () => {
         </div>
 
         {/* FAQ Section */}
-        <div className="space-y-4">
+        <div className="w-full">
           {filteredFAQs.length > 0 ? (
             filteredFAQs.map((faq, index) => (
               <div
                 key={index}
-                className="bg-white shadow-md rounded-lg overflow-hidden transition-all duration-300"
+                className="bg-white shadow-md rounded-sm overflow-hidden transition-all duration-300"
               >
                 <div
                   className={`p-4 flex justify-between items-center cursor-pointer border-b ${
@@ -100,11 +140,11 @@ const HelpPage = () => {
                   }`}
                   onClick={() => toggleFAQ(index)}
                 >
-                  <h2 className="text-lg font-semibold text-gray-800">
+                  <h2 className="text-lg font-semibold text-blue-600">
                     {faq.question}
                   </h2>
-                  <span className="text-xl text-gray-500">
-                    {activeIndex === index ? <FaMinus /> : <FaPlus />}
+                  <span className="text-lg text-blue-600">
+                    {activeIndex === index ? <FaAngleUp /> : <FaAngleDown />}
                   </span>
                 </div>
                 {activeIndex === index && (

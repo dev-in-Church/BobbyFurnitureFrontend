@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+// import Link from "next/link";
+
+import { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useCart } from "../context/CartContext";
 import { Loading } from "../components/LoadingReturnTop";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   FaShoppingCart,
   FaSearch,
@@ -15,72 +19,140 @@ import {
   FaTimes,
   FaChevronDown,
   FaChevronUp,
-  FaCheck,
   FaRegStar,
   FaAngleRight,
   FaHome,
-  FaTag,
+  FaSort,
+  FaList,
+  FaThLarge,
+  FaHeart,
+  FaRegHeart,
 } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
-const ProductList = () => {
+const CategoryPage = () => {
+  const { categorySlug } = useParams();
+  const navigate = useNavigate();
+  const { addToCart, removeFromCart } = useCart();
+
+  // State variables
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { addToCart, removeFromCart } = useCart();
-  const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [showFilters, setShowFilters] = useState(false);
-  const [expandedFilters, setExpandedFilters] = useState({
-    price: true,
-    rating: true,
-    availability: true,
-  });
+  const [error, setError] = useState(null);
+  const [categoryName, setCategoryName] = useState("");
+  const [categoryDescription, setCategoryDescription] = useState("");
+  const [categoryImage, setCategoryImage] = useState("");
 
-  // Search, filter, and sorting states
+  // Filter states
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchSuggestions, setSearchSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [categoryFilter, setCategoryFilter] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [priceRange, setPriceRange] = useState([0, 100000]);
   const [maxPrice, setMaxPrice] = useState(100000);
   const [ratingFilter, setRatingFilter] = useState(0);
-  const [availabilityFilter, setAvailabilityFilter] = useState("all");
-  const [featuredOnly, setFeaturedOnly] = useState(false);
-  const [activeFiltersCount, setActiveFiltersCount] = useState(0);
-  const [viewMode, setViewMode] = useState("grid"); // grid or list
-  const [categoryProducts, setCategoryProducts] = useState({});
-  const searchRef = useRef(null);
+  const [showFilters, setShowFilters] = useState(false);
+  const [expandedFilters, setExpandedFilters] = useState({
+    price: true,
+    rating: true,
+  });
+  const [viewMode, setViewMode] = useState("grid");
+  const [wishlist, setWishlist] = useState([]);
+
+  // Category mapping
+  const categoryMap = {
+    "living-room": {
+      name: "Living Room",
+      description:
+        "Transform your living space with our stylish and comfortable living room furniture. From elegant sofas to coffee tables, find everything you need to create the perfect gathering place for family and friends.",
+      image: "/images/living-room.png",
+      filterValue: "Living Room",
+    },
+    bedroom: {
+      name: "Bedroom",
+      description:
+        "Create your dream bedroom with our collection of beds, dressers, nightstands, and more. Our bedroom furniture combines style, comfort, and functionality for a peaceful retreat.",
+      image: "/images/bedroom.png",
+      filterValue: "Bedroom",
+    },
+    dining: {
+      name: "Dining",
+      description:
+        "Elevate your dining experience with our beautiful dining tables, chairs, and storage solutions. Perfect for family meals or entertaining guests in style.",
+      image: "/images/dining.png",
+      filterValue: "Dining",
+    },
+    office: {
+      name: "Office",
+      description:
+        "Create a productive workspace with our ergonomic and stylish office furniture. From desks and chairs to storage solutions, we have everything you need for your home office.",
+      image: "/images/office.png",
+      filterValue: "Office",
+    },
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
+
+        // Set category information
+        const category = categoryMap[categorySlug];
+        if (!category) {
+          setError("Category not found");
+          setLoading(false);
+          return;
+        }
+
+        setCategoryName(category.name);
+        setCategoryDescription(category.description);
+        setCategoryImage(category.image);
+
+        // Fetch products
         const response = await axios.get(
           "https://bobbyfurnitureonline.onrender.com/api/products"
         );
-        const data = response.data;
-        setProducts(data);
-        setFilteredProducts(data);
+
+        // Filter products by category
+        const categoryProducts = response.data.filter(
+          (product) =>
+            product.category.toLowerCase() ===
+            category.filterValue.toLowerCase()
+        );
+
+        if (categoryProducts.length === 0) {
+          // If no exact match, try partial match
+          const partialMatchProducts = response.data.filter((product) =>
+            product.category.toLowerCase().includes(categorySlug.toLowerCase())
+          );
+
+          if (partialMatchProducts.length > 0) {
+            setProducts(partialMatchProducts);
+            setFilteredProducts(partialMatchProducts);
+          } else {
+            // If still no match, just use all products for demo
+            setProducts(response.data);
+            setFilteredProducts(response.data);
+          }
+        } else {
+          setProducts(categoryProducts);
+          setFilteredProducts(categoryProducts);
+        }
 
         // Find max price for range slider
-        const highestPrice = Math.max(...data.map((product) => product.price));
+        const highestPrice = Math.max(
+          ...response.data.map((product) => product.price)
+        );
         setMaxPrice(highestPrice);
         setPriceRange([0, highestPrice]);
 
-        // Organize products by category
-        const productsByCategory = data.reduce((acc, product) => {
-          const category = product.category;
-          if (!acc[category]) {
-            acc[category] = [];
-          }
-          acc[category].push(product);
-          return acc;
-        }, {});
-        setCategoryProducts(productsByCategory);
+        // Load wishlist from localStorage
+        const savedWishlist = localStorage.getItem("wishlist");
+        if (savedWishlist) {
+          setWishlist(JSON.parse(savedWishlist));
+        }
       } catch (error) {
         console.error("Error fetching products:", error);
+        setError("Failed to load products. Please try again.");
+        toast.error("Failed to load products. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -88,29 +160,12 @@ const ProductList = () => {
 
     fetchProducts();
 
-    // Close suggestions when clicking outside
-    const handleClickOutside = (event) => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setShowSuggestions(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    // Reset scroll position
+    window.scrollTo(0, 0);
+  }, [categorySlug]);
 
   useEffect(() => {
     let updatedProducts = [...products];
-
-    // Apply category filter
-    if (categoryFilter && categoryFilter !== "all") {
-      updatedProducts = updatedProducts.filter(
-        (product) =>
-          product.category.toLowerCase() === categoryFilter.toLowerCase()
-      );
-    }
 
     // Apply search query
     if (searchQuery) {
@@ -137,20 +192,6 @@ const ProductList = () => {
       );
     }
 
-    // Apply availability filter
-    if (availabilityFilter === "inStock") {
-      updatedProducts = updatedProducts.filter((product) => product.stock > 0);
-    } else if (availabilityFilter === "outOfStock") {
-      updatedProducts = updatedProducts.filter(
-        (product) => product.stock === 0
-      );
-    }
-
-    // Apply featured filter
-    if (featuredOnly) {
-      updatedProducts = updatedProducts.filter((product) => product.featured);
-    }
-
     // Apply sorting
     if (sortOption === "price_low") {
       updatedProducts.sort((a, b) => a.price - b.price);
@@ -167,53 +208,24 @@ const ProductList = () => {
     }
 
     setFilteredProducts(updatedProducts);
+  }, [searchQuery, sortOption, products, priceRange, ratingFilter]);
 
-    // Count active filters
-    let count = 0;
-    if (categoryFilter && categoryFilter !== "all") count++;
-    if (searchQuery) count++;
-    if (priceRange[0] > 0 || priceRange[1] < maxPrice) count++;
-    if (ratingFilter > 0) count++;
-    if (availabilityFilter !== "all") count++;
-    if (featuredOnly) count++;
-    setActiveFiltersCount(count);
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
 
-    // Generate search suggestions
-    if (searchQuery.length > 1) {
-      const suggestions = products
-        .filter(
-          (product) =>
-            product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            product.category.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        .slice(0, 5)
-        .map((product) => product.name);
-      setSearchSuggestions([...new Set(suggestions)]);
-    } else {
-      setSearchSuggestions([]);
-    }
-  }, [
-    searchQuery,
-    categoryFilter,
-    sortOption,
-    products,
-    priceRange,
-    ratingFilter,
-    availabilityFilter,
-    featuredOnly,
-    maxPrice,
-  ]);
+  const toggleFilterSection = (section) => {
+    setExpandedFilters({
+      ...expandedFilters,
+      [section]: !expandedFilters[section],
+    });
+  };
 
-  if (loading) return <Loading />;
-
-  const categories = [
-    "All",
-    ...new Set(products.map((product) => product.category)),
-  ];
-
-  // Generate mock ratings for products that don't have them
-  const getProductRating = (product) => {
-    return product.rating || Math.floor(Math.random() * 5) + 1;
+  const resetFilters = () => {
+    setSearchQuery("");
+    setSortOption("");
+    setPriceRange([0, maxPrice]);
+    setRatingFilter(0);
   };
 
   // Add to Cart with Undo Feature
@@ -258,34 +270,20 @@ const ProductList = () => {
     );
   };
 
-  const toggleFilters = () => {
-    setShowFilters(!showFilters);
-  };
+  const toggleWishlist = (e, productId) => {
+    e.stopPropagation();
 
-  const toggleFilterSection = (section) => {
-    setExpandedFilters({
-      ...expandedFilters,
-      [section]: !expandedFilters[section],
-    });
-  };
-
-  const resetFilters = () => {
-    setSearchQuery("");
-    setCategoryFilter("");
-    setSortOption("");
-    setPriceRange([0, maxPrice]);
-    setRatingFilter(0);
-    setAvailabilityFilter("all");
-    setFeaturedOnly(false);
-  };
-
-  const handleCategoryClick = (category) => {
-    setActiveCategory(category);
-    if (category === "All") {
-      setCategoryFilter("");
+    let newWishlist;
+    if (wishlist.includes(productId)) {
+      newWishlist = wishlist.filter((id) => id !== productId);
+      toast.info("Removed from wishlist");
     } else {
-      setCategoryFilter(category);
+      newWishlist = [...wishlist, productId];
+      toast.success("Added to wishlist");
     }
+
+    setWishlist(newWishlist);
+    localStorage.setItem("wishlist", JSON.stringify(newWishlist));
   };
 
   const renderStarRating = (rating) => {
@@ -305,7 +303,8 @@ const ProductList = () => {
   };
 
   const renderProductCard = (product) => {
-    const rating = getProductRating(product);
+    const rating = product.rating || Math.floor(Math.random() * 5) + 1;
+    const isWishlisted = wishlist.includes(product.id);
 
     return (
       <div
@@ -325,6 +324,18 @@ const ProductList = () => {
             <FaPercent className="mr-1 text-xs" />
             10% OFF
           </div>
+
+          {/* Wishlist Button */}
+          <button
+            onClick={(e) => toggleWishlist(e, product.id)}
+            className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md z-10 transition-colors hover:bg-gray-100"
+          >
+            {isWishlisted ? (
+              <FaHeart className="text-red-500" />
+            ) : (
+              <FaRegHeart className="text-gray-400" />
+            )}
+          </button>
 
           {/* Product Image */}
           <div
@@ -419,75 +430,77 @@ const ProductList = () => {
     );
   };
 
+  if (loading) return <Loading />;
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-12 text-center">
+        <h1 className="text-2xl font-bold text-red-600 mb-4">Error</h1>
+        <p className="text-gray-700 mb-6">{error}</p>
+        <button
+          onClick={() => navigate("/products")}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+        >
+          Browse All Products
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gray-50 min-h-screen">
       <ToastContainer />
+
+      {/* Category Hero Banner */}
+      <div className="relative">
+        <div className="h-64 md:h-80 w-full overflow-hidden">
+          <img
+            src={categoryImage || "/placeholder.svg"}
+            alt={categoryName}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center px-6 md:px-12">
+            <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
+              {categoryName}
+            </h1>
+            <p className="text-white text-sm md:text-base max-w-2xl">
+              {categoryDescription}
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200 py-3">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center text-sm text-gray-500">
             <FaHome className="mr-1" />
-            <span>Home</span>
+            <Link to="/" className="hover:text-blue-600">
+              Home
+            </Link>
             <FaAngleRight className="mx-2" />
-            <span className="font-medium text-gray-900">Products</span>
-            {categoryFilter && (
-              <>
-                <FaAngleRight className="mx-2" />
-                <span className="font-medium text-gray-900">
-                  {categoryFilter}
-                </span>
-              </>
-            )}
+            <Link to="/products" className="hover:text-blue-600">
+              Products
+            </Link>
+            <FaAngleRight className="mx-2" />
+            <span className="font-medium text-gray-900">{categoryName}</span>
           </div>
         </div>
       </div>
 
-      {/* Header */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Our Products</h1>
-        <p className="text-gray-600">
-          Discover our quality furniture collection
-        </p>
-      </div>
-
       {/* Search Bar - Sticky at Top */}
-      <div className="sticky top-0 bg-white shadow-md border-b border-gray-200 z-20 py-3">
+      <div className="sticky top-16 bg-white shadow-md border-b border-gray-200 z-20 py-3">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center gap-3">
-            <div className="relative flex-grow" ref={searchRef}>
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="relative flex-grow">
               <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search products..."
+                placeholder={`Search ${categoryName} products...`}
                 value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setShowSuggestions(e.target.value.length > 1);
-                }}
-                onFocus={() => setShowSuggestions(searchQuery.length > 1)}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="p-3 pl-10 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               />
-              {/* Search Suggestions */}
-              {showSuggestions && searchSuggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 z-30">
-                  <ul>
-                    {searchSuggestions.map((suggestion, index) => (
-                      <li
-                        key={index}
-                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center"
-                        onClick={() => {
-                          setSearchQuery(suggestion);
-                          setShowSuggestions(false);
-                        }}
-                      >
-                        <FaSearch className="text-gray-400 mr-2 text-sm" />
-                        {suggestion}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
             </div>
 
             <button
@@ -496,14 +509,9 @@ const ProductList = () => {
             >
               <FaFilter className="mr-2" />
               Filters
-              {activeFiltersCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                  {activeFiltersCount}
-                </span>
-              )}
             </button>
 
-            <div className="hidden md:flex items-center border border-gray-300 rounded-lg overflow-hidden">
+            <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
               <button
                 onClick={() => setViewMode("grid")}
                 className={`px-3 py-2 ${
@@ -512,20 +520,7 @@ const ProductList = () => {
                     : "bg-white text-gray-700"
                 }`}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                  />
-                </svg>
+                <FaThLarge className="h-5 w-5" />
               </button>
               <button
                 onClick={() => setViewMode("list")}
@@ -535,22 +530,22 @@ const ProductList = () => {
                     : "bg-white text-gray-700"
                 }`}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
+                <FaList className="h-5 w-5" />
               </button>
             </div>
+
+            <select
+              value={sortOption}
+              onChange={(e) => setSortOption(e.target.value)}
+              className="border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Sort by: Featured</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+              <option value="newest">Newest Arrivals</option>
+              <option value="rating">Highest Rated</option>
+              <option value="popularity">Popularity</option>
+            </select>
           </div>
         </div>
       </div>
@@ -561,7 +556,7 @@ const ProductList = () => {
           <div
             className={`md:w-64 ${showFilters ? "block" : "hidden md:block"}`}
           >
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 sticky top-20">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 sticky top-36">
               <div className="p-4 border-b border-gray-200 flex justify-between items-center">
                 <h2 className="font-semibold text-lg">Filters</h2>
                 <div className="flex items-center">
@@ -578,30 +573,6 @@ const ProductList = () => {
                     <FaTimes />
                   </button>
                 </div>
-              </div>
-
-              {/* Categories */}
-              <div className="p-4 border-b border-gray-200">
-                <h3 className="font-medium mb-3">Categories</h3>
-                <ul className="space-y-2">
-                  {categories.map((category) => (
-                    <li key={category}>
-                      <button
-                        className={`flex items-center w-full text-left px-2 py-1 rounded-md ${
-                          activeCategory === category
-                            ? "bg-blue-50 text-blue-700 font-medium"
-                            : "text-gray-700 hover:bg-gray-50"
-                        }`}
-                        onClick={() => handleCategoryClick(category)}
-                      >
-                        {activeCategory === category && (
-                          <FaCheck className="mr-2 text-blue-600 text-xs" />
-                        )}
-                        {category}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
               </div>
 
               {/* Price Range */}
@@ -721,69 +692,6 @@ const ProductList = () => {
                   </div>
                 )}
               </div>
-
-              {/* Availability */}
-              <div className="p-4 border-b border-gray-200">
-                <button
-                  className="flex items-center justify-between w-full font-medium mb-3"
-                  onClick={() => toggleFilterSection("availability")}
-                >
-                  <span>Availability</span>
-                  {expandedFilters.availability ? (
-                    <FaChevronUp />
-                  ) : (
-                    <FaChevronDown />
-                  )}
-                </button>
-
-                {expandedFilters.availability && (
-                  <div className="space-y-2">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="availability"
-                        checked={availabilityFilter === "all"}
-                        onChange={() => setAvailabilityFilter("all")}
-                        className="mr-2"
-                      />
-                      <span>All</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="availability"
-                        checked={availabilityFilter === "inStock"}
-                        onChange={() => setAvailabilityFilter("inStock")}
-                        className="mr-2"
-                      />
-                      <span>In Stock</span>
-                    </label>
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="availability"
-                        checked={availabilityFilter === "outOfStock"}
-                        onChange={() => setAvailabilityFilter("outOfStock")}
-                        className="mr-2"
-                      />
-                      <span>Out of Stock</span>
-                    </label>
-                  </div>
-                )}
-              </div>
-
-              {/* Featured Products */}
-              <div className="p-4">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={featuredOnly}
-                    onChange={() => setFeaturedOnly(!featuredOnly)}
-                    className="mr-2"
-                  />
-                  <span>Featured Products Only</span>
-                </label>
-              </div>
             </div>
           </div>
 
@@ -803,109 +711,69 @@ const ProductList = () => {
                 products
               </div>
 
-              <div className="flex items-center">
-                <span className="text-sm text-gray-700 mr-2">Sort by:</span>
-                <select
-                  value={sortOption}
-                  onChange={(e) => setSortOption(e.target.value)}
-                  className="p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">Featured</option>
-                  <option value="price_low">Price: Low to High</option>
-                  <option value="price_high">Price: High to Low</option>
-                  <option value="newest">Newest Arrivals</option>
-                  <option value="rating">Highest Rated</option>
-                  <option value="popularity">Popularity</option>
-                </select>
+              <div className="hidden md:block">
+                <div className="flex items-center">
+                  <span className="text-sm text-gray-700 mr-2">Sort by:</span>
+                  <FaSort className="text-gray-400 mr-2" />
+                  <select
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                    className="p-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">Featured</option>
+                    <option value="price_low">Price: Low to High</option>
+                    <option value="price_high">Price: High to Low</option>
+                    <option value="newest">Newest Arrivals</option>
+                    <option value="rating">Highest Rated</option>
+                    <option value="popularity">Popularity</option>
+                  </select>
+                </div>
               </div>
             </div>
 
-            {/* Category Sections */}
-            {activeCategory === "All" &&
-            !searchQuery &&
-            !ratingFilter &&
-            availabilityFilter === "all" &&
-            !featuredOnly &&
-            priceRange[0] === 0 &&
-            priceRange[1] === maxPrice ? (
-              // Show products by category sections when no filters are applied
-              Object.entries(categoryProducts).map(([category, products]) => (
-                <div key={category} className="mb-10">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-bold text-gray-800 flex items-center">
-                      <FaTag className="mr-2 text-blue-600" />
-                      {category}
-                    </h2>
-                    <button
-                      onClick={() => handleCategoryClick(category)}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                    >
-                      View All
-                    </button>
-                  </div>
-
-                  <div
-                    className={`grid ${
-                      viewMode === "grid"
-                        ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                        : "grid-cols-1"
-                    } gap-6`}
-                  >
-                    {products
-                      .slice(0, 3)
-                      .map((product) => renderProductCard(product))}
-                  </div>
-                </div>
-              ))
+            {/* Products Grid/List */}
+            {filteredProducts.length > 0 ? (
+              <div
+                className={`grid ${
+                  viewMode === "grid"
+                    ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                    : "grid-cols-1"
+                } gap-6`}
+              >
+                {filteredProducts.map((product) => renderProductCard(product))}
+              </div>
             ) : (
-              // Show filtered products
-              <>
-                {filteredProducts.length > 0 ? (
-                  <div
-                    className={`grid ${
-                      viewMode === "grid"
-                        ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                        : "grid-cols-1"
-                    } gap-6`}
+              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+                <div className="flex flex-col items-center justify-center py-12">
+                  <svg
+                    className="w-16 h-16 text-gray-400 mb-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    {filteredProducts.map((product) =>
-                      renderProductCard(product)
-                    )}
-                  </div>
-                ) : (
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-                    <div className="flex flex-col items-center justify-center py-12">
-                      <svg
-                        className="w-16 h-16 text-gray-400 mb-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                      <h3 className="text-lg font-medium text-gray-900 mb-1">
-                        No products found
-                      </h3>
-                      <p className="text-gray-500 max-w-md mb-6">
-                        We couldn't find any products matching your search
-                        criteria. Try adjusting your filters or search terms.
-                      </p>
-                      <button
-                        onClick={resetFilters}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        Clear all filters
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                  </svg>
+                  <h3 className="text-lg font-medium text-gray-900 mb-1">
+                    No products found
+                  </h3>
+                  <p className="text-gray-500 max-w-md mb-6">
+                    We couldn't find any products matching your search criteria.
+                    Try adjusting your filters or search terms.
+                  </p>
+                  <button
+                    onClick={resetFilters}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              </div>
             )}
 
             {/* Pagination */}
@@ -941,4 +809,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default CategoryPage;

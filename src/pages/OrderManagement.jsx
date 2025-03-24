@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { format } from "date-fns";
 
-const API_BASE_URL = "https://bobbyfurnitureonline.onrender.com/api/orders"; // Change if needed
+const API_BASE_URL = "http://localhost:5000/api/orders"; //"https://bobbyfurnitureonline.onrender.com/api/orders"; // Change if needed
 
 const OrderManagement = () => {
   const [orders, setOrders] = useState([]);
@@ -211,24 +211,6 @@ const OrderManagement = () => {
             <p>Delivery Location: {selectedOrder.address}</p>
             <p>Total: Ksh {selectedOrder.total_amount}</p>
 
-            {/* Order Items */}
-            {/* <div className="mt-4">
-              <p className="font-semibold text-gray-800">Items:</p>
-              <ul className="ml-4 list-disc text-gray-700">
-                {selectedOrder.items.map((item, index) => (
-                  <li key={index} className="mt-1">
-                    <span className="font-medium text-gray-900">
-                      {item.product_name}
-                    </span>{" "}
-                    -
-                    <span className="text-gray-600">
-                      {" "}
-                      {item.quantity} x Ksh {item.price}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div> */}
             <button
               className="mt-2 bg-gray-500 text-white px-4 py-2 rounded"
               onClick={() => setSelectedOrder(null)}
