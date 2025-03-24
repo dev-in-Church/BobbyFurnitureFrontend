@@ -119,7 +119,9 @@ const Wishlist = () => {
         setLoading(true);
 
         // Fetch all products
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get(
+          "https://bobbyfurnitureonline.onrender.com/api/products"
+        );
 
         // Ensure wishlist is an array
         const savedWishlist = localStorage.getItem("wishlist");
