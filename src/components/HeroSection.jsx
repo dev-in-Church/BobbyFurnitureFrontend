@@ -176,17 +176,33 @@
 // src/components/hero.jsx
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
-import { ArrowRight, ShoppingCart, Tag } from "lucide-react";
+import { ArrowRight, ShoppingCart, Tag, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export default function HeroSection() {
   return (
     <div className="relative overflow-hidden bg-background">
       {/* Discount Banner */}
-      <div className="bg-primary text-primary-foreground py-2 px-4 text-center font-medium">
-        <span className="flex items-center justify-center gap-2">
-          <Tag className="h-4 w-4" /> Special Offer: 25% OFF Everything! Limited
-          Time Only
+      <div className="relative bg-gradient-to-r from-red-600 to-orange-500 text-white py-4 px-8 text-center font-bold text-xl shadow-xl overflow-hidden group hover:scale-105 transition-transform duration-300">
+        {/* Animated Background Glow */}
+        <div className="absolute inset-0 bg-white opacity-10 blur-lg animate-pulse"></div>
+
+        {/* Banner Content */}
+        <span className="flex items-center justify-center gap-3 relative z-10">
+          {/* Tag Icon with Bounce */}
+          <Tag className="h-6 w-6 text-yellow-300 animate-bounce" />
+
+          {/* Animated Text Elements with Continuous Animations */}
+          <span className="animate-fade-in-loop text-white">
+            Special Offer:
+          </span>
+          <span className="text-yellow-300 animate-scale-up-loop">10% OFF</span>
+          <span className="animate-slide-in-loop">
+            Everything! Limited Time Only
+          </span>
+
+          {/* Clock Icon with Pulse */}
+          <Clock className="h-6 w-6 text-yellow-300 animate-pulse group-hover:rotate-12 transition-transform duration-500" />
         </span>
       </div>
 
@@ -222,12 +238,26 @@ export default function HeroSection() {
 
             {/* Discount Callout */}
             <div className="mt-8 bg-muted p-6 rounded-lg border border-border relative">
-              <div className="absolute -top-5 -right-4 bg-destructive text-destructive-foreground text-lg font-bold rounded-full h-16 w-16 flex items-center justify-center transform rotate-12">
-                25% OFF
-              </div>
+              {/* <div
+                className="absolute -top-5 -right-4 bg-destructive text-destructive-foreground text-lg font-bold rounded-full h-16 w-16 flex items-center justify-center text-center transform rotate-12"
+                style={{
+                  animation: "tada 0.8s infinite",
+                }}
+              >
+                10% OFF
+              </div> */}
+              <img
+                className="h-16 absolute -top-5 -right-4 transform rotate-12"
+                src="/disc.png"
+                alt=""
+                style={{
+                  animation: "tada 0.8s infinite",
+                }}
+              />
+
               <h3 className="text-xl font-bold">Special Discount Event</h3>
               <p className="text-muted-foreground mt-2">
-                Enjoy 25% off on all furniture items.
+                Enjoy 10% off on all furniture items.
                 {/* <span className="font-bold"></span> at checkout. */}
               </p>
               <Button variant="secondary" className="mt-4">
@@ -250,9 +280,9 @@ export default function HeroSection() {
                   Premium Sofa Set
                 </p>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold">Ksh. 60,499</span>
+                  <span className="text-xl font-bold">Ksh. 54,449</span>
                   <span className="text-sm line-through text-muted-foreground">
-                    Ksh. 54,449
+                    Ksh. 60,499
                   </span>
                 </div>
               </div>

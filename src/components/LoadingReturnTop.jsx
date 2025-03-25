@@ -37,7 +37,7 @@ export const ReturnToTop = () => {
     showButton && (
       <button
         onClick={scrollToTop}
-        className="fixed bottom-5 right-5 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition"
+        className="fixed bottom-20 right-5 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 transition"
       >
         <FaArrowUp size={20} />
       </button>

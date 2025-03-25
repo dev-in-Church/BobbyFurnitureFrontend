@@ -33,6 +33,7 @@ import WhatsAppButton from "./components/WhatsAppButton";
 import AllProductsPage from "./pages/AllProductsPage";
 import Wishlist from "./pages/wishlist";
 import CategoryPage from "./pages/category-page";
+import HelpButton from "./components/help-button";
 
 const App = () => {
   return (
@@ -44,9 +45,9 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/products" element={<ProductsPage />} />
-          <Route path="/about-us" element={<AboutPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/products/:id" element={<ProductDetails />} />
-          <Route path="/contact-us" element={<ContactPage />} />
+          <Route path="/contact" element={<ContactPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/category/:categorySlug" element={<CategoryPage />} />
@@ -116,6 +117,7 @@ const App = () => {
       </main>
       <Footer />
       <ReturnToTop />
+      <HelpButton />
       <WhatsAppButton />
     </div>
   );
