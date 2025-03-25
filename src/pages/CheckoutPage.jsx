@@ -97,7 +97,7 @@ const CheckoutPage = () => {
 
   const shipping = deliveryFees[deliveryOption];
   const giftWrapFee = giftWrap ? 200 : 0;
-  const tax = subtotal * 0.16; // 16% VAT
+  const tax = subtotal * 0.01; // 1% VAT
   const totalBeforeDiscount = subtotal + shipping + tax + giftWrapFee;
   const totalAmount = totalBeforeDiscount - promoDiscount;
 
@@ -1427,7 +1427,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Tax (16% VAT)</span>
+                  <span className="text-gray-600">Tax (1% VAT)</span>
                   <span className="text-gray-900 font-medium">
                     Ksh.{" "}
                     {tax.toLocaleString(undefined, {
@@ -1531,7 +1531,7 @@ const CheckoutPage = () => {
                 <div className="mt-6 space-y-4">
                   <div className="flex items-center text-sm text-gray-500">
                     <Truck className="w-4 h-4 mr-2 text-gray-400" />
-                    <span>Free shipping on orders over Ksh. 5,000</span>
+                    <span>Free shipping for delivery within Nairobi</span>
                   </div>
                   <div className="flex items-center text-sm text-gray-500">
                     <Shield className="w-4 h-4 mr-2 text-gray-400" />
@@ -1558,8 +1558,8 @@ const CheckoutPage = () => {
                     Need help?
                   </h3>
                   <p className="mt-1 text-sm text-blue-700">
-                    Call us at +254 712 345 678 or email at
-                    support@bobbyfurniture.com
+                    Call us at +254 708 165 310 or email at
+                    bobbyfurnitures254@gmail.com
                   </p>
                 </div>
               </div>
@@ -1575,25 +1575,21 @@ const CheckoutPage = () => {
               </div>
               <div className="flex justify-center space-x-4">
                 <img
-                  src="https://via.placeholder.com/40x25?text=Visa"
+                  src="/visa.png"
                   alt="Visa"
-                  className="h-6 object-contain"
+                  className="h-8 object-contain"
                 />
                 <img
-                  src="https://via.placeholder.com/40x25?text=MC"
+                  src="/master-card.png"
                   alt="Mastercard"
-                  className="h-6 object-contain"
+                  className="h-8 object-contain"
                 />
                 <img
-                  src="https://via.placeholder.com/40x25?text=MPesa"
+                  src="/lipa-na-m-pesa.png"
                   alt="M-Pesa"
-                  className="h-6 object-contain"
+                  className="h-8 object-contain"
                 />
-                <img
-                  src="https://via.placeholder.com/40x25?text=SSL"
-                  alt="SSL"
-                  className="h-6 object-contain"
-                />
+                <img src="ssl.jpg" alt="SSL" className="h-8 object-contain" />
               </div>
             </div>
           </div>

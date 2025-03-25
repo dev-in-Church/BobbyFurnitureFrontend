@@ -58,7 +58,7 @@ const ProductList = () => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          "https://bobbyfurnitureonline.onrender.com/api/products" //"https://bobbyfurnitureonline.onrender.com/api/products"
+          "http://localhost:5000/api/products" //"https://bobbyfurnitureonline.onrender.com/api/products"
         );
         const data = response.data;
         setProducts(data);
