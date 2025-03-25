@@ -130,7 +130,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-[90] w-full border-b bg-white shadow-sm">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-2 md:gap-4">
           <Button
@@ -358,7 +358,7 @@ export default function Navbar() {
 
       {/* Mobile Menu - Fixed overlay */}
       {isMenuOpen && (
-        <div className="fixed inset-0 top-16 md:hidden bg-white bg-opacity-100 rounded-md shadow-lg border border-gray-200">
+        <div className="fixed inset-0 top-16 z-[100] bg-white md:hidden overflow-y-auto shadow-lg">
           <div className="flex flex-col h-full p-6">
             <form className="relative w-full mb-6" onSubmit={handleSearch}>
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
