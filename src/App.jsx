@@ -34,6 +34,10 @@ import AllProductsPage from "./pages/AllProductsPage";
 import Wishlist from "./pages/wishlist";
 import CategoryPage from "./pages/category-page";
 import HelpButton from "./components/help-button";
+import PrivacyPolicy from "./pages/privacy-policy";
+import TermsOfService from "./pages/terms-of-service";
+import ShippingPolicy from "./pages/shipping-policy";
+import ReturnPolicy from "./pages/return-policy";
 
 const App = () => {
   return (
@@ -50,6 +54,10 @@ const App = () => {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/shipping-policy" element={<ShippingPolicy />} />
+          <Route path="/return-policy" element={<ReturnPolicy />} />
           <Route path="/category/:categorySlug" element={<CategoryPage />} />
 
           <Route path="/help" element={<HelpPage />} />
