@@ -146,7 +146,9 @@ const Collection = () => {
         setCollection(collectionData);
 
         // Fetch products
-        const response = await axios.get("http://localhost:5000/api/products");
+        const response = await axios.get(
+          "https://bobbyfurnitureonline.onrender.com/api/products"
+        );
 
         // Filter products based on collection categories or tags
         let collectionProducts = response.data;
