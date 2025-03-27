@@ -139,6 +139,8 @@ const Collection = () => {
         const collectionData = collectionsMap[collectionSlug];
         if (!collectionData) {
           setError("Collection not found");
+          console.log(error);
+
           setLoading(false);
           return;
         }
