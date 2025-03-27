@@ -38,6 +38,7 @@ import PrivacyPolicy from "./pages/privacy-policy";
 import TermsOfService from "./pages/terms-of-service";
 import ShippingPolicy from "./pages/shipping-policy";
 import ReturnPolicy from "./pages/return-policy";
+import Collection from "./pages/collection";
 
 const App = () => {
   return (
@@ -49,6 +50,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/products" element={<ProductsPage />} />
+          <Route path="/collection" element={<Collection />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/contact" element={<ContactPage />} />

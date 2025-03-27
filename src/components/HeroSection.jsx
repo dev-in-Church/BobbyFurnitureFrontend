@@ -220,10 +220,13 @@ export default function HeroSection() {
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
-              <Button size="lg" className="inline-flex items-center gap-2">
-                <ShoppingCart className="h-5 w-5" />
-                Shop Now
-              </Button>
+              <Link to="/products">
+                {" "}
+                <Button size="lg" className="inline-flex items-center gap-2">
+                  <ShoppingCart className="h-5 w-5" />
+                  Shop Now
+                </Button>
+              </Link>
               <Link to="/collection">
                 <Button
                   variant="outline"
