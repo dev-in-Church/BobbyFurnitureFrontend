@@ -22,6 +22,8 @@ import {
   FaPalette,
   FaChevronDown,
   FaChevronUp,
+  FaBaby,
+  FaDollyFlatbed,
 } from "react-icons/fa";
 import api from "../api/axios";
 
@@ -37,6 +39,14 @@ const furnitureCategories = [
       "TV Stands",
       "Accent Chairs",
       "Console Tables",
+      "Sectional Sofas",
+      "Livingroom Packages",
+      "Tables",
+      "Nest of Tables",
+      "Semi Recliners",
+      "Couches in set",
+      "Buffet Tables",
+      "Pouffes & Ottomans",
     ],
   },
   {
@@ -49,6 +59,10 @@ const furnitureCategories = [
       "Nightstands",
       "Wardrobes",
       "Mattresses",
+      "Ottomans",
+      "Chest of Drawers",
+      "Bedroom Packages",
+      "Bed Benches",
     ],
   },
   {
@@ -61,6 +75,9 @@ const furnitureCategories = [
       "Buffets",
       "Bar Carts",
       "China Cabinets",
+      "Four seater DIning Sets",
+      "Six seater DIning Sets",
+      "Eight seater DIning Sets",
     ],
   },
   {
@@ -97,13 +114,37 @@ const furnitureCategories = [
       "Storage Bins",
       "Closet Systems",
       "Media Storage",
+      "Shoe Racks",
     ],
   },
   {
     id: "decor",
     name: "Decor",
     icon: <FaPalette className="text-gray-500" />,
-    subcategories: ["Mirrors", "Rugs", "Lighting", "Wall Art", "Throw Pillows"],
+    subcategories: [
+      "Mirrors",
+      "Mirror Frames",
+      "Rugs",
+      "Lighting",
+      "Wall Art",
+      "Throw Pillows",
+    ],
+  },
+  {
+    id: "kids-room",
+    name: "Kids Room",
+    icon: <FaBaby className="text-gray-500" />,
+    subcategories: ["Beds", "Double Deckers", "Baby Cots"],
+  },
+  {
+    id: "matresses",
+    name: "Matresses",
+    icon: <FaDollyFlatbed className="text-gray-500" />,
+    subcategories: [
+      "Foam Matresses",
+      "Spring Matresses",
+      "Orthopedic Matresses",
+    ],
   },
 ];
 
@@ -400,9 +441,9 @@ const ManageProducts = () => {
                     Category
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <FaLayerGroup className="text-gray-400" />
-                    </div>
+                    </div> */}
                     <div className="border border-gray-300 rounded-lg overflow-hidden">
                       {/* Main Categories */}
                       <div className="max-h-48 overflow-y-auto p-1">
