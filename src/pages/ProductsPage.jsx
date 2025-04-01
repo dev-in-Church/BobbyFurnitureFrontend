@@ -28,6 +28,7 @@ import {
   FaUmbrella,
   FaArchive,
   FaPalette,
+  FaBabyCarriage,
 } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -117,6 +118,7 @@ const categoryIcons = {
   Outdoor: <FaUmbrella className="mr-2 text-gray-500" />,
   Storage: <FaArchive className="mr-2 text-gray-500" />,
   Decor: <FaPalette className="mr-2 text-gray-500" />,
+  "Kids Room": <FaBabyCarriage className="mr-2 text-gray-500" />,
 };
 
 const ProductList = () => {
@@ -161,6 +163,8 @@ const ProductList = () => {
     outdoor: false,
     storage: false,
     decor: false,
+    kidsRoom: false,
+    matresses: false,
   });
   const [activeSubcategory, setActiveSubcategory] = useState("");
 
@@ -638,6 +642,8 @@ const ProductList = () => {
       outdoor: false,
       storage: false,
       decor: false,
+      kidsRoom: false,
+      matresses: false,
     });
   };
 
@@ -848,6 +854,8 @@ const ProductList = () => {
       Outdoor: "outdoor",
       Storage: "storage",
       Decor: "decor",
+      "Kids Room": "kidsRoom",
+      Matresses: "matresses",
     };
     return (
       mapping[categoryName] || categoryName.toLowerCase().replace(/\s+/g, "")
