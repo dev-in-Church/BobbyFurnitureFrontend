@@ -144,6 +144,7 @@ const furnitureCategories = [
       "Foam Matresses",
       "Spring Matresses",
       "Orthopedic Matresses",
+      "Memory Foam Matresses",
     ],
   },
 ];
