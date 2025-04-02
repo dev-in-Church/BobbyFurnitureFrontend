@@ -155,7 +155,7 @@ const ContactPage = () => {
               href="tel:+254712345678"
               className="text-blue-600 font-medium hover:underline"
             >
-              +254 712 345 678
+              +254 708 156 310
             </a>
           </div>
 
@@ -173,7 +173,7 @@ const ContactPage = () => {
               href="mailto:info@bobbyfurniture.com"
               className="text-blue-600 font-medium hover:underline"
             >
-              info@bobbyfurniture.com
+              bobbyfurnitures254@gmail.com
             </a>
           </div>
 
@@ -383,8 +383,8 @@ const ContactPage = () => {
                     <Phone className="w-6 h-6 mr-3 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-medium mb-1">Phone Number</p>
-                      <p className="opacity-90">+254 712 345 678</p>
-                      <p className="opacity-90">+254 723 456 789</p>
+                      <p className="opacity-90">+254 708 156 310</p>
+                      {/* <p className="opacity-90">+254 723 456 789</p> */}
                     </div>
                   </li>
 
@@ -392,8 +392,8 @@ const ContactPage = () => {
                     <Mail className="w-6 h-6 mr-3 flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-medium mb-1">Email Address</p>
-                      <p className="opacity-90">info@bobbyfurniture.com</p>
-                      <p className="opacity-90">sales@bobbyfurniture.com</p>
+                      <p className="opacity-90">bobbyfurnitures254@gmail.com</p>
+                      {/* <p className="opacity-90">sales@bobbyfurniture.com</p> */}
                     </div>
                   </li>
 
