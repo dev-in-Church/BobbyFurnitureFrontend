@@ -5,33 +5,62 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useCart } from "../context/CartContext";
 import { Loading } from "../components/LoadingReturnTop";
-import {
-  FaShoppingCart,
-  FaSearch,
-  FaFilter,
-  FaUndo,
-  FaStar,
-  FaPercent,
-  FaTimes,
-  FaChevronDown,
-  FaChevronUp,
-  FaCheck,
-  FaRegStar,
-  FaAngleRight,
-  FaHome,
-  FaTag,
-  FaTags,
-  FaCouch,
-  FaBed,
-  FaUtensils,
-  FaLaptop,
-  FaUmbrella,
-  FaArchive,
-  FaPalette,
-  FaBabyCarriage,
-} from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  Search,
+  SlidersHorizontal,
+  RotateCcw,
+  Star,
+  Percent,
+  X,
+  ChevronDown,
+  ChevronUp,
+  Home,
+  ChevronRight,
+  Tag,
+  Tags,
+  Sofa,
+  Bed,
+  Utensils,
+  Laptop,
+  Umbrella,
+  Archive,
+  Palette,
+  Baby,
+  ShoppingCart,
+  Grid,
+  List,
+} from "lucide-react";
+import { cn } from "../lib/utils";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Badge } from "../components/ui/badge";
+import { Card, CardContent } from "../components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../components/ui/accordion";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../components/ui/sheet";
+import { Slider } from "../components/ui/slider";
+import { Switch } from "../components/ui/switch";
+import { Label } from "../components/ui/label";
+import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
 
 // Define the category structure for consistency
 const categoryStructure = {
@@ -100,25 +129,26 @@ const categoryStructure = {
     "Wall Art",
     "Throw Pillows",
   ],
-  "kids Room": ["Beds", "Double Deckers", "Baby Cots"],
-  Matresses: [
-    "Foam Matresses",
-    "Spring Matresses",
-    "Orthopedic Matresses",
-    "Memory Foam Matresses",
+  "Kids Room": ["Beds", "Double Deckers", "Baby Cots"],
+  Mattresses: [
+    "Foam Mattresses",
+    "Spring Mattresses",
+    "Orthopedic Mattresses",
+    "Memory Foam Mattresses",
   ],
 };
 
 // Category icons mapping
 const categoryIcons = {
-  "Living Room": <FaCouch className="mr-2 text-gray-500" />,
-  Bedroom: <FaBed className="mr-2 text-gray-500" />,
-  "Dining Room": <FaUtensils className="mr-2 text-gray-500" />,
-  Office: <FaLaptop className="mr-2 text-gray-500" />,
-  Outdoor: <FaUmbrella className="mr-2 text-gray-500" />,
-  Storage: <FaArchive className="mr-2 text-gray-500" />,
-  Decor: <FaPalette className="mr-2 text-gray-500" />,
-  "Kids Room": <FaBabyCarriage className="mr-2 text-gray-500" />,
+  "Living Room": <Sofa className="h-4 w-4" />,
+  Bedroom: <Bed className="h-4 w-4" />,
+  "Dining Room": <Utensils className="h-4 w-4" />,
+  Office: <Laptop className="h-4 w-4" />,
+  Outdoor: <Umbrella className="h-4 w-4" />,
+  Storage: <Archive className="h-4 w-4" />,
+  Decor: <Palette className="h-4 w-4" />,
+  "Kids Room": <Baby className="h-4 w-4" />,
+  Mattresses: <Bed className="h-4 w-4" />,
 };
 
 const ProductList = () => {
@@ -155,17 +185,7 @@ const ProductList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(12);
 
-  const [expandedCategories, setExpandedCategories] = useState({
-    livingRoom: false,
-    bedroom: false,
-    diningRoom: false,
-    office: false,
-    outdoor: false,
-    storage: false,
-    decor: false,
-    kidsRoom: false,
-    matresses: false,
-  });
+  const [expandedCategories, setExpandedCategories] = useState({});
   const [activeSubcategory, setActiveSubcategory] = useState("");
 
   // Mock data for testing when API is not available
@@ -595,7 +615,7 @@ const ProductList = () => {
           }}
         >
           <span className="flex items-center space-x-1">
-            <FaUndo className="mr-1" />
+            <RotateCcw className="mr-1 h-3 w-3" />
             <span>Undo</span>
           </span>
         </button>
@@ -634,17 +654,7 @@ const ProductList = () => {
     setFeaturedOnly(false);
     setActiveCategory("All");
     setActiveSubcategory("");
-    setExpandedCategories({
-      livingRoom: false,
-      bedroom: false,
-      diningRoom: false,
-      office: false,
-      outdoor: false,
-      storage: false,
-      decor: false,
-      kidsRoom: false,
-      matresses: false,
-    });
+    setExpandedCategories({});
   };
 
   const handleCategoryClick = (category) => {
@@ -685,9 +695,9 @@ const ProductList = () => {
         {[1, 2, 3, 4, 5].map((star) => (
           <span key={star}>
             {star <= rating ? (
-              <FaStar className="text-yellow-400" />
+              <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
             ) : (
-              <FaRegStar className="text-gray-300" />
+              <Star className="h-3 w-3 text-gray-300" />
             )}
           </span>
         ))}
@@ -699,65 +709,65 @@ const ProductList = () => {
     const rating = getProductRating(product);
 
     return (
-      <div
+      <Card
         key={product.id}
-        className={`bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 flex ${
-          viewMode === "grid" ? "flex-col h-full" : "flex-row h-auto md:h-48"
+        className={`group overflow-hidden transition-all duration-300 hover:shadow-md ${
+          viewMode === "list" ? "flex flex-row h-auto" : ""
         }`}
         onClick={() => navigate(`/products/${product.id}`)}
       >
-        {/* Discount Badge */}
+        {/* Product Image with Discount Badge */}
         <div
           className={`relative ${
             viewMode === "grid" ? "w-full" : "w-1/3 max-w-[180px]"
           }`}
         >
-          <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center z-10">
-            <FaPercent className="mr-1 text-xs" />
+          <Badge
+            variant="destructive"
+            className="absolute top-2 left-2 z-10 px-2 py-1 text-xs font-medium"
+          >
+            <Percent className="mr-1 h-3 w-3" />
             10% OFF
-          </div>
+          </Badge>
 
-          {/* Product Image */}
           <div
             className={`overflow-hidden bg-gray-100 ${
-              viewMode === "grid" ? "w-full h-48 sm:h-52" : "w-full h-full"
+              viewMode === "grid" ? "aspect-square w-full" : "w-full h-full"
             }`}
           >
             <img
               src={product.images?.[0] || "https://via.placeholder.com/200"}
               alt={product.name}
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
           </div>
         </div>
 
         {/* Product Details */}
-        <div
-          className={`p-4 flex flex-col flex-grow ${
-            viewMode === "list" ? "w-2/3" : ""
-          }`}
+        <CardContent
+          className={`flex flex-col p-4 ${viewMode === "list" ? "w-2/3" : ""}`}
         >
-          {/* Category */}
+          {/* Category Tags */}
           <div className="mb-2 flex flex-wrap gap-1">
-            <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+            <Badge variant="secondary" className="text-xs">
               {product.category}
-            </span>
+            </Badge>
             {product.subcategory && (
-              <span className="text-xs font-medium text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">
+              <Badge variant="outline" className="text-xs">
                 {product.subcategory}
-              </span>
+              </Badge>
             )}
             {product.featured && (
-              <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+              <Badge variant="default" className="bg-amber-500 text-xs">
                 Featured
-              </span>
+              </Badge>
             )}
           </div>
 
           {/* Title */}
           <h2
-            className={`text-sm sm:text-base font-semibold text-gray-800 mb-1 ${
-              viewMode === "grid" ? "line-clamp-2" : ""
+            className={`font-medium text-gray-900 ${
+              viewMode === "grid" ? "line-clamp-1" : "line-clamp-1 text-lg"
             }`}
           >
             {product.name}
@@ -765,52 +775,53 @@ const ProductList = () => {
 
           {/* Description */}
           <p
-            className={`text-xs sm:text-sm text-gray-500 mb-2 ${
-              viewMode === "grid" ? "line-clamp-2" : "line-clamp-3"
+            className={`mt-1 text-sm text-gray-500 ${
+              viewMode === "grid" ? "line-clamp-2" : "line-clamp-2"
             } flex-grow`}
           >
             {product.description}
           </p>
 
           {/* Rating */}
-          <div className="flex items-center mb-2">
-            <div className="scale-90 origin-left">
-              {renderStarRating(rating)}
-            </div>
-            <span className="text-xs text-gray-500 ml-1">({rating}.0)</span>
+          <div className="mt-2 flex items-center">
+            {renderStarRating(rating)}
+            <span className="ml-1 text-xs text-gray-500">({rating})</span>
           </div>
 
-          {/* Price Section */}
-          <div className="flex items-center justify-between">
+          {/* Price and Add to Cart */}
+          <div className="mt-3 flex items-center justify-between">
             <div>
-              <p className="text-gray-400 line-through text-xs">
+              <p className="text-xs text-gray-400 line-through">
                 Ksh. {(product.price * 1.1).toLocaleString()}
               </p>
-              <p className="text-gray-900 font-bold text-sm sm:text-base">
+              <p className="text-base font-bold text-gray-900">
                 Ksh. {product.price.toLocaleString()}
               </p>
             </div>
 
             {viewMode === "list" ? (
-              <button
+              <Button
+                size="sm"
                 onClick={(e) => handleAddToCart(e, product)}
-                className="py-1.5 px-3 rounded-lg text-white font-medium transition-all flex items-center justify-center bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-sm"
+                className="gap-1"
               >
-                <FaShoppingCart className="mr-1.5" />
+                <ShoppingCart className="h-4 w-4" />
                 Add to Cart
-              </button>
+              </Button>
             ) : (
-              <button
+              <Button
+                size="icon"
+                variant="secondary"
+                className="h-9 w-9 rounded-full"
                 onClick={(e) => handleAddToCart(e, product)}
-                className="p-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                 aria-label="Add to cart"
               >
-                <FaShoppingCart className="h-4 w-4" />
-              </button>
+                <ShoppingCart className="h-4 w-4" />
+              </Button>
             )}
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     );
   };
 
@@ -855,7 +866,7 @@ const ProductList = () => {
       Storage: "storage",
       Decor: "decor",
       "Kids Room": "kidsRoom",
-      Matresses: "matresses",
+      Mattresses: "mattresses",
     };
     return (
       mapping[categoryName] || categoryName.toLowerCase().replace(/\s+/g, "")
@@ -863,26 +874,26 @@ const ProductList = () => {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       <ToastContainer />
 
       {/* Breadcrumb */}
-      <div className="bg-white border-b border-gray-200 py-2">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4">
-          <div className="flex items-center text-xs sm:text-sm text-gray-500">
-            <FaHome className="mr-1 text-xs" />
+      <div className="border-b border-gray-200 bg-white py-2">
+        <div className="mx-auto max-w-7xl px-4">
+          <nav className="flex items-center text-sm text-gray-500">
+            <Home className="mr-1 h-3.5 w-3.5" />
             <span>Home</span>
-            <FaAngleRight className="mx-1 text-xs" />
+            <ChevronRight className="mx-1 h-3.5 w-3.5" />
             <span className="font-medium text-gray-700">Products</span>
             {categoryFilter && (
               <>
-                <FaAngleRight className="mx-1 text-xs" />
+                <ChevronRight className="mx-1 h-3.5 w-3.5" />
                 <span className="font-medium text-gray-700">
                   {categoryFilter}
                 </span>
                 {subcategoryFilter && (
                   <>
-                    <FaAngleRight className="mx-1 text-xs" />
+                    <ChevronRight className="mx-1 h-3.5 w-3.5" />
                     <span className="font-medium text-gray-700">
                       {subcategoryFilter}
                     </span>
@@ -890,41 +901,44 @@ const ProductList = () => {
                 )}
               </>
             )}
-          </div>
+          </nav>
         </div>
       </div>
 
       {/* Search Bar - Sticky at Top */}
-      <div className="sticky top-0 bg-white shadow-sm border-b border-gray-200 z-20 py-2">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4">
+      <div className="sticky top-0 z-20 border-b border-gray-200 bg-white py-3 shadow-sm">
+        <div className="mx-auto max-w-7xl px-4">
           <div className="flex items-center gap-2">
             <div className="relative flex-grow" ref={searchRef}>
-              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                  setShowSuggestions(e.target.value.length > 1);
-                }}
-                onFocus={() => setShowSuggestions(searchQuery.length > 1)}
-                className="py-2 pl-8 pr-3 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm"
-              />
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSuggestions(e.target.value.length > 1);
+                  }}
+                  onFocus={() => setShowSuggestions(searchQuery.length > 1)}
+                  className="pl-9"
+                />
+              </div>
+
               {/* Search Suggestions */}
               {showSuggestions && searchSuggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-md mt-1 z-30">
+                <div className="absolute left-0 right-0 top-full z-30 mt-1 rounded-lg border border-gray-200 bg-white shadow-md">
                   <ul>
                     {searchSuggestions.map((suggestion, index) => (
                       <li
                         key={index}
-                        className="px-3 py-2 hover:bg-gray-50 cursor-pointer flex items-center text-sm"
+                        className="flex cursor-pointer items-center px-3 py-2 text-sm hover:bg-gray-50"
                         onClick={() => {
                           setSearchQuery(suggestion);
                           setShowSuggestions(false);
                         }}
                       >
-                        <FaSearch className="text-gray-400 mr-2 text-xs" />
+                        <Search className="mr-2 h-3.5 w-3.5 text-gray-400" />
                         {suggestion}
                       </li>
                     ))}
@@ -933,106 +947,152 @@ const ProductList = () => {
               )}
             </div>
 
-            <button
-              onClick={toggleFilters}
-              className="bg-white border border-gray-300 text-gray-700 px-3 py-2 rounded-lg flex items-center hover:bg-gray-50 transition-colors relative text-sm"
-            >
-              <FaFilter className="mr-1 text-sm" />
-              <span className="hidden sm:inline">Filters</span>
-              {activeFiltersCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                  {activeFiltersCount}
-                </span>
-              )}
-            </button>
+            {/* Mobile Filter Button */}
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="relative md:hidden"
+                >
+                  <SlidersHorizontal className="h-4 w-4" />
+                  {activeFiltersCount > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -right-1 -top-1 h-4 w-4 p-0 text-xs"
+                    >
+                      {activeFiltersCount}
+                    </Badge>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[300px] sm:w-[350px]">
+                <SheetHeader>
+                  <SheetTitle className="flex items-center justify-between">
+                    <span>Filters</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={resetFilters}
+                      className="h-8 text-xs"
+                    >
+                      <RotateCcw className="mr-1 h-3 w-3" />
+                      Reset All
+                    </Button>
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="mt-4">
+                  {/* Mobile Filters Content */}
+                  <MobileFilters
+                    categories={categories}
+                    categoryStructure={categoryStructure}
+                    categoryIcons={categoryIcons}
+                    activeCategory={activeCategory}
+                    activeSubcategory={activeSubcategory}
+                    expandedCategories={expandedCategories}
+                    handleCategoryClick={handleCategoryClick}
+                    toggleCategoryExpansion={toggleCategoryExpansion}
+                    handleSubcategoryClick={handleSubcategoryClick}
+                    getCategoryKey={getCategoryKey}
+                    priceRange={priceRange}
+                    setPriceRange={setPriceRange}
+                    maxPrice={maxPrice}
+                    ratingFilter={ratingFilter}
+                    setRatingFilter={setRatingFilter}
+                    availabilityFilter={availabilityFilter}
+                    setAvailabilityFilter={setAvailabilityFilter}
+                    featuredOnly={featuredOnly}
+                    setFeaturedOnly={setFeaturedOnly}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
 
-            <div className="hidden sm:flex items-center border border-gray-300 rounded-lg overflow-hidden">
-              <button
+            {/* Desktop Filter Button */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="relative hidden md:flex"
+              onClick={toggleFilters}
+            >
+              <SlidersHorizontal className="mr-1.5 h-4 w-4" />
+              <span>Filters</span>
+              {activeFiltersCount > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="absolute -right-1 -top-1 h-4 w-4 p-0 text-xs"
+                >
+                  {activeFiltersCount}
+                </Badge>
+              )}
+            </Button>
+
+            {/* View Mode Toggle */}
+            <div className="hidden overflow-hidden rounded-lg border border-gray-200 sm:flex">
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "h-9 w-9 rounded-none",
+                  viewMode === "grid" && "bg-primary text-primary-foreground"
+                )}
                 onClick={() => setViewMode("grid")}
-                className={`px-2 py-2 ${
-                  viewMode === "grid"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-gray-700"
-                }`}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                  />
-                </svg>
-              </button>
-              <button
+                <Grid className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "h-9 w-9 rounded-none",
+                  viewMode === "list" && "bg-primary text-primary-foreground"
+                )}
                 onClick={() => setViewMode("list")}
-                className={`px-2 py-2 ${
-                  viewMode === "list"
-                    ? "bg-blue-500 text-white"
-                    : "bg-white text-gray-700"
-                }`}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
+                <List className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-4">
-        <div className="flex flex-col md:flex-row gap-4">
-          {/* Filters Sidebar */}
+      <div className="mx-auto max-w-7xl px-4 py-6">
+        <div className="flex flex-col gap-6 md:flex-row">
+          {/* Desktop Filters Sidebar */}
           <div
-            className={`md:w-56 ${showFilters ? "block" : "hidden md:block"}`}
+            className={`md:w-64 lg:w-72 ${
+              showFilters ? "block" : "hidden md:block"
+            }`}
           >
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 sticky top-16">
-              <div className="p-3 border-b border-gray-200 flex justify-between items-center">
-                <h2 className="font-semibold text-base">Filters</h2>
-                <div className="flex items-center">
-                  <button
-                    onClick={resetFilters}
-                    className="text-xs text-blue-500 hover:text-blue-700"
-                  >
-                    Reset All
-                  </button>
-                  <button
-                    className="md:hidden ml-3 text-gray-500"
-                    onClick={toggleFilters}
-                  >
-                    <FaTimes />
-                  </button>
-                </div>
+            <div className="sticky top-20 rounded-lg border border-gray-200 bg-white shadow-sm">
+              <div className="flex items-center justify-between border-b border-gray-200 p-4">
+                <h2 className="text-base font-semibold">Filters</h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={resetFilters}
+                  className="h-8 text-xs"
+                >
+                  <RotateCcw className="mr-1 h-3 w-3" />
+                  Reset
+                </Button>
               </div>
 
               {/* Active Filters */}
               {activeFiltersCount > 0 && (
-                <div className="p-3 border-b border-gray-200">
-                  <h3 className="font-medium text-sm mb-2">Active Filters:</h3>
+                <div className="border-b border-gray-200 p-4">
+                  <h3 className="mb-2 text-sm font-medium">Active Filters:</h3>
                   <div className="flex flex-wrap gap-1">
                     {categoryFilter && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                      <Badge
+                        variant="secondary"
+                        className="flex items-center gap-1"
+                      >
                         {categoryFilter}
-                        <button
-                          className="ml-1 text-blue-500 hover:text-blue-700"
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-4 w-4 p-0 hover:bg-transparent"
                           onClick={() => {
                             setCategoryFilter("");
                             setSubcategoryFilter("");
@@ -1040,322 +1100,261 @@ const ProductList = () => {
                             setActiveSubcategory("");
                           }}
                         >
-                          <FaTimes className="text-xs" />
-                        </button>
-                      </span>
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </Badge>
                     )}
                     {subcategoryFilter && (
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-50 text-purple-700">
+                      <Badge
+                        variant="outline"
+                        className="flex items-center gap-1"
+                      >
                         {subcategoryFilter}
-                        <button
-                          className="ml-1 text-purple-500 hover:text-purple-700"
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-4 w-4 p-0 hover:bg-transparent"
                           onClick={() => {
                             setSubcategoryFilter("");
                             setActiveSubcategory("");
                           }}
                         >
-                          <FaTimes className="text-xs" />
-                        </button>
-                      </span>
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </Badge>
                     )}
                   </div>
                 </div>
               )}
 
               {/* Categories with Subcategories */}
-              <div className="p-3 border-b border-gray-200">
-                <h3 className="font-medium text-sm mb-2">Categories</h3>
-                <ul className="space-y-1">
-                  <li>
-                    <button
-                      className={`flex items-center w-full text-left px-2 py-1 rounded-md text-xs ${
-                        activeCategory === "All"
-                          ? "bg-blue-50 text-blue-700 font-medium"
-                          : "text-gray-700 hover:bg-gray-50"
-                      }`}
-                      onClick={() => handleCategoryClick("All")}
-                    >
-                      {activeCategory === "All" && (
-                        <FaCheck className="mr-1 text-blue-600 text-xs" />
-                      )}
-                      <span className="flex items-center">
-                        <FaTags className="mr-1 text-gray-500 text-xs" />
+              <Accordion type="multiple" className="px-2 py-2">
+                <AccordionItem value="categories" className="border-none">
+                  <AccordionTrigger className="py-2 text-sm font-medium">
+                    Categories
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-1 pl-1">
+                      <Button
+                        variant={
+                          activeCategory === "All" ? "secondary" : "ghost"
+                        }
+                        size="sm"
+                        className="w-full justify-start text-xs font-normal"
+                        onClick={() => handleCategoryClick("All")}
+                      >
+                        <Tags className="mr-2 h-3.5 w-3.5" />
                         All Categories
-                      </span>
-                    </button>
-                  </li>
+                      </Button>
 
-                  {/* Render each main category with subcategories */}
-                  {Object.keys(categoryStructure).map((category) => {
-                    const categoryKey = getCategoryKey(category);
-                    const isExpanded = expandedCategories[categoryKey];
-                    const isActive = activeCategory === category;
+                      {/* Render each main category with subcategories */}
+                      {Object.keys(categoryStructure).map((category) => {
+                        const categoryKey = getCategoryKey(category);
+                        const isExpanded = expandedCategories[categoryKey];
+                        const isActive = activeCategory === category;
 
-                    return (
-                      <li key={category} className="mt-1">
-                        <div className="mb-0.5">
-                          <button
-                            className={`flex items-center justify-between w-full text-left px-2 py-1 rounded-md text-xs ${
-                              isActive || isExpanded
-                                ? "bg-blue-50 text-blue-700 font-medium"
-                                : "text-gray-700 hover:bg-gray-50"
-                            }`}
-                            onClick={() => {
-                              if (!isActive) {
-                                handleCategoryClick(category);
-                              }
-                              toggleCategoryExpansion(categoryKey);
-                            }}
-                          >
-                            <span className="flex items-center">
-                              {isActive && (
-                                <FaCheck className="mr-1 text-blue-600 text-xs" />
+                        return (
+                          <div key={category} className="mt-1">
+                            <Button
+                              variant={isActive ? "secondary" : "ghost"}
+                              size="sm"
+                              className="w-full justify-between text-xs font-normal"
+                              onClick={() => {
+                                if (!isActive) {
+                                  handleCategoryClick(category);
+                                }
+                                toggleCategoryExpansion(categoryKey);
+                              }}
+                            >
+                              <span className="flex items-center">
+                                {categoryIcons[category] || (
+                                  <Tag className="mr-2 h-3.5 w-3.5" />
+                                )}
+                                {category}
+                              </span>
+                              {isExpanded ? (
+                                <ChevronUp className="h-3.5 w-3.5" />
+                              ) : (
+                                <ChevronDown className="h-3.5 w-3.5" />
                               )}
-                              {categoryIcons[category] || (
-                                <FaTag className="mr-1 text-gray-500 text-xs" />
-                              )}
-                              {category}
-                            </span>
-                            {isExpanded ? (
-                              <FaChevronUp className="text-xs" />
-                            ) : (
-                              <FaChevronDown className="text-xs" />
+                            </Button>
+
+                            {isExpanded && (
+                              <div className="ml-4 mt-1 space-y-1 border-l border-gray-100 pl-2">
+                                {categoryStructure[category].map((subcat) => (
+                                  <Button
+                                    key={subcat}
+                                    variant={
+                                      activeSubcategory === subcat
+                                        ? "secondary"
+                                        : "ghost"
+                                    }
+                                    size="sm"
+                                    className="w-full justify-start text-xs font-normal"
+                                    onClick={() =>
+                                      handleSubcategoryClick(category, subcat)
+                                    }
+                                  >
+                                    {subcat}
+                                  </Button>
+                                ))}
+                              </div>
                             )}
-                          </button>
-                        </div>
-
-                        {isExpanded && (
-                          <ul className="ml-4 space-y-0.5 border-l border-gray-100 pl-2">
-                            {categoryStructure[category].map((subcat) => (
-                              <li key={subcat}>
-                                <button
-                                  className={`flex items-center w-full text-left px-2 py-1 text-xs rounded-md ${
-                                    activeSubcategory === subcat
-                                      ? "bg-blue-50 text-blue-700 font-medium"
-                                      : "text-gray-600 hover:bg-gray-50"
-                                  }`}
-                                  onClick={() =>
-                                    handleSubcategoryClick(category, subcat)
-                                  }
-                                >
-                                  {activeSubcategory === subcat && (
-                                    <FaCheck className="mr-1 text-blue-600 text-xs" />
-                                  )}
-                                  {subcat}
-                                </button>
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-
-              {/* Price Range */}
-              <div className="p-3 border-b border-gray-200">
-                <button
-                  className="flex items-center justify-between w-full font-medium text-sm mb-2"
-                  onClick={() => toggleFilterSection("price")}
-                >
-                  <span>Price Range</span>
-                  {expandedFilters.price ? (
-                    <FaChevronUp className="text-xs" />
-                  ) : (
-                    <FaChevronDown className="text-xs" />
-                  )}
-                </button>
-
-                {expandedFilters.price && (
-                  <div className="mt-2">
-                    <div className="flex justify-between mb-1 text-xs">
-                      <span>Ksh. {priceRange[0].toLocaleString()}</span>
-                      <span>Ksh. {priceRange[1].toLocaleString()}</span>
+                          </div>
+                        );
+                      })}
                     </div>
-                    <div className="relative pt-1">
-                      <div className="h-1 bg-gray-200 rounded-full">
-                        <div
-                          className="absolute h-1 rounded-full bg-blue-500"
-                          style={{
-                            left: `${(priceRange[0] / maxPrice) * 100}%`,
-                            width: `${
-                              ((priceRange[1] - priceRange[0]) / maxPrice) * 100
-                            }%`,
-                          }}
-                        ></div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* Price Range */}
+                <AccordionItem value="price" className="border-none">
+                  <AccordionTrigger className="py-2 text-sm font-medium">
+                    Price Range
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="px-1 py-2">
+                      <div className="mb-4 flex justify-between text-xs">
+                        <span>Ksh. {priceRange[0].toLocaleString()}</span>
+                        <span>Ksh. {priceRange[1].toLocaleString()}</span>
+                      </div>
+                      <Slider
+                        defaultValue={[0, maxPrice]}
+                        value={priceRange}
+                        max={maxPrice}
+                        step={1000}
+                        onValueChange={(value) => setPriceRange(value)}
+                        className="mb-6"
+                      />
+                      <div className="flex gap-2">
+                        <Input
+                          type="number"
+                          min={0}
+                          max={priceRange[1]}
+                          value={priceRange[0]}
+                          onChange={(e) =>
+                            setPriceRange([
+                              Number.parseInt(e.target.value),
+                              priceRange[1],
+                            ])
+                          }
+                          className="h-8 text-xs"
+                        />
+                        <Input
+                          type="number"
+                          min={priceRange[0]}
+                          max={maxPrice}
+                          value={priceRange[1]}
+                          onChange={(e) =>
+                            setPriceRange([
+                              priceRange[0],
+                              Number.parseInt(e.target.value),
+                            ])
+                          }
+                          className="h-8 text-xs"
+                        />
                       </div>
                     </div>
-                    <input
-                      type="range"
-                      min={0}
-                      max={maxPrice}
-                      value={priceRange[0]}
-                      onChange={(e) =>
-                        setPriceRange([
-                          Number.parseInt(e.target.value),
-                          priceRange[1],
-                        ])
-                      }
-                      className="w-full mb-1 appearance-none bg-transparent [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500"
-                    />
-                    <input
-                      type="range"
-                      min={0}
-                      max={maxPrice}
-                      value={priceRange[1]}
-                      onChange={(e) =>
-                        setPriceRange([
-                          priceRange[0],
-                          Number.parseInt(e.target.value),
-                        ])
-                      }
-                      className="w-full appearance-none bg-transparent [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500"
-                    />
-                    <div className="flex gap-2 mt-2">
-                      <input
-                        type="number"
-                        min={0}
-                        max={priceRange[1]}
-                        value={priceRange[0]}
-                        onChange={(e) =>
-                          setPriceRange([
-                            Number.parseInt(e.target.value),
-                            priceRange[1],
-                          ])
-                        }
-                        className="w-full p-1 border border-gray-300 rounded-md text-xs"
-                      />
-                      <input
-                        type="number"
-                        min={priceRange[0]}
-                        max={maxPrice}
-                        value={priceRange[1]}
-                        onChange={(e) =>
-                          setPriceRange([
-                            priceRange[0],
-                            Number.parseInt(e.target.value),
-                          ])
-                        }
-                        className="w-full p-1 border border-gray-300 rounded-md text-xs"
-                      />
+                  </AccordionContent>
+                </AccordionItem>
+
+                {/* Rating Filter */}
+                <AccordionItem value="rating" className="border-none">
+                  <AccordionTrigger className="py-2 text-sm font-medium">
+                    Rating
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-2 px-1 py-2">
+                      {[5, 4, 3, 2, 1].map((rating) => (
+                        <Button
+                          key={rating}
+                          variant={
+                            ratingFilter === rating ? "secondary" : "ghost"
+                          }
+                          size="sm"
+                          className="w-full justify-start text-xs font-normal"
+                          onClick={() =>
+                            setRatingFilter(
+                              ratingFilter === rating ? 0 : rating
+                            )
+                          }
+                        >
+                          <div className="flex mr-2">
+                            {[...Array(5)].map((_, i) => (
+                              <span key={i}>
+                                {i < rating ? (
+                                  <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                ) : (
+                                  <Star className="h-3 w-3 text-gray-300" />
+                                )}
+                              </span>
+                            ))}
+                          </div>
+                          <span>{rating === 1 ? "& Up" : `& Up`}</span>
+                        </Button>
+                      ))}
                     </div>
-                  </div>
-                )}
-              </div>
+                  </AccordionContent>
+                </AccordionItem>
 
-              {/* Rating Filter */}
-              <div className="p-3 border-b border-gray-200">
-                <button
-                  className="flex items-center justify-between w-full font-medium text-sm mb-2"
-                  onClick={() => toggleFilterSection("rating")}
-                >
-                  <span>Rating</span>
-                  {expandedFilters.rating ? (
-                    <FaChevronUp className="text-xs" />
-                  ) : (
-                    <FaChevronDown className="text-xs" />
-                  )}
-                </button>
-
-                {expandedFilters.rating && (
-                  <div className="space-y-1">
-                    {[5, 4, 3, 2, 1].map((rating) => (
-                      <button
-                        key={rating}
-                        className={`flex items-center w-full text-left px-2 py-1 rounded-md text-xs ${
-                          ratingFilter === rating
-                            ? "bg-blue-50 text-blue-700 font-medium"
-                            : "text-gray-700 hover:bg-gray-50"
-                        }`}
-                        onClick={() =>
-                          setRatingFilter(ratingFilter === rating ? 0 : rating)
-                        }
-                      >
-                        <div className="flex mr-1">
-                          {[...Array(5)].map((_, i) => (
-                            <span key={i}>
-                              {i < rating ? (
-                                <FaStar className="text-yellow-400 text-xs" />
-                              ) : (
-                                <FaRegStar className="text-gray-300 text-xs" />
-                              )}
-                            </span>
-                          ))}
-                        </div>
-                        <span className="text-xs">
-                          {rating === 1 ? "& Up" : `& Up`}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Availability */}
-              <div className="p-3 border-b border-gray-200">
-                <button
-                  className="flex items-center justify-between w-full font-medium text-sm mb-2"
-                  onClick={() => toggleFilterSection("availability")}
-                >
-                  <span>Availability</span>
-                  {expandedFilters.availability ? (
-                    <FaChevronUp className="text-xs" />
-                  ) : (
-                    <FaChevronDown className="text-xs" />
-                  )}
-                </button>
-
-                {expandedFilters.availability && (
-                  <div className="space-y-1">
-                    <label className="flex items-center text-xs">
-                      <input
-                        type="radio"
-                        name="availability"
-                        checked={availabilityFilter === "all"}
-                        onChange={() => setAvailabilityFilter("all")}
-                        className="mr-1 accent-blue-500"
-                      />
-                      <span>All</span>
-                    </label>
-                    <label className="flex items-center text-xs">
-                      <input
-                        type="radio"
-                        name="availability"
-                        checked={availabilityFilter === "inStock"}
-                        onChange={() => setAvailabilityFilter("inStock")}
-                        className="mr-1 accent-blue-500"
-                      />
-                      <span>In Stock</span>
-                    </label>
-                    <label className="flex items-center text-xs">
-                      <input
-                        type="radio"
-                        name="availability"
-                        checked={availabilityFilter === "outOfStock"}
-                        onChange={() => setAvailabilityFilter("outOfStock")}
-                        className="mr-1 accent-blue-500"
-                      />
-                      <span>Out of Stock</span>
-                    </label>
-                  </div>
-                )}
-              </div>
+                {/* Availability */}
+                <AccordionItem value="availability" className="border-none">
+                  <AccordionTrigger className="py-2 text-sm font-medium">
+                    Availability
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <RadioGroup
+                      value={availabilityFilter}
+                      onValueChange={setAvailabilityFilter}
+                      className="px-1 py-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="all"
+                          id="all"
+                          className="h-4 w-4"
+                        />
+                        <Label htmlFor="all" className="text-xs">
+                          All
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="inStock"
+                          id="inStock"
+                          className="h-4 w-4"
+                        />
+                        <Label htmlFor="inStock" className="text-xs">
+                          In Stock
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          value="outOfStock"
+                          id="outOfStock"
+                          className="h-4 w-4"
+                        />
+                        <Label htmlFor="outOfStock" className="text-xs">
+                          Out of Stock
+                        </Label>
+                      </div>
+                    </RadioGroup>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
 
               {/* Featured Products */}
-              <div className="p-3">
-                <label className="relative inline-flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
+              <div className="border-t border-gray-200 p-4">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="featured-only"
                     checked={featuredOnly}
-                    onChange={() => setFeaturedOnly(!featuredOnly)}
-                    className="sr-only peer"
+                    onCheckedChange={setFeaturedOnly}
                   />
-                  <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
-                  <span className="ml-2 text-xs font-medium text-gray-700">
+                  <Label htmlFor="featured-only" className="text-sm">
                     Featured Products Only
-                  </span>
-                </label>
+                  </Label>
+                </div>
               </div>
             </div>
           </div>
@@ -1363,42 +1362,49 @@ const ProductList = () => {
           {/* Main Content */}
           <div className="flex-1">
             {/* Sort Options */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mb-4 flex justify-between items-center">
-              <div className="text-xs text-gray-500">
-                Showing{" "}
-                <span className="font-semibold text-gray-700">
-                  {filteredProducts.length > 0
-                    ? `${indexOfFirstProduct + 1}-${Math.min(
-                        indexOfLastProduct,
-                        filteredProducts.length
-                      )}`
-                    : 0}
-                </span>{" "}
-                of{" "}
-                <span className="font-semibold text-gray-700">
-                  {filteredProducts.length}
-                </span>{" "}
-                products
-              </div>
+            <Card className="mb-6">
+              <CardContent className="flex items-center justify-between p-4">
+                <div className="text-sm text-gray-500">
+                  Showing{" "}
+                  <span className="font-semibold text-gray-700">
+                    {filteredProducts.length > 0
+                      ? `${indexOfFirstProduct + 1}-${Math.min(
+                          indexOfLastProduct,
+                          filteredProducts.length
+                        )}`
+                      : 0}
+                  </span>{" "}
+                  of{" "}
+                  <span className="font-semibold text-gray-700">
+                    {filteredProducts.length}
+                  </span>{" "}
+                  products
+                </div>
 
-              <div className="flex items-center">
-                <span className="text-xs text-gray-700 mr-2 hidden sm:inline">
-                  Sort by:
-                </span>
-                <select
-                  value={sortOption}
-                  onChange={(e) => setSortOption(e.target.value)}
-                  className="p-1 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">Featured</option>
-                  <option value="price_low">Price: Low to High</option>
-                  <option value="price_high">Price: High to Low</option>
-                  <option value="newest">Newest Arrivals</option>
-                  <option value="rating">Highest Rated</option>
-                  <option value="popularity">Popularity</option>
-                </select>
-              </div>
-            </div>
+                <div className="flex items-center">
+                  <span className="mr-2 hidden text-sm text-gray-700 sm:inline">
+                    Sort by:
+                  </span>
+                  <Select value={sortOption} onValueChange={setSortOption}>
+                    <SelectTrigger className="h-8 w-[180px] text-xs">
+                      <SelectValue placeholder="Featured" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="featured">Featured</SelectItem>
+                      <SelectItem value="price_low">
+                        Price: Low to High
+                      </SelectItem>
+                      <SelectItem value="price_high">
+                        Price: High to Low
+                      </SelectItem>
+                      <SelectItem value="newest">Newest Arrivals</SelectItem>
+                      <SelectItem value="rating">Highest Rated</SelectItem>
+                      <SelectItem value="popularity">Popularity</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Category Sections */}
             {activeCategory === "All" &&
@@ -1410,28 +1416,30 @@ const ProductList = () => {
             priceRange[1] === maxPrice ? (
               // Show products by category sections when no filters are applied
               Object.entries(categoryProducts).map(([category, products]) => (
-                <div key={category} className="mb-8">
-                  <div className="flex items-center justify-between mb-3">
-                    <h2 className="text-base sm:text-lg font-bold text-gray-800 flex items-center">
+                <div key={category} className="mb-10">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h2 className="flex items-center text-lg font-bold text-gray-800">
                       {categoryIcons[category] || (
-                        <FaTag className="mr-1 text-blue-500" />
+                        <Tag className="mr-2 h-4 w-4 text-primary" />
                       )}
                       {category}
                     </h2>
-                    <button
+                    <Button
+                      variant="link"
+                      size="sm"
                       onClick={() => handleCategoryClick(category)}
-                      className="text-blue-500 hover:text-blue-700 text-xs font-medium"
+                      className="font-medium"
                     >
                       View All
-                    </button>
+                    </Button>
                   </div>
 
                   <div
-                    className={`grid ${
+                    className={`grid gap-4 ${
                       viewMode === "grid"
-                        ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4"
+                        ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"
                         : "grid-cols-1"
-                    } gap-3 sm:gap-4`}
+                    }`}
                   >
                     {products
                       .slice(0, 4)
@@ -1444,138 +1452,332 @@ const ProductList = () => {
               <>
                 {filteredProducts.length > 0 ? (
                   <div
-                    className={`grid ${
+                    className={`grid gap-4 ${
                       viewMode === "grid"
-                        ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4"
+                        ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"
                         : "grid-cols-1"
-                    } gap-3 sm:gap-4`}
+                    }`}
                   >
                     {currentProducts.map((product) =>
                       renderProductCard(product)
                     )}
                   </div>
                 ) : (
-                  <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
-                    <div className="flex flex-col items-center justify-center py-6">
-                      <svg
-                        className="w-12 h-12 text-gray-400 mb-3"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        ></path>
-                      </svg>
-                      <h3 className="text-base font-medium text-gray-700 mb-1">
+                  <Card className="py-8">
+                    <CardContent className="flex flex-col items-center justify-center text-center">
+                      <div className="mb-4 rounded-full bg-gray-100 p-3">
+                        <Search className="h-6 w-6 text-gray-400" />
+                      </div>
+                      <h3 className="mb-1 text-lg font-medium text-gray-700">
                         No products found
                       </h3>
-                      <p className="text-gray-500 text-sm max-w-md mb-4">
+                      <p className="mb-4 max-w-md text-gray-500">
                         We couldn't find any products matching your search
                         criteria. Try adjusting your filters or search terms.
                       </p>
-                      <button
-                        onClick={resetFilters}
-                        className="px-3 py-1.5 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition-colors"
-                      >
-                        Clear all filters
-                      </button>
-                    </div>
-                  </div>
+                      <Button onClick={resetFilters}>Clear all filters</Button>
+                    </CardContent>
+                  </Card>
                 )}
               </>
             )}
 
             {/* Pagination */}
             {filteredProducts.length > productsPerPage && (
-              <div className="mt-6">
-                <div className="flex justify-center">
-                  <nav
-                    className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
-                    aria-label="Pagination"
+              <div className="mt-8 flex justify-center">
+                <div className="flex items-center space-x-1">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={prevPage}
+                    disabled={currentPage === 1}
+                    className="h-8 w-8"
                   >
-                    <button
-                      onClick={prevPage}
-                      disabled={currentPage === 1}
-                      className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                    >
-                      <span className="sr-only">Previous</span>
-                      <svg
-                        className="h-4 w-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
+                    <ChevronRight className="h-4 w-4 rotate-180" />
+                  </Button>
+
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      // If 5 or fewer pages, show all
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      // If near start, show first 5
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      // If near end, show last 5
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      // Otherwise show current and 2 on each side
+                      pageNum = currentPage - 2 + i;
+                    }
+
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={
+                          currentPage === pageNum ? "default" : "outline"
+                        }
+                        size="icon"
+                        onClick={() => paginate(pageNum)}
+                        className="h-8 w-8"
                       >
-                        <path
-                          fillRule="evenodd"
-                          d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
+                        {pageNum}
+                      </Button>
+                    );
+                  })}
 
-                    {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                      let pageNum;
-                      if (totalPages <= 5) {
-                        // If 5 or fewer pages, show all
-                        pageNum = i + 1;
-                      } else if (currentPage <= 3) {
-                        // If near start, show first 5
-                        pageNum = i + 1;
-                      } else if (currentPage >= totalPages - 2) {
-                        // If near end, show last 5
-                        pageNum = totalPages - 4 + i;
-                      } else {
-                        // Otherwise show current and 2 on each side
-                        pageNum = currentPage - 2 + i;
-                      }
-
-                      return (
-                        <button
-                          key={pageNum}
-                          onClick={() => paginate(pageNum)}
-                          className={`relative inline-flex items-center px-3 py-2 border text-sm font-medium
-                            ${
-                              currentPage === pageNum
-                                ? "z-10 bg-blue-50 border-blue-500 text-blue-600"
-                                : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
-                            }`}
-                        >
-                          {pageNum}
-                        </button>
-                      );
-                    })}
-
-                    <button
-                      onClick={nextPage}
-                      disabled={currentPage === totalPages}
-                      className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                    >
-                      <span className="sr-only">Next</span>
-                      <svg
-                        className="h-4 w-4"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
-                  </nav>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={nextPage}
+                    disabled={currentPage === totalPages}
+                    className="h-8 w-8"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             )}
           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Mobile Filters Component
+const MobileFilters = ({
+  categories,
+  categoryStructure,
+  categoryIcons,
+  activeCategory,
+  activeSubcategory,
+  expandedCategories,
+  handleCategoryClick,
+  toggleCategoryExpansion,
+  handleSubcategoryClick,
+  getCategoryKey,
+  priceRange,
+  setPriceRange,
+  maxPrice,
+  ratingFilter,
+  setRatingFilter,
+  availabilityFilter,
+  setAvailabilityFilter,
+  featuredOnly,
+  setFeaturedOnly,
+}) => {
+  return (
+    <div className="space-y-4">
+      <Accordion type="multiple" className="w-full">
+        <AccordionItem value="categories">
+          <AccordionTrigger>Categories</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-1">
+              <Button
+                variant={activeCategory === "All" ? "secondary" : "ghost"}
+                size="sm"
+                className="w-full justify-start text-xs font-normal"
+                onClick={() => handleCategoryClick("All")}
+              >
+                <Tags className="mr-2 h-3.5 w-3.5" />
+                All Categories
+              </Button>
+
+              {Object.keys(categoryStructure).map((category) => {
+                const categoryKey = getCategoryKey(category);
+                const isExpanded = expandedCategories[categoryKey];
+                const isActive = activeCategory === category;
+
+                return (
+                  <div key={category} className="mt-1">
+                    <Button
+                      variant={isActive ? "secondary" : "ghost"}
+                      size="sm"
+                      className="w-full justify-between text-xs font-normal"
+                      onClick={() => {
+                        if (!isActive) {
+                          handleCategoryClick(category);
+                        }
+                        toggleCategoryExpansion(categoryKey);
+                      }}
+                    >
+                      <span className="flex items-center">
+                        {categoryIcons[category] || (
+                          <Tag className="mr-2 h-3.5 w-3.5" />
+                        )}
+                        {category}
+                      </span>
+                      {isExpanded ? (
+                        <ChevronUp className="h-3.5 w-3.5" />
+                      ) : (
+                        <ChevronDown className="h-3.5 w-3.5" />
+                      )}
+                    </Button>
+
+                    {isExpanded && (
+                      <div className="ml-4 mt-1 space-y-1 border-l border-gray-100 pl-2">
+                        {categoryStructure[category].map((subcat) => (
+                          <Button
+                            key={subcat}
+                            variant={
+                              activeSubcategory === subcat
+                                ? "secondary"
+                                : "ghost"
+                            }
+                            size="sm"
+                            className="w-full justify-start text-xs font-normal"
+                            onClick={() =>
+                              handleSubcategoryClick(category, subcat)
+                            }
+                          >
+                            {subcat}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="price">
+          <AccordionTrigger>Price Range</AccordionTrigger>
+          <AccordionContent>
+            <div className="px-1 py-2">
+              <div className="mb-4 flex justify-between text-xs">
+                <span>Ksh. {priceRange[0].toLocaleString()}</span>
+                <span>Ksh. {priceRange[1].toLocaleString()}</span>
+              </div>
+              <Slider
+                defaultValue={[0, maxPrice]}
+                value={priceRange}
+                max={maxPrice}
+                step={1000}
+                onValueChange={(value) => setPriceRange(value)}
+                className="mb-6"
+              />
+              <div className="flex gap-2">
+                <Input
+                  type="number"
+                  min={0}
+                  max={priceRange[1]}
+                  value={priceRange[0]}
+                  onChange={(e) =>
+                    setPriceRange([
+                      Number.parseInt(e.target.value),
+                      priceRange[1],
+                    ])
+                  }
+                  className="h-8 text-xs"
+                />
+                <Input
+                  type="number"
+                  min={priceRange[0]}
+                  max={maxPrice}
+                  value={priceRange[1]}
+                  onChange={(e) =>
+                    setPriceRange([
+                      priceRange[0],
+                      Number.parseInt(e.target.value),
+                    ])
+                  }
+                  className="h-8 text-xs"
+                />
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="rating">
+          <AccordionTrigger>Rating</AccordionTrigger>
+          <AccordionContent>
+            <div className="space-y-2 px-1 py-2">
+              {[5, 4, 3, 2, 1].map((rating) => (
+                <Button
+                  key={rating}
+                  variant={ratingFilter === rating ? "secondary" : "ghost"}
+                  size="sm"
+                  className="w-full justify-start text-xs font-normal"
+                  onClick={() =>
+                    setRatingFilter(ratingFilter === rating ? 0 : rating)
+                  }
+                >
+                  <div className="flex mr-2">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i}>
+                        {i < rating ? (
+                          <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                        ) : (
+                          <Star className="h-3 w-3 text-gray-300" />
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                  <span>{rating === 1 ? "& Up" : `& Up`}</span>
+                </Button>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="availability">
+          <AccordionTrigger>Availability</AccordionTrigger>
+          <AccordionContent>
+            <RadioGroup
+              value={availabilityFilter}
+              onValueChange={setAvailabilityFilter}
+              className="px-1 py-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem
+                  value="all"
+                  id="mobile-all"
+                  className="h-4 w-4"
+                />
+                <Label htmlFor="mobile-all" className="text-xs">
+                  All
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem
+                  value="inStock"
+                  id="mobile-inStock"
+                  className="h-4 w-4"
+                />
+                <Label htmlFor="mobile-inStock" className="text-xs">
+                  In Stock
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem
+                  value="outOfStock"
+                  id="mobile-outOfStock"
+                  className="h-4 w-4"
+                />
+                <Label htmlFor="mobile-outOfStock" className="text-xs">
+                  Out of Stock
+                </Label>
+              </div>
+            </RadioGroup>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+
+      {/* Featured Products */}
+      <div className="px-1 py-2">
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="mobile-featured-only"
+            checked={featuredOnly}
+            onCheckedChange={setFeaturedOnly}
+          />
+          <Label htmlFor="mobile-featured-only" className="text-sm">
+            Featured Products Only
+          </Label>
         </div>
       </div>
     </div>

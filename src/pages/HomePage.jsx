@@ -1,22 +1,20 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import "animate.css"; // Importing Animate.css
 import HeroSection from "../components/HeroSection";
-import ProductShowcase from "../components/ProductsShowcase";
-import AboutSection from "../components/AboutSection";
-import DiscountBanner from "../components/DiscountBanner";
-// import DiscountBanner from "../components/DiscountBanner";
-// import TestimonialsSection from "../components/TestimonialsSection";
+import FeaturedProductsCarousel from "../components/FeaturedProductsCarousel";
+import SpecialOffers from "../components/SpecialOffers";
+import TestimonialsSection from "../components/TestimonialsSection";
+import NewsletterSignup from "../components/NewsletterSignup";
+import TrustBadges from "../components/TrustBadges";
 
 const Home = () => {
   return (
     <main className="overflow-x-hidden">
-      {/* <DiscountBanner /> */}
       <HeroSection />
-      <DiscountBanner />
-      {/* <AboutSection /> */}
-      {/* <ProductShowcase /> */}
-      {/* <TestimonialsSection /> */}
+      <FeaturedProductsCarousel />
+      <SpecialOffers />
+      <TestimonialsSection />
+      <TrustBadges />
+      <NewsletterSignup />
     </main>
   );
 };
