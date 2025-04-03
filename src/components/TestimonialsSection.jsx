@@ -5,12 +5,10 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/autoplay"; // Optional for autoplay-specific styles
 
-// Import modules explicitly
-import SwiperCore, { Pagination, Autoplay } from "swiper";
+// Import the necessary modules from swiper
+import { Pagination, Autoplay } from "swiper";
 
-// Configure Swiper with the necessary modules
-SwiperCore.use([Pagination, Autoplay]);
-
+// Now you pass the modules directly in the Swiper component
 const testimonials = [
   {
     text: "Great product, really satisfied!",
@@ -38,6 +36,7 @@ const TestimonialsSection = () => {
             delay: 5000, // Autoplay every 5 seconds
             disableOnInteraction: false, // Allow autoplay even after interaction
           }}
+          modules={[Pagination, Autoplay]} // Pass modules here directly
           breakpoints={{
             640: {
               slidesPerView: 2, // 2 testimonials on tablet screens
