@@ -307,7 +307,7 @@ const OrderConfirmationPage = () => {
           <p className="text-gray-600">
             Track your order status in your{" "}
             <a
-              href="/account/orders"
+              href="/orders"
               className="text-blue-600 hover:text-blue-800 font-medium"
             >
               account dashboard

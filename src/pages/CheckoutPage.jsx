@@ -24,6 +24,7 @@ import {
   Gift,
   CreditCardIcon,
   AlertCircle,
+  Smile,
   ArrowRight,
 } from "lucide-react";
 import api from "../api/axios"; // Adjust the import path accordingly
@@ -37,9 +38,10 @@ const CheckoutPage = () => {
     zipCode: "",
     phone: "",
   });
-  const [cart, setCart] = useState(
-    JSON.parse(localStorage.getItem("cart")) || []
-  );
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
   const [cartBackup, setCartBackup] = useState(null); // Undo feature
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeStep, setActiveStep] = useState("shipping"); // shipping, payment, review
@@ -60,7 +62,11 @@ const CheckoutPage = () => {
   const [mpesaNumber, setMpesaNumber] = useState("");
   const [formErrors, setFormErrors] = useState({});
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  // Get user from localStorage only once during component initialization
+  const [user] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const user_id = user?.id || null;
   const navigate = useNavigate();
 
@@ -97,7 +103,7 @@ const CheckoutPage = () => {
 
   const shipping = deliveryFees[deliveryOption];
   const giftWrapFee = giftWrap ? 200 : 0;
-  const tax = subtotal * 0.01; // 1% VAT
+  const tax = subtotal * 0.0005; // 0.5 VAT
   const totalBeforeDiscount = subtotal + shipping + tax + giftWrapFee;
   const totalAmount = totalBeforeDiscount - promoDiscount;
 
@@ -866,7 +872,7 @@ const CheckoutPage = () => {
 
                   <div className="p-6">
                     <div className="space-y-4">
-                      <div>
+                      {/* <div>
                         <label className="flex items-center p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                           <input
                             type="radio"
@@ -878,7 +884,7 @@ const CheckoutPage = () => {
                           />
                           <div className="ml-3 flex items-center">
                             <img
-                              src="/m-pesa.png"
+                              src="https://via.placeholder.com/40x40?text=M"
                               alt="M-Pesa"
                               className="h-10 w-10 object-contain mr-3"
                             />
@@ -1127,6 +1133,42 @@ const CheckoutPage = () => {
                             </div>
                           </div>
                         )}
+                      </div> */}
+
+                      <div className="w-full max-w-md mx-auto">
+                        <div
+                          role="alert"
+                          className="p-5 border border-yellow-300 bg-yellow-50 rounded-lg text-yellow-900 shadow-md transition-all hover:shadow-lg"
+                        >
+                          <div className="flex items-center gap-2 mb-3">
+                            <AlertCircle className="h-6 w-6 flex-shrink-0 text-yellow-600" />
+                            <h3 className="text-lg font-semibold">
+                              Payment Methods Unavailable
+                            </h3>
+                          </div>
+
+                          <p className="text-sm mb-2">
+                            We're currently working hard to integrate secure
+                            online payment options including:
+                          </p>
+
+                          <ul className="list-disc ml-5 text-sm space-y-1">
+                            <li>M-Pesa</li>
+                            <li>Debit/Credit Cards</li>
+                            <li>PayPal</li>
+                          </ul>
+
+                          <div className="flex items-center mt-4 text-green-700 bg-green-50 p-2 rounded-md">
+                            <Smile className="h-5 w-5 flex-shrink-0 mr-2" />
+                            <p className="text-sm">
+                              For now, please proceed with{" "}
+                              <span className="font-semibold">
+                                Cash on Delivery
+                              </span>
+                              .
+                            </p>
+                          </div>
+                        </div>
                       </div>
 
                       <div>
@@ -1427,7 +1469,7 @@ const CheckoutPage = () => {
                 </div>
 
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Tax (1% VAT)</span>
+                  <span className="text-gray-600">Tax (0.05% VAT)</span>
                   <span className="text-gray-900 font-medium">
                     Ksh.{" "}
                     {tax.toLocaleString(undefined, {
@@ -1531,7 +1573,7 @@ const CheckoutPage = () => {
                 <div className="mt-6 space-y-4">
                   <div className="flex items-center text-sm text-gray-500">
                     <Truck className="w-4 h-4 mr-2 text-gray-400" />
-                    <span>Free shipping for delivery within Nairobi</span>
+                    <span>Free shipping on orders over Ksh. 5,000</span>
                   </div>
                   <div className="flex items-center text-sm text-gray-500">
                     <Shield className="w-4 h-4 mr-2 text-gray-400" />
@@ -1558,8 +1600,8 @@ const CheckoutPage = () => {
                     Need help?
                   </h3>
                   <p className="mt-1 text-sm text-blue-700">
-                    Call us at +254 708 165 310 or email at
-                    bobbyfurnitures254@gmail.com
+                    Call us at +254 712 345 678 or email at
+                    support@bobbyfurniture.com
                   </p>
                 </div>
               </div>
@@ -1575,21 +1617,25 @@ const CheckoutPage = () => {
               </div>
               <div className="flex justify-center space-x-4">
                 <img
-                  src="/visa.png"
+                  src="https://via.placeholder.com/40x25?text=Visa"
                   alt="Visa"
-                  className="h-8 object-contain"
+                  className="h-6 object-contain"
                 />
                 <img
-                  src="/master-card.png"
+                  src="https://via.placeholder.com/40x25?text=MC"
                   alt="Mastercard"
-                  className="h-8 object-contain"
+                  className="h-6 object-contain"
                 />
                 <img
-                  src="/lipa-na-m-pesa.png"
+                  src="https://via.placeholder.com/40x25?text=MPesa"
                   alt="M-Pesa"
-                  className="h-8 object-contain"
+                  className="h-6 object-contain"
                 />
-                <img src="ssl.jpg" alt="SSL" className="h-8 object-contain" />
+                <img
+                  src="https://via.placeholder.com/40x25?text=SSL"
+                  alt="SSL"
+                  className="h-6 object-contain"
+                />
               </div>
             </div>
           </div>

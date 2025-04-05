@@ -966,7 +966,10 @@ const ProductList = () => {
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[300px] sm:w-[350px]">
+              <SheetContent
+                side="left"
+                className="w-[300px] sm:w-[350px] z-[999] overflow-y-scroll"
+              >
                 <SheetHeader>
                   <SheetTitle className="flex items-center justify-between">
                     <span>Filters</span>

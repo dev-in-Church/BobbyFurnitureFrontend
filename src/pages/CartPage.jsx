@@ -111,7 +111,7 @@ const CartPage = () => {
   // Calculate cart summary
   const subtotal = total;
   const shipping = cart.length > 0 ? (subtotal < 5000 ? 500 : 0) : 0;
-  const tax = subtotal * 0.16; // 16% VAT
+  const tax = subtotal * 0.0005; // 16% VAT
   const grandTotal = subtotal + shipping + tax;
 
   return (
@@ -335,7 +335,7 @@ const CartPage = () => {
                   </div>
 
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Tax (16% VAT)</span>
+                    <span className="text-gray-600">Tax (0.5% VAT)</span>
                     <span className="text-gray-900 font-medium">
                       Ksh.{" "}
                       {tax.toLocaleString(undefined, {
