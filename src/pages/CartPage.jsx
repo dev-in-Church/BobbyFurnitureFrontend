@@ -335,7 +335,7 @@ const CartPage = () => {
                   </div>
 
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Tax (0.5% VAT)</span>
+                    <span className="text-gray-600">Tax (0.05% VAT)</span>
                     <span className="text-gray-900 font-medium">
                       Ksh.{" "}
                       {tax.toLocaleString(undefined, {
