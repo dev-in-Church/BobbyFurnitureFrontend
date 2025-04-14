@@ -531,28 +531,29 @@ export default function Navbar() {
     </div>
   );
 
-  const renderPromoBar = () => {
-    if (!isPromoVisible) return null;
+  ////promo section
+  // const renderPromoBar = () => {
+  //   if (!isPromoVisible) return null;
 
-    return (
-      <div className="bg-primary text-white py-2 relative">
-        <div className="container flex justify-center items-center">
-          <p className="text-center text-sm font-medium">
-            Summer Sale! Use our <span className="font-bold">Promo Code</span>{" "}
-            for 25% off all outdoor furniture{" "}
-            <span className="font-bold">COMING SOON!!!</span>
-          </p>
-          <button
-            className="absolute right-4 text-white"
-            onClick={() => setIsPromoVisible(false)}
-            aria-label="Close promotion"
-          >
-            <X className="h-4 w-4" aria-hidden="true" />
-          </button>
-        </div>
-      </div>
-    );
-  };
+  //   return (
+  //     <div className="bg-primary text-white py-2 relative">
+  //       <div className="container flex justify-center items-center">
+  //         <p className="text-center text-sm font-medium">
+  //           Summer Sale! Use our <span className="font-bold">Promo Code</span>{" "}
+  //           for 25% off all outdoor furniture{" "}
+  //           <span className="font-bold">COMING SOON!!!</span>
+  //         </p>
+  //         <button
+  //           className="absolute right-4 text-white"
+  //           onClick={() => setIsPromoVisible(false)}
+  //           aria-label="Close promotion"
+  //         >
+  //           <X className="h-4 w-4" aria-hidden="true" />
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   const renderMobileMenu = () =>
     isMenuOpen && (
@@ -862,7 +863,8 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-[90] w-full bg-white shadow-sm">
       {/* Promotional Banner */}
-      {renderPromoBar()}
+      {/* uncoment when promoode is ready */}
+      {/* {renderPromoBar()} */}
 
       {/* Top Bar */}
       <div className="bg-gray-50 border-b border-gray-100">

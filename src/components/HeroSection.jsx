@@ -120,14 +120,14 @@ export default function HeroSection() {
         <div className="relative z-10 flex flex-wrap items-center justify-center gap-2 md:gap-3">
           <Tag className="h-5 w-5 md:h-6 md:w-6 text-yellow-300 animate-bounce" />
           <span className="font-semibold">Special Offer:</span>
-          <span className="text-yellow-300 font-bold text-xl md:text-2xl animate-pulse">
+          <span className="text-yellow-300 font-bold text-lg md:text-2xl animate-pulse">
             10% OFF
           </span>
           <span className="hidden sm:inline">
             Everything! Limited Time Only
           </span>
           <span className="sm:hidden">Limited Time!</span>
-          <Clock className="h-5 w-5 md:h-6 md:w-6 text-yellow-300 animate-pulse" />
+          <Clock className="hidden sm:inline h-5 w-5 md:h-6 md:w-6 text-yellow-300 animate-pulse" />
         </div>
       </div>
 
