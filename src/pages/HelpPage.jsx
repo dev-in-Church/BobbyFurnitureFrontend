@@ -101,7 +101,7 @@ const HelpPage = () => {
       category: "General",
       question: "How do I contact customer support?",
       answer:
-        "You can contact us via: Phone: +254 712 345 678 Email: bobbyfurniture@gmail.com Live Chat: Visit our website and click on the chat icon in the bottom right corner.",
+        "You can contact us via: Phone: +254 708 156 310 Email: bobbyfurnitures254@gmail.com Live Chat: Visit our website and click on the chat icon in the bottom left corner.",
       icon: <HelpingHand className="w-5 h-5" />,
     },
     {

@@ -203,7 +203,7 @@ export default function Navbar() {
         <Phone className="h-3 w-3" aria-hidden="true" />
         <span>+254 708 156 310</span>
       </div>
-      <div className="hidden md:flex items-center gap-2">
+      <div className="flex md:flex items-center gap-2">
         <Mail className="h-3 w-3" aria-hidden="true" />
         <span>bobbyfurnitures254@gmail.com</span>
       </div>
@@ -304,7 +304,7 @@ export default function Navbar() {
         <span>Promotions</span>
       </Link>
 
-      <div className="hidden md:flex items-center gap-3">
+      <div className="flex md:flex items-center gap-3">
         {SOCIAL_LINKS.map((social, index) => (
           <a
             key={index}

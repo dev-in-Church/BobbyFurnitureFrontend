@@ -1379,9 +1379,10 @@ const ProductList = () => {
                   </span>{" "}
                   of{" "}
                   <span className="font-semibold text-gray-700">
-                    {filteredProducts.length}
+                    {/* {filteredProducts.length} */}
+                    many
                   </span>{" "}
-                  products
+                  {/* products */}
                 </div>
 
                 <div className="flex items-center">
