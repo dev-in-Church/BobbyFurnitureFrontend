@@ -1601,7 +1601,7 @@ const CheckoutPage = () => {
                   </h3>
                   <p className="mt-1 text-sm text-blue-700">
                     Call us at +254 712 345 678 or email at
-                    support@bobbyfurniture.com
+                    bobbyfurnitures254@gmail.com
                   </p>
                 </div>
               </div>
@@ -1617,25 +1617,21 @@ const CheckoutPage = () => {
               </div>
               <div className="flex justify-center space-x-4">
                 <img
-                  src="https://via.placeholder.com/40x25?text=Visa"
+                  src="/visa.png"
                   alt="Visa"
                   className="h-6 object-contain"
                 />
                 <img
-                  src="https://via.placeholder.com/40x25?text=MC"
+                  src="/master-card.png"
                   alt="Mastercard"
                   className="h-6 object-contain"
                 />
                 <img
-                  src="https://via.placeholder.com/40x25?text=MPesa"
+                  src="/lipa-na-m-pesa.png"
                   alt="M-Pesa"
                   className="h-6 object-contain"
                 />
-                <img
-                  src="https://via.placeholder.com/40x25?text=SSL"
-                  alt="SSL"
-                  className="h-6 object-contain"
-                />
+                <img src="/ssl.jpg" alt="SSL" className="h-6 object-contain" />
               </div>
             </div>
           </div>

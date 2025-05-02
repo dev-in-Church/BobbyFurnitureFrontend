@@ -183,7 +183,7 @@ export default function HeroSection() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <span>Free delivery over Ksh. 10,000</span>
+                <span>Free delivery Within Nairobi</span>
               </div>
               <div className="flex items-center gap-1">
                 <svg

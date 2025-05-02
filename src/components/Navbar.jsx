@@ -190,7 +190,10 @@ export default function Navbar() {
   // Extracted components for better organization
   const renderLogo = () => (
     <Link to="/" className="flex text-primary items-center gap-2">
-      <Sofa className="h-6 w-6" aria-hidden="true" />
+      {/* <Sofa className="h-6 w-6" aria-hidden="true" /> */}
+
+      <img src="/logo4.png" alt="Logo" class="h-8 w-auto sm:h-10" />
+
       <span className="font-bold text-xl hidden sm:inline-block">
         Bobby Furniture
       </span>

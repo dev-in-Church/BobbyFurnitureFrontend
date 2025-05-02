@@ -959,7 +959,7 @@ const ProductList = () => {
                   {activeFiltersCount > 0 && (
                     <Badge
                       variant="destructive"
-                      className="absolute -right-1 -top-1 h-4 w-4 p-0 text-xs"
+                      className="absolute -right-1 -top-1 h-4 w-4 p-0 text-xs flex justify-center"
                     >
                       {activeFiltersCount}
                     </Badge>
@@ -1023,7 +1023,7 @@ const ProductList = () => {
               {activeFiltersCount > 0 && (
                 <Badge
                   variant="destructive"
-                  className="absolute -right-1 -top-1 h-4 w-4 p-0 text-xs"
+                  className="absolute -right-1 -top-1 h-4 w-4 p-0 text-xs flex justify-center"
                 >
                   {activeFiltersCount}
                 </Badge>

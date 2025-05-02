@@ -79,7 +79,7 @@ const Footer = () => {
           <div className="space-y-6">
             <div>
               <img
-                src="/logo-white.png"
+                src="/logo4.png"
                 alt="Bobby Furniture Logo"
                 className="h-12 mb-4"
               />
@@ -125,9 +125,9 @@ const Footer = () => {
             <ul className="space-y-3">
               {[
                 { name: "Home", path: "/" },
-                { name: "About Us", path: "/about-us" },
+                { name: "About Us", path: "/about" },
                 { name: "Shop", path: "/products" },
-                { name: "Contact", path: "/contact-us" },
+                { name: "Contact", path: "/contact" },
                 { name: "Blog", path: "/blog" },
                 { name: "FAQs", path: "/faqs" },
               ].map((link, index) => (
