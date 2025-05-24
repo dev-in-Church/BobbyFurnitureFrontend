@@ -327,10 +327,10 @@ export default function HomeEnhanced() {
 
   return (
     <div>
-      <main className="container mx-auto min-h-screen px-2 md:px-6 lg:px-8 py-4 bg-[url('/textures/blue-snow.png')] bg-repeat">
-        <div className="mx-auto max-w-7xl rounded-xl shadow-md overflow-hidden">
+      <main className="container mx-auto min-h-screen px-1 md:px-6 lg:px-8 py-4 bg-[url('/textures/blue-snow.png')] bg-repeat">
+        <div className="mx-auto max-w-7xl rounded-lg shadow-md overflow-hidden">
           <HeroSection />
-          <div className="p-2 md:p-4">
+          <div className="pt-4 md:p-4">
             <ProductSection
               title="New Arrivals"
               products={newArrivals}

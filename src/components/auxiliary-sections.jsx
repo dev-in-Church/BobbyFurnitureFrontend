@@ -47,7 +47,7 @@ export function FurnitureGrid() {
     },
     {
       name: "New Arrivals",
-      image: "/placeholder.png?height=150&width=150",
+      image: "/new-arrivals.png?height=150&width=150",
       link: "/new-arrivals",
       bgColor: "bg-orange-500",
     },
@@ -89,7 +89,7 @@ export function FurnitureGrid() {
     },
     {
       name: "Clearance Sale",
-      image: "/new-arrivals.png?height=150&width=150",
+      image: "/placeholder.png?height=150&width=150",
       link: "/clearance",
       bgColor: "bg-rose-500",
     },
@@ -106,7 +106,7 @@ export function FurnitureGrid() {
               className="group overflow-hidden transition-all duration-300 hover:scale-105"
             >
               <div
-                className={`bg-gray-100 h-30 sm:h-[11rem] md:h-48 rounded-lg flex items-center justify-center relative overflow-hidden`}
+                className={`bg-gray-100 h-[10rem] sm:h-[11rem] md:h-48 rounded-lg flex items-center justify-center relative overflow-hidden`}
               >
                 <img
                   src={category.image || "/placeholder.png"}

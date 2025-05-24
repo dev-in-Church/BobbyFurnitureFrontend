@@ -69,9 +69,9 @@ export default function ProductSection({
   const hoverColorClass = `hover:bg-${getColorClass(color)}`;
 
   return (
-    <div className="mb-6 bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="mb-6 bg-white rounded-md shadow-md overflow-hidden">
       <div
-        className={`flex justify-between px-6 py-3 items-center ${bgColorClass}`}
+        className={`flex justify-between px-6 py-2 items-center ${bgColorClass}`}
       >
         <h2 className="text-md text-white md:text-lg font-medium tracking-wide">
           {title}

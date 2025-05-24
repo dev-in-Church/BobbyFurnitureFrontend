@@ -777,7 +777,7 @@ const HeroSection = () => {
   return (
     // <div className="bg-primary py-4 h-screen">
     <div className="md:mb-4 md:px-[3.5rem]">
-      <div className="grid grid-cols-1 w-full md:grid-cols-[1fr_710px_1fr] gap-3 h-[384px]">
+      <div className="grid grid-cols-1 w-full h-auto md:grid-cols-[1fr_710px_1fr] gap-3 md:h-[384px]">
         {/* Categories sidebar - fixed width */}
         <div className="relative hidden md:block bg-white rounded-md h-full shadow-md ">
           <ul className="flex flex-col h-full py-3 justify-between">
