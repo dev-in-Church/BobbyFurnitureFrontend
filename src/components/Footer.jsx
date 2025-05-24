@@ -5,7 +5,7 @@ import {
   Facebook,
   Youtube,
   Instagram,
-  InstagramIcon as TiktokIcon,
+  Twitter,
   Mail,
   Phone,
   MapPin,
@@ -15,13 +15,21 @@ import {
   Loader2,
   CheckCircle,
   AlertTriangle,
+  CreditCard,
+  Shield,
+  Truck,
+  HelpCircle,
+  Heart,
+  ArrowUp,
 } from "lucide-react";
+import { Button } from "./ui/button";
 
-const Footer = () => {
+const EnhancedFooter = () => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState(null); // null, 'success', 'error'
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -69,47 +77,125 @@ const Footer = () => {
     }
   };
 
+  // Scroll to top functionality
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  // Show/hide scroll to top button based on scroll position
+  if (typeof window !== "undefined") {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 500) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    });
+  }
+
   const currentYear = new Date().getFullYear();
 
+  // Payment methods
+  const paymentMethods = [
+    { name: "Visa", logo: "/visa.png?height=30&width=50" },
+    { name: "Mastercard", logo: "/master-card.png?height=30&width=50" },
+    { name: "M-Pesa", logo: "/m-pesa.png?height=30&width=50" },
+    { name: "PayPal", logo: "/paypal.png?height=30&width=50" },
+  ];
+
   return (
-    <footer className="bg-gray-900 text-white pt-16 pb-8">
+    <footer className="bg-gradient-to-b from-gray-900 to-gray-950 text-white pt-16 pb-8 relative">
       <div className="container mx-auto px-4 md:px-6">
+        {/* Trust Badges */}
+        <div className="mb-12 grid grid-cols-2 md:grid-cols-4 gap-6 border-b border-gray-800 pb-12">
+          <div className="flex flex-col items-center text-center">
+            <div className="bg-blue-500/10 p-3 rounded-full mb-3">
+              <Truck className="w-6 h-6 text-blue-400" />
+            </div>
+            <h4 className="font-medium text-white mb-1">Free Delivery</h4>
+            <p className="text-gray-400 text-sm">On orders over KSh 50,000</p>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <div className="bg-blue-500/10 p-3 rounded-full mb-3">
+              <Shield className="w-6 h-6 text-blue-400" />
+            </div>
+            <h4 className="font-medium text-white mb-1">2-Year Warranty</h4>
+            <p className="text-gray-400 text-sm">On all furniture items</p>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <div className="bg-blue-500/10 p-3 rounded-full mb-3">
+              <CreditCard className="w-6 h-6 text-blue-400" />
+            </div>
+            <h4 className="font-medium text-white mb-1">Secure Payment</h4>
+            <p className="text-gray-400 text-sm">100% secure transactions</p>
+          </div>
+          <div className="flex flex-col items-center text-center">
+            <div className="bg-blue-500/10 p-3 rounded-full mb-3">
+              <HelpCircle className="w-6 h-6 text-blue-400" />
+            </div>
+            <h4 className="font-medium text-white mb-1">24/7 Support</h4>
+            <p className="text-gray-400 text-sm">Dedicated customer service</p>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Company Info */}
           <div className="space-y-6">
             <div>
-              <img
-                src="/logo4.png"
-                alt="Bobby Furniture Logo"
-                className="h-12 mb-4"
-              />
+              <div className="flex items-center mb-4">
+                <img
+                  src="/logo4.png"
+                  alt="Bobby Furniture Logo"
+                  className="h-12 mr-3"
+                />
+                <h2 className="text-xl font-bold text-white">
+                  Bobby Furniture
+                </h2>
+              </div>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Crafting exceptional furniture with passion, precision, and a
-                commitment to quality since 2015.
+                commitment to quality since 2015. We bring your dream living
+                spaces to life with our handcrafted furniture pieces.
               </p>
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-start">
-                <MapPin className="w-5 h-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
-                <p className="text-gray-300">Kahawa Sukari, Nairobi, Kenya</p>
+              <div className="flex items-start group">
+                <MapPin className="w-5 h-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0 group-hover:text-blue-300 transition-colors" />
+                <p className="text-gray-300 group-hover:text-white transition-colors">
+                  Kahawa Sukari, Nairobi, Kenya
+                </p>
               </div>
 
-              <div className="flex items-start">
-                <Phone className="w-5 h-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
-                <p className="text-gray-300">+254 708 156310</p>
+              <div className="flex items-start group">
+                <Phone className="w-5 h-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0 group-hover:text-blue-300 transition-colors" />
+                <a
+                  href="tel:+254708156310"
+                  className="text-gray-300 group-hover:text-white transition-colors"
+                >
+                  +254 708 156310
+                </a>
               </div>
 
-              <div className="flex items-start">
-                <Mail className="w-5 h-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
-                <p className="text-gray-300">bobbyfurnitures254@gmail.com</p>
+              <div className="flex items-start group">
+                <Mail className="w-5 h-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0 group-hover:text-blue-300 transition-colors" />
+                <a
+                  href="mailto:bobbyfurnitures254@gmail.com"
+                  className="text-gray-300 group-hover:text-white transition-colors"
+                >
+                  bobbyfurnitures254@gmail.com
+                </a>
               </div>
 
-              <div className="flex items-start">
-                <Clock className="w-5 h-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+              <div className="flex items-start group">
+                <Clock className="w-5 h-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0 group-hover:text-blue-300 transition-colors" />
                 <div>
-                  <p className="text-gray-300">Mon - Fri: 8:00 AM - 5:00 PM</p>
-                  <p className="text-gray-300">Sat: 9:00 AM - 3:00 PM</p>
+                  <p className="text-gray-300 group-hover:text-white transition-colors">
+                    Mon - Fri: 8:00 AM - 5:00 PM
+                  </p>
+                  <p className="text-gray-300 group-hover:text-white transition-colors">
+                    Sat: 9:00 AM - 3:00 PM
+                  </p>
                 </div>
               </div>
             </div>
@@ -130,6 +216,8 @@ const Footer = () => {
                 { name: "Contact", path: "/contact" },
                 { name: "Blog", path: "/blog" },
                 { name: "FAQs", path: "/faqs" },
+                { name: "Showroom", path: "/showroom" },
+                { name: "Careers", path: "/careers" },
               ].map((link, index) => (
                 <li key={index}>
                   <a
@@ -171,6 +259,8 @@ const Footer = () => {
                   name: "Furniture Maintenance",
                   path: "/services/maintenance",
                 },
+                { name: "Space Planning", path: "/services/space-planning" },
+                { name: "Corporate Solutions", path: "/services/corporate" },
               ].map((service, index) => (
                 <li key={index}>
                   <a
@@ -244,7 +334,7 @@ const Footer = () => {
             </form>
 
             <h4 className="font-medium text-gray-200 mb-3">Follow Us</h4>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 mb-6">
               <a
                 href="https://www.facebook.com/profile.php?id=61558829731076"
                 target="_blank"
@@ -279,14 +369,73 @@ const Footer = () => {
                 aria-label="TikTok"
                 className="bg-gray-800 hover:bg-black text-gray-300 hover:text-white p-2 rounded-full transition-colors duration-300"
               >
-                <TiktokIcon className="w-5 h-5" />
+                <Twitter className="w-5 h-5" />
               </a>
+            </div>
+
+            {/* Payment Methods */}
+            <h4 className="font-medium text-gray-200 mb-3">We Accept</h4>
+            <div className="flex flex-wrap gap-2">
+              {paymentMethods.map((method, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-md p-1 h-8 w-12 flex items-center justify-center"
+                  title={method.name}
+                >
+                  <img
+                    src={method.logo || "/placeholder.svg"}
+                    alt={method.name}
+                    className="max-h-6 max-w-full"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Awards & Certifications */}
+        <div className="mt-12 pt-8 border-t border-gray-800 mb-8">
+          <h3 className="text-center text-lg font-semibold mb-6">
+            Awards & Certifications
+          </h3>
+          <div className="flex flex-wrap justify-center gap-8">
+            <div className="flex flex-col items-center">
+              <img
+                src="/placeholder.svg?height=60&width=60"
+                alt="Quality Certification"
+                className="h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
+              />
+              <span className="text-xs text-gray-400">ISO 9001</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <img
+                src="/placeholder.svg?height=60&width=60"
+                alt="Eco-Friendly"
+                className="h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
+              />
+              <span className="text-xs text-gray-400">Eco-Certified</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <img
+                src="/placeholder.svg?height=60&width=60"
+                alt="Best Furniture Award"
+                className="h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
+              />
+              <span className="text-xs text-gray-400">Design Excellence</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <img
+                src="/placeholder.svg?height=60&width=60"
+                alt="Customer Satisfaction"
+                className="h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
+              />
+              <span className="text-xs text-gray-400">Customer Choice</span>
             </div>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-gray-800">
+        <div className="pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
               &copy; {currentYear} Bobby Furniture. All Rights Reserved.
@@ -324,8 +473,19 @@ const Footer = () => {
           </div>
         </div>
       </div>
+
+      {/* Scroll to top button */}
+      {showScrollTop && (
+        <button
+          onClick={handleScrollToTop}
+          className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-all duration-300 z-50"
+          aria-label="Scroll to top"
+        >
+          <ArrowUp className="w-5 h-5" />
+        </button>
+      )}
     </footer>
   );
 };
 
-export default Footer;
+export default EnhancedFooter;

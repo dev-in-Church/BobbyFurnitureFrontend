@@ -1,485 +1,887 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
 import {
-  ArrowRight,
-  ShoppingCart,
-  Tag,
-  Clock,
-  Star,
-  ChevronRight,
-  Info,
+  HelpCircle,
+  Zap,
+  Sofa,
+  Bed,
+  Utensils,
+  Laptop,
+  Umbrella,
+  Archive,
+  Palette,
+  Baby,
+  Bath,
 } from "lucide-react";
+import clsx from "clsx";
+// import Link from "next/link";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { useCart } from "../context/CartContext";
-import { motion } from "framer-motion";
 
-export default function HeroSection() {
-  const [latestProduct, setLatestProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const { addToCart } = useCart();
+// Updated category data with furniture-specific subcategories
+const categories = [
+  {
+    id: 1,
+    name: "Living Room",
+    icon: <Sofa className="h-4 w-4" />,
+    subcategories: [
+      {
+        title: "SOFAS",
+        items: [
+          "3-Seater Sofas",
+          "L-Shaped Sofas",
+          "Recliners",
+          "Sectionals",
+          "Loveseats",
+        ],
+      },
+      {
+        title: "COFFEE TABLES",
+        items: [
+          "Glass Coffee Tables",
+          "Wooden Coffee Tables",
+          "Ottoman Tables",
+          "Nesting Tables",
+          "Console Tables",
+        ],
+      },
+      {
+        title: "TV STANDS",
+        items: [
+          "Modern TV Stands",
+          "Corner TV Units",
+          "Entertainment Centers",
+          "Media Consoles",
+          "TV Cabinets",
+        ],
+      },
+      {
+        title: "ACCENT FURNITURE",
+        items: [
+          "Side Tables",
+          "End Tables",
+          "Accent Chairs",
+          "Ottomans",
+          "Poufs",
+        ],
+      },
+      {
+        title: "BOOKCASES",
+        items: [
+          "Open Shelving",
+          "Closed Bookcases",
+          "Corner Bookcases",
+          "Ladder Shelves",
+          "Wall-Mounted Shelves",
+        ],
+      },
+      {
+        title: "LIVING ROOM SETS",
+        items: [
+          "Complete Sets",
+          "Sofa & Loveseat Sets",
+          "Sectional Sets",
+          "3-2-1 Sets",
+          "Modular Sets",
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: "Bedroom",
+    icon: <Bed className="h-4 w-4" />,
+    subcategories: [
+      {
+        title: "BEDS",
+        items: [
+          "Queen Beds",
+          "King Beds",
+          "Single Beds",
+          "Double Beds",
+          "Platform Beds",
+        ],
+      },
+      {
+        title: "DRESSERS",
+        items: [
+          "Chest of Drawers",
+          "Double Dressers",
+          "Tallboys",
+          "Lingerie Chests",
+          "Media Chests",
+        ],
+      },
+      {
+        title: "NIGHTSTANDS",
+        items: [
+          "Bedside Tables",
+          "Nightstands with Storage",
+          "Floating Nightstands",
+          "Mirrored Nightstands",
+          "Modern Nightstands",
+        ],
+      },
+      {
+        title: "WARDROBES",
+        items: [
+          "Armoires",
+          "Sliding Door Wardrobes",
+          "Fitted Wardrobes",
+          "Corner Wardrobes",
+          "Mirrored Wardrobes",
+        ],
+      },
+      {
+        title: "MATTRESSES",
+        items: [
+          "Memory Foam",
+          "Spring Mattresses",
+          "Hybrid Mattresses",
+          "Latex Mattresses",
+          "Orthopedic Mattresses",
+        ],
+      },
+      {
+        title: "BEDROOM SETS",
+        items: [
+          "Complete Bedroom Sets",
+          "5-Piece Sets",
+          "King Sets",
+          "Queen Sets",
+          "Youth Bedroom Sets",
+        ],
+      },
+    ],
+  },
+  {
+    id: 3,
+    name: "Dining Room",
+    icon: <Utensils className="h-4 w-4" />,
+    subcategories: [
+      {
+        title: "DINING TABLES",
+        items: [
+          "Rectangular Tables",
+          "Round Tables",
+          "Extendable Tables",
+          "Glass Tables",
+          "Wooden Tables",
+        ],
+      },
+      {
+        title: "DINING CHAIRS",
+        items: [
+          "Upholstered Chairs",
+          "Wooden Chairs",
+          "Metal Chairs",
+          "Parsons Chairs",
+          "Bench Seating",
+        ],
+      },
+      {
+        title: "BUFFETS",
+        items: [
+          "Sideboards",
+          "Credenzas",
+          "Server Tables",
+          "Wine Cabinets",
+          "Hutches",
+        ],
+      },
+      {
+        title: "BAR FURNITURE",
+        items: [
+          "Bar Carts",
+          "Bar Stools",
+          "Home Bars",
+          "Wine Racks",
+          "Pub Tables",
+        ],
+      },
+      {
+        title: "DINING SETS",
+        items: [
+          "5-Piece Sets",
+          "7-Piece Sets",
+          "Counter Height Sets",
+          "Breakfast Nook Sets",
+          "Formal Dining Sets",
+        ],
+      },
+      {
+        title: "CHINA CABINETS",
+        items: [
+          "Display Cabinets",
+          "Curio Cabinets",
+          "Corner Cabinets",
+          "Modern China Cabinets",
+          "Hutch Cabinets",
+        ],
+      },
+    ],
+  },
+  {
+    id: 4,
+    name: "Office",
+    icon: <Laptop className="h-4 w-4" />,
+    subcategories: [
+      {
+        title: "DESKS",
+        items: [
+          "Computer Desks",
+          "Writing Desks",
+          "Executive Desks",
+          "Standing Desks",
+          "L-Shaped Desks",
+        ],
+      },
+      {
+        title: "OFFICE CHAIRS",
+        items: [
+          "Ergonomic Chairs",
+          "Executive Chairs",
+          "Task Chairs",
+          "Mesh Chairs",
+          "Leather Office Chairs",
+        ],
+      },
+      {
+        title: "STORAGE",
+        items: [
+          "Filing Cabinets",
+          "Bookcases",
+          "Credenzas",
+          "Mobile Pedestals",
+          "Storage Cabinets",
+        ],
+      },
+      {
+        title: "OFFICE SETS",
+        items: [
+          "Complete Office Sets",
+          "Desk & Chair Sets",
+          "Executive Sets",
+          "Home Office Sets",
+          "Modular Office",
+        ],
+      },
+      {
+        title: "ACCESSORIES",
+        items: [
+          "Desk Lamps",
+          "Monitor Stands",
+          "Keyboard Trays",
+          "Cable Management",
+          "Desk Organizers",
+        ],
+      },
+      {
+        title: "CONFERENCE",
+        items: [
+          "Conference Tables",
+          "Meeting Chairs",
+          "Presentation Boards",
+          "Podiums",
+          "Training Tables",
+        ],
+      },
+    ],
+  },
+  {
+    id: 5,
+    name: "Outdoor",
+    icon: <Umbrella className="h-4 w-4" />,
+    subcategories: [
+      {
+        title: "PATIO SETS",
+        items: [
+          "Dining Sets",
+          "Conversation Sets",
+          "Bistro Sets",
+          "Sectional Sets",
+          "Bar Sets",
+        ],
+      },
+      {
+        title: "SEATING",
+        items: [
+          "Outdoor Sofas",
+          "Lounge Chairs",
+          "Adirondack Chairs",
+          "Hammocks",
+          "Porch Swings",
+        ],
+      },
+      {
+        title: "TABLES",
+        items: [
+          "Dining Tables",
+          "Side Tables",
+          "Coffee Tables",
+          "Bar Tables",
+          "Folding Tables",
+        ],
+      },
+      {
+        title: "SHADE",
+        items: ["Umbrellas", "Canopies", "Pergolas", "Gazebos", "Shade Sails"],
+      },
+      {
+        title: "OUTDOOR DECOR",
+        items: [
+          "Outdoor Rugs",
+          "Planters",
+          "Outdoor Lighting",
+          "Garden Sculptures",
+          "Fountains",
+        ],
+      },
+      {
+        title: "MATERIALS",
+        items: [
+          "Wicker/Rattan",
+          "Teak",
+          "Aluminum",
+          "Wrought Iron",
+          "Plastic/Resin",
+        ],
+      },
+    ],
+  },
+  {
+    id: 6,
+    name: "Storage",
+    icon: <Archive className="h-4 w-4" />,
+    subcategories: [
+      {
+        title: "SHELVING",
+        items: [
+          "Bookcases",
+          "Wall Shelves",
+          "Cube Storage",
+          "Etageres",
+          "Ladder Shelves",
+        ],
+      },
+      {
+        title: "CABINETS",
+        items: [
+          "Storage Cabinets",
+          "Media Cabinets",
+          "Accent Cabinets",
+          "Utility Cabinets",
+          "Pantry Cabinets",
+        ],
+      },
+      {
+        title: "CLOSET",
+        items: [
+          "Closet Systems",
+          "Wardrobes",
+          "Clothing Racks",
+          "Shoe Storage",
+          "Accessory Organizers",
+        ],
+      },
+      {
+        title: "ENTRYWAY",
+        items: [
+          "Hall Trees",
+          "Console Tables",
+          "Coat Racks",
+          "Shoe Benches",
+          "Key Organizers",
+        ],
+      },
+      {
+        title: "BASKETS & BINS",
+        items: [
+          "Storage Baskets",
+          "Decorative Bins",
+          "Underbed Storage",
+          "Toy Storage",
+          "Magazine Holders",
+        ],
+      },
+      {
+        title: "SPECIALTY",
+        items: [
+          "Wine Storage",
+          "Record Storage",
+          "Bathroom Storage",
+          "Garage Storage",
+          "Kitchen Organization",
+        ],
+      },
+    ],
+  },
+  {
+    id: 7,
+    name: "Decor",
+    icon: <Palette className="h-4 w-4" />,
+    subcategories: [
+      {
+        title: "WALL DECOR",
+        items: [
+          "Wall Art",
+          "Mirrors",
+          "Wall Clocks",
+          "Tapestries",
+          "Wall Sculptures",
+        ],
+      },
+      {
+        title: "LIGHTING",
+        items: [
+          "Table Lamps",
+          "Floor Lamps",
+          "Pendant Lights",
+          "Chandeliers",
+          "Wall Sconces",
+        ],
+      },
+      {
+        title: "TEXTILES",
+        items: [
+          "Throw Pillows",
+          "Throw Blankets",
+          "Area Rugs",
+          "Curtains",
+          "Decorative Cushions",
+        ],
+      },
+      {
+        title: "ACCENTS",
+        items: [
+          "Vases",
+          "Candles & Holders",
+          "Decorative Bowls",
+          "Bookends",
+          "Sculptures",
+        ],
+      },
+      {
+        title: "SEASONAL",
+        items: [
+          "Holiday Decor",
+          "Seasonal Wreaths",
+          "Outdoor Decorations",
+          "Festive Lighting",
+          "Table Decorations",
+        ],
+      },
+      {
+        title: "FRAMES & ALBUMS",
+        items: [
+          "Picture Frames",
+          "Photo Albums",
+          "Digital Frames",
+          "Shadow Boxes",
+          "Poster Frames",
+        ],
+      },
+    ],
+  },
+  {
+    id: 8,
+    name: "Kids & Baby",
+    icon: <Baby className="h-4 w-4" />,
+    subcategories: [
+      {
+        title: "KIDS FURNITURE",
+        items: ["Kids Beds", "Bunk Beds", "Desks", "Dressers", "Bookcases"],
+      },
+      {
+        title: "BABY FURNITURE",
+        items: [
+          "Cribs",
+          "Changing Tables",
+          "Gliders & Rockers",
+          "Bassinets",
+          "Toddler Beds",
+        ],
+      },
+      {
+        title: "PLAYROOM",
+        items: [
+          "Play Tables",
+          "Toy Storage",
+          "Play Kitchens",
+          "Activity Centers",
+          "Kids Seating",
+        ],
+      },
+      {
+        title: "KIDS BEDDING",
+        items: [
+          "Kids Comforters",
+          "Sheet Sets",
+          "Pillows",
+          "Bed Canopies",
+          "Sleeping Bags",
+        ],
+      },
+      {
+        title: "DECOR",
+        items: ["Wall Art", "Rugs", "Lighting", "Wall Decals", "Growth Charts"],
+      },
+      {
+        title: "STORAGE",
+        items: [
+          "Toy Boxes",
+          "Book Racks",
+          "Cubbies",
+          "Hampers",
+          "Wall Organizers",
+        ],
+      },
+    ],
+  },
+  {
+    id: 9,
+    name: "Mattresses",
+    icon: <Bed className="h-4 w-4" />,
+    subcategories: [
+      {
+        title: "TYPES",
+        items: ["Memory Foam", "Innerspring", "Hybrid", "Latex", "Adjustable"],
+      },
+      {
+        title: "SIZES",
+        items: ["King", "Queen", "Full", "Twin", "California King"],
+      },
+      {
+        title: "BRANDS",
+        items: ["Sealy", "Serta", "Tempur-Pedic", "Purple", "Casper"],
+      },
+      {
+        title: "FIRMNESS",
+        items: ["Soft", "Medium", "Firm", "Extra Firm", "Customizable"],
+      },
+      {
+        title: "ACCESSORIES",
+        items: [
+          "Mattress Toppers",
+          "Mattress Pads",
+          "Mattress Protectors",
+          "Bed Frames",
+          "Foundations",
+        ],
+      },
+      {
+        title: "SPECIALTY",
+        items: [
+          "Cooling Mattresses",
+          "Organic Mattresses",
+          "RV Mattresses",
+          "Crib Mattresses",
+          "Air Mattresses",
+        ],
+      },
+    ],
+  },
+  {
+    id: 10,
+    name: "Bathroom",
+    icon: <Bath className="h-4 w-4" />,
+    subcategories: [
+      {
+        title: "VANITIES",
+        items: [
+          "Single Vanities",
+          "Double Vanities",
+          "Vessel Sink Vanities",
+          "Wall-Mounted Vanities",
+          "Corner Vanities",
+        ],
+      },
+      {
+        title: "STORAGE",
+        items: [
+          "Linen Cabinets",
+          "Over-Toilet Storage",
+          "Medicine Cabinets",
+          "Bathroom Shelving",
+          "Towel Storage",
+        ],
+      },
+      {
+        title: "FIXTURES",
+        items: ["Faucets", "Sinks", "Shower Heads", "Bathtubs", "Toilets"],
+      },
+      {
+        title: "ACCESSORIES",
+        items: [
+          "Towel Bars",
+          "Toilet Paper Holders",
+          "Shower Caddies",
+          "Soap Dispensers",
+          "Bathroom Mirrors",
+        ],
+      },
+      {
+        title: "BATH LINENS",
+        items: [
+          "Bath Towels",
+          "Hand Towels",
+          "Washcloths",
+          "Bath Mats",
+          "Shower Curtains",
+        ],
+      },
+      {
+        title: "DECOR",
+        items: [
+          "Bathroom Art",
+          "Decorative Storage",
+          "Candles",
+          "Plants",
+          "Bathroom Sets",
+        ],
+      },
+    ],
+  },
+];
 
-  // Properly formatted category data with images and names
-  const categories = [
-    {
-      id: "living-room",
-      name: "Living Room",
-      image: "/images/living-room.png",
-    },
-    { id: "bedroom", name: "Bedroom", image: "/images/bedroom.png" },
-    { id: "dining", name: "Dining Room", image: "/images/dining.png" },
-    { id: "office", name: "Office", image: "/images/office.png" },
-  ];
+const CategoryItem = ({ category, isActive, setActiveCategory }) => {
+  return (
+    <li
+      className={clsx("relative", { "text-primary": isActive })}
+      onMouseEnter={() => setActiveCategory(category.id)}
+      onMouseLeave={() => setActiveCategory(null)}
+    >
+      <Link
+        to={`/category/${category.name.toLowerCase().replace(/\s+/g, "-")}`}
+        className="flex items-center px-4"
+        // onClick={(e) => category.subcategories.length > 0 && e.preventDefault()}
+      >
+        <span className="mr-3 w-6 text-center">{category.icon}</span>
+        <span className="text-sm">{category.name}</span>
+      </Link>
+    </li>
+  );
+};
 
-  // Fetch the latest product
-  useEffect(() => {
-    const fetchLatestProduct = async () => {
-      try {
-        // Try to fetch from API
-        const response = await axios
-          .get("https://bobbyfurnitureonline.onrender.com/api/products")
-          .catch(() => {
-            // If API fetch fails, use mock data
-            console.log("Using mock data instead of API");
-            return {
-              data: [
-                {
-                  id: 1,
-                  name: "Premium Leather Sofa Set",
-                  description:
-                    "Elegant 3-seater leather sofa with chrome legs and premium comfort",
-                  price: 54449,
-                  originalPrice: 60499,
-                  category: "Living Room",
-                  subcategory: "Sofas",
-                  stock: 5,
-                  rating: 4.8,
-                  featured: true,
-                  images: [
-                    "https://via.placeholder.com/600x400?text=Premium+Leather+Sofa",
-                  ],
-                  date: "2023-05-15",
-                  reviews: 120,
-                },
-              ],
-            };
-          });
-
-        // // Sort by date to get the latest product
-        // const sortedProducts = response.data.sort(
-        //   (a, b) => new Date(b.date || 0) - new Date(a.date || 0)
-        // );
-
-        // // Get the first (latest) product
-        // const latest = sortedProducts[1];
-
-        // Sort by date to get the latest product first
-        const sortedProducts = response.data.sort(
-          (a, b) => new Date(b.date || 0) - new Date(a.date || 0)
-        );
-
-        // Get the last product
-        const latest = sortedProducts[sortedProducts.length - 1];
-
-        // Set the latest product
-        setLatestProduct(latest);
-      } catch (error) {
-        console.error("Error fetching latest product:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLatestProduct();
-  }, []);
-
-  // Handle add to cart
-  const handleAddToCart = (e) => {
-    e.preventDefault();
-    if (latestProduct) {
-      addToCart(latestProduct);
-    }
-  };
+const SubcategoriesPanel = ({ category, setActiveCategory }) => {
+  if (!category || category.subcategories.length === 0) return null;
 
   return (
-    <div className="relative overflow-hidden bg-background">
-      {/* Enhanced Discount Banner */}
-      <div className="fixed inset-x-0 bg-gradient-to-r from-red-600 via-red-500 to-orange-500 text-white py-4 px-4 md:px-8 text-center font-bold text-lg md:text-xl shadow-xl overflow-hidden z-50">
-        {/* Animated Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -left-10 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-white opacity-10 blur-xl"></div>
-          <div className="absolute -right-10 top-1/2 h-40 w-40 -translate-y-1/2 rounded-full bg-yellow-300 opacity-10 blur-xl"></div>
-          <div className="absolute left-1/4 top-1/2 h-20 w-20 -translate-y-1/2 rounded-full bg-white opacity-10 blur-lg animate-pulse"></div>
-          <div className="absolute right-1/4 top-1/2 h-20 w-20 -translate-y-1/2 rounded-full bg-yellow-300 opacity-10 blur-lg animate-pulse"></div>
+    <div
+      className="absolute bg-white overflow-y-auto grid grid-cols-3 gap-6 top-0 left-[210px] border border-gray-200 z-50 w-[730px] h-full p-4 rounded-r-lg shadow-md"
+      // style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      onMouseEnter={() => setActiveCategory(category.id)}
+      onMouseLeave={() => setActiveCategory(null)}
+    >
+      {category.subcategories.map((subcategory, index) => (
+        <div key={index} className="space-y-1">
+          <h3 className="font-bold text-sm text-gray-700 underline">
+            {subcategory.title}
+          </h3>
+          <ul className="">
+            {subcategory.items.map((item, idx) => (
+              <li key={idx}>
+                <Link
+                  to={`/category/${subcategory.title
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}/${item
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                  className="text-sm text-gray-600 hover:text-primary"
+                >
+                  {item}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const HeroSection = () => {
+  const banners = [
+    {
+      id: 1,
+      image: "/banners/banner.jpg?height=400&width=800&text=Banner+1",
+      alt: "Banner 1",
+      link: "/promo/banner-1",
+    },
+    {
+      id: 2,
+      image: "/banners/banner.jpg?height=400&width=800&text=Banner+2",
+      alt: "Banner 2",
+      link: "/promo/banner-2",
+    },
+    {
+      id: 3,
+      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      alt: "Banner 3",
+      link: "/promo/banner-3",
+    },
+    {
+      id: 4,
+      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      alt: "Banner 4",
+      link: "/promo/banner-4",
+    },
+    {
+      id: 5,
+      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      alt: "Banner 5",
+      link: "/promo/banner-5",
+    },
+    {
+      id: 6,
+      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      alt: "Banner 6",
+      link: "/promo/banner-6",
+    },
+    {
+      id: 7,
+      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      alt: "Banner 7",
+      link: "/promo/banner-7",
+    },
+    {
+      id: 8,
+      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      alt: "Banner 8",
+      link: "/promo/banner-8",
+    },
+  ];
+
+  const [currentBanner, setCurrentBanner] = useState(0);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const activeCategoryData = categories.find(
+    (cat) => cat.id === activeCategory
+  );
+
+  const nextBanner = () => {
+    setCurrentBanner((prev) => (prev === banners.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevBanner = () => {
+    setCurrentBanner((prev) => (prev === 0 ? banners.length - 1 : prev - 1));
+  };
+
+  // Auto-rotate banners
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextBanner();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    // <div className="bg-primary py-4 h-screen">
+    <div className="md:mb-4 md:px-[3.5rem]">
+      <div className="grid grid-cols-1 w-full md:grid-cols-[1fr_710px_1fr] gap-3 h-[384px]">
+        {/* Categories sidebar - fixed width */}
+        <div className="relative hidden md:block bg-white rounded-md h-full shadow-md ">
+          <ul className="flex flex-col h-full py-3 justify-between">
+            {categories.map((category) => (
+              <CategoryItem
+                key={category.id}
+                category={category}
+                isActive={activeCategory === category.id}
+                setActiveCategory={setActiveCategory}
+              />
+            ))}
+          </ul>
+
+          {/* Subcategories panel */}
+          {activeCategory && (
+            <SubcategoriesPanel
+              category={activeCategoryData}
+              setActiveCategory={setActiveCategory}
+            />
+          )}
         </div>
 
-        {/* Banner Content */}
-        <div className="relative z-10 flex flex-wrap items-center justify-center gap-2 md:gap-3">
-          <Tag className="h-5 w-5 md:h-6 md:w-6 text-yellow-300 animate-bounce" />
-          <span className="font-semibold">Special Offer:</span>
-          <span className="text-yellow-300 font-bold text-lg md:text-2xl animate-pulse">
-            10% OFF
-          </span>
-          <span className="hidden sm:inline">
-            Everything! Limited Time Only
-          </span>
-          <span className="sm:hidden">Limited Time!</span>
-          <Clock className="hidden sm:inline h-5 w-5 md:h-6 md:w-6 text-yellow-300 animate-pulse" />
-        </div>
-      </div>
-
-      <div className="container px-4 md:px-6 py-8 md:py-16 lg:py-24 mt-20 sm:mt-0">
-        <div className="grid gap-8 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-          <div className="flex flex-col justify-center space-y-6">
-            <div className="space-y-4">
-              <Badge className="inline-flex mb-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
-                New Collection 2025
-              </Badge>
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                Transform Your Home With{" "}
-                <span className="text-primary">Elegant Furniture</span>
-              </h1>
-              <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                Discover our curated collection of premium furniture pieces
-                designed to elevate your living space with style and comfort.
-              </p>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <div className="flex">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      className="h-4 w-4 fill-amber-400 text-amber-400"
-                    />
-                  ))}
-                </div>
-                <span>4.9/5 (2,000+ reviews)</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <svg
-                  className="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+        {/* Banner slider - flexible width */}
+        <div className="relative overflow-hidden h-fit rounded-md shadow-md">
+          <div
+            className="flex transition-transform duration-500 ease-in-out h-full"
+            style={{ transform: `translateX(-${currentBanner * 100}%)` }}
+          >
+            {banners.map((banner) => (
+              <div key={banner.id} className="h-full w-full flex-shrink-0">
+                <Link to={banner.link}>
+                  <img
+                    src={banner.image || "/placeholder.svg"}
+                    alt={banner.alt}
+                    className="h-full"
                   />
-                  <path
-                    d="M9 12L11 14L15 10"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span>Free delivery Within Nairobi</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <svg
-                  className="h-4 w-4"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M12 6V12L16 14"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span>30-day money-back guarantee</span>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link to="/products">
-                <Button
-                  size="lg"
-                  className="w-full sm:w-auto inline-flex items-center gap-2 bg-primary hover:bg-primary/90 transition-colors"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Shop Now
-                </Button>
-              </Link>
-              <Link to="/collection">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-full sm:w-auto inline-flex items-center gap-2 border-primary text-primary hover:bg-primary/10 transition-colors"
-                >
-                  Explore Collection
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-              </Link>
-            </div>
-
-            {/* Enhanced Discount Callout */}
-            <div className="mt-4 bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-xl border border-primary/20 relative shadow-sm">
-              <motion.div
-                className="absolute h-16 w-16 -top-6 -right-3"
-                animate={{
-                  scale: [1, 1.2, 1, 1.2, 1],
-                  rotate: [0, 3, -3, 3, -3, 0],
-                }}
-                transition={{
-                  duration: 0.6,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                }}
-              >
-                <img src="/disc.png" alt="" />
-              </motion.div>
-
-              {/* Background Pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <svg
-                  className="w-full h-full"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <pattern
-                    id="pattern"
-                    patternUnits="userSpaceOnUse"
-                    width="10"
-                    height="10"
-                    patternTransform="rotate(45)"
-                  >
-                    <line
-                      x1="0"
-                      y="0"
-                      x2="0"
-                      y2="10"
-                      stroke="currentColor"
-                      strokeWidth="1"
-                    />
-                  </pattern>
-                  <rect width="100%" height="100%" fill="url(#pattern)" />
-                </svg>
-              </div>
-
-              <div className="">
-                <h3 className="text-xl font-bold text-primary">
-                  Special Discount Event
-                </h3>
-                <p className="text-muted-foreground mt-2">
-                  Enjoy 10% off on all furniture items when you order this week.
-                  {/* Use code{" "}
-                  <span className="font-bold text-primary">FURNITURE10</span> at
-                  checkout. */}
-                </p>
-                <Link to="/products">
-                  <Button className="mt-4 bg-primary hover:bg-primary/90 transition-colors">
-                    Claim Discount
-                  </Button>
                 </Link>
               </div>
-            </div>
+            ))}
           </div>
 
-          <div className="relative lg:order-last">
-            {loading ? (
-              // Loading state
-              <div className="relative h-[350px] sm:h-[400px] md:h-[450px] lg:h-[550px] overflow-hidden rounded-xl shadow-xl bg-muted flex items-center justify-center">
-                <div className="h-16 w-16 animate-spin rounded-full border-4 border-gray-300 border-t-primary"></div>
-              </div>
-            ) : (
-              // Latest product display
-              <div className="relative h-[350px] sm:h-[400px] md:h-[450px] lg:h-[550px]  rounded-xl shadow-xl group">
-                {/* Latest Product Image */}
-                <img
-                  src={latestProduct?.images?.[0] || "/images/hero1.png"}
-                  alt={latestProduct?.name || "Latest furniture product"}
-                  className="absolute inset-0 object-cover w-full h-full transition-transform duration-700 "
-                />
-
-                <div className="absolute rounded-full h-14 w-14 top-10 z-40 right-2 -translate-x-1/2 -translate-y-1/2 bg-primary/10 border border-primary/20 flex items-center justify-center shadow-lg">
-                  <img
-                    src={latestProduct?.images?.[0] || "/images/hero1.png"}
-                    alt={latestProduct?.name || "Latest furniture product"}
-                    className=" object-cover rounded-full transition-transform duration-700 "
-                  />
-                </div>
-
-                {/* Decorative Elements */}
-                <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-background/30 to-transparent"></div>
-
-                {/* New Product Badge */}
-                <motion.div
-                  className="absolute -top-8 -left-4"
-                  animate={{
-                    y: [0, -10, 0], // Bouncing
-                    scale: [1, 1.1, 1], // Pulsing
-                  }}
-                  transition={{
-                    duration: 0.8,
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                  }}
-                >
-                  <img src="/na4.png" alt="" className="h-20 sm:h-28" />
-                </motion.div>
-
-                {/* Product Details */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 bg-background/40 backdrop-blur-sm transition-transform duration-300 border-t border-primary/20">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-bold text-foreground mb-1">
-                        {latestProduct?.name || "Premium Furniture"}
-                      </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                        {latestProduct?.description ||
-                          "Elegant design with premium materials for your home"}
-                      </p>
-
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xl font-bold text-primary">
-                          Ksh.{" "}
-                          {latestProduct?.price?.toLocaleString() || "54,449"}
-                        </span>
-                        {latestProduct?.originalPrice && (
-                          <span className="text-sm line-through text-muted-foreground">
-                            Ksh.{" "}
-                            {latestProduct?.originalPrice?.toLocaleString() ||
-                              "60,499"}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <div className="flex mr-2">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              className={`h-4 w-4 ${
-                                star <= Math.round(latestProduct?.rating || 5)
-                                  ? "fill-amber-400 text-amber-400"
-                                  : "text-gray-300"
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span>({latestProduct?.reviews || "120"} reviews)</span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                      <Button
-                        size="sm"
-                        className="bg-primary hover:bg-primary/90"
-                        onClick={handleAddToCart}
-                      >
-                        <ShoppingCart className="h-4 w-4 mr-1" />
-                        Add to Cart
-                      </Button>
-                      <Link to={`/products/${latestProduct?.id || 1}`}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full border-primary text-primary hover:bg-primary/10"
-                        >
-                          <Info className="h-4 w-4 mr-1" />
-                          Details
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-
-                  {/* Category and Availability */}
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {latestProduct?.category && (
-                      <Badge variant="secondary" className="text-xs">
-                        {latestProduct.category}
-                      </Badge>
-                    )}
-                    {latestProduct?.subcategory && (
-                      <Badge variant="outline" className="text-xs">
-                        {latestProduct.subcategory}
-                      </Badge>
-                    )}
-                    {latestProduct?.stock > 0 ? (
-                      <Badge
-                        variant="outline"
-                        className="bg-green-50 text-green-700 border-green-200 text-xs"
-                      >
-                        In Stock
-                      </Badge>
-                    ) : (
-                      <Badge
-                        variant="outline"
-                        className="bg-red-50 text-red-700 border-red-200 text-xs"
-                      >
-                        Out of Stock
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
+          {/* Dots indicator */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {banners.map((_, index) => (
+              <button
+                key={index}
+                className={`h-2 w-2 rounded-full ${
+                  currentBanner === index ? "bg-white" : "bg-white/40"
+                }`}
+                onClick={() => setCurrentBanner(index)}
+              >
+                <span className="sr-only">Banner {index + 1}</span>
+              </button>
+            ))}
           </div>
         </div>
 
-        {/* Enhanced Featured Categories */}
-        <div className="mt-16 md:mt-24">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold">Shop By Category</h2>
-            <Link
-              to="/categories"
-              className="text-primary flex items-center hover:underline"
-            >
-              View All Categories
-              <ChevronRight className="h-4 w-4 ml-1" />
+        {/* Right sidebar - fixed width with two sections */}
+        <div className="hidden md:grid h-full overflow-hidden grid-rows-[1fr_184px] gap-3">
+          {/* Top section - white box with info items */}
+          <div className="flex flex-col justify-between bg-white p-2 rounded-sm shadow-md gap-5">
+            {/* Help Center */}
+            <Link to="/help" className="flex items-center">
+              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                <HelpCircle size={20} className="text-primary" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm">HELP CENTER</h3>
+                <p className="text-xs text-gray-500">Guide To Customer Care</p>
+              </div>
+            </Link>
+
+            {/* Top Deals */}
+            <Link className="flex items-center">
+              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                <Zap size={20} className="text-primary" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm">TOP DEALS</h3>
+                <p className="text-xs text-gray-500">LIVE NOW</p>
+              </div>
+            </Link>
+
+            {/* Sell at bobby */}
+            <Link className="flex items-center cursor-not-allowed">
+              <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                <span className="text-primary font-bold">$</span>
+              </div>
+              <div>
+                <h3 className="font-bold text-sm">SELL AT BOBBY</h3>
+                <p className="text-xs text-gray-500">Thousands Of Visitors</p>
+              </div>
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                to={`/category/${category.id}`}
-                className="group relative overflow-hidden rounded-xl shadow-md transition-all duration-300 hover:shadow-lg"
-              >
-                <div className="h-[180px] md:h-[220px] bg-muted relative">
-                  <img
-                    src={category.image || "/placeholder.svg"}
-                    alt={`${category.name} furniture`}
-                    className="object-cover h-full w-full transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent group-hover:from-primary/90 group-hover:via-primary/40 transition-colors duration-300"></div>
-                </div>
-                <div className="absolute inset-0 flex flex-col justify-end p-4">
-                  <h3 className="font-medium text-lg text-white group-hover:text-white transition-colors duration-300">
-                    {category.name}
-                  </h3>
-                  <div className="flex items-center mt-2 text-white/80 group-hover:text-white transition-colors duration-300">
-                    <span className="text-sm">Browse Collection</span>
-                    <ArrowRight className="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-300" />
-                  </div>
-                </div>
-              </Link>
-            ))}
+          {/* Bottom section - Call/WhatsApp gif */}
+          <div className="bg-white rounded-sm shadow-md overflow-hidden">
+            <img src="/banners/banner-bleft.jpg" alt="" className="h-full" />
           </div>
         </div>
       </div>
     </div>
+    // </div>
   );
-}
+};
+
+export default HeroSection;

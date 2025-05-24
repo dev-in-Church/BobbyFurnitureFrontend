@@ -24,7 +24,7 @@ export default function TrustBadges() {
     {
       icon: <Truck className="h-6 w-6" />,
       title: "Free Delivery",
-      description: "On all orders above Ksh. 10,000",
+      description: "For orders within Nairobi Kenya",
     },
     {
       icon: <RotateCcw className="h-6 w-6" />,

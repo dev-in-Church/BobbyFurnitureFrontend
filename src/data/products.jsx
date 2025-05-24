@@ -11,7 +11,7 @@ export const productsData = [
     reviewCount: 42,
     isNew: true,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Elegant modern sofa with genuine leather upholstery and solid wood legs.",
     features: [
@@ -37,7 +37,7 @@ export const productsData = [
     reviewCount: 36,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Sleek minimalist coffee table with tempered glass top and metal frame.",
     features: [
@@ -63,7 +63,7 @@ export const productsData = [
     reviewCount: 28,
     isNew: true,
     isSale: false,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Comfortable accent armchair with plush cushioning and stylish design.",
     features: [
@@ -89,7 +89,7 @@ export const productsData = [
     reviewCount: 19,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Spacious entertainment center with ample storage for media devices.",
     features: [
@@ -115,7 +115,7 @@ export const productsData = [
     reviewCount: 53,
     isNew: true,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Versatile sectional sofa with modular design for flexible arrangement.",
     features: [
@@ -143,7 +143,7 @@ export const productsData = [
     reviewCount: 53,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Elegant queen size bed frame with upholstered headboard and solid wood base.",
     features: [
@@ -169,7 +169,7 @@ export const productsData = [
     reviewCount: 38,
     isNew: true,
     isSale: false,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Spacious 6-drawer dresser with smooth gliding drawers and modern design.",
     features: [
@@ -195,7 +195,7 @@ export const productsData = [
     reviewCount: 42,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Compact nightstand with drawer and open shelf for bedside storage.",
     features: [
@@ -221,7 +221,7 @@ export const productsData = [
     reviewCount: 87,
     isNew: true,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Premium king size mattress with memory foam and cooling technology.",
     features: [
@@ -247,7 +247,7 @@ export const productsData = [
     reviewCount: 29,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Spacious wardrobe cabinet with hanging rod and adjustable shelves.",
     features: [
@@ -275,7 +275,7 @@ export const productsData = [
     reviewCount: 46,
     isNew: true,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Complete dining set with table and 6 chairs in modern design.",
     features: [
@@ -309,7 +309,7 @@ export const productsData = [
     reviewCount: 32,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Stylish counter height stools with comfortable seating and footrest.",
     features: [
@@ -335,7 +335,7 @@ export const productsData = [
     reviewCount: 28,
     isNew: true,
     isSale: false,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Elegant buffet cabinet with ample storage for dining essentials.",
     features: [
@@ -361,7 +361,7 @@ export const productsData = [
     reviewCount: 34,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description: "Elegant round dining table perfect for intimate gatherings.",
     features: [
       "Solid wood construction",
@@ -385,7 +385,7 @@ export const productsData = [
     reviewCount: 38,
     isNew: true,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description: "Set of 4 comfortable dining chairs with elegant design.",
     features: [
       "Upholstered seats",
@@ -412,7 +412,7 @@ export const productsData = [
     reviewCount: 28,
     isNew: true,
     isSale: false,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Comfortable ergonomic office chair with adjustable features for all-day comfort.",
     features: [
@@ -439,7 +439,7 @@ export const productsData = [
     reviewCount: 32,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description: "Spacious executive desk with drawers and ample workspace.",
     features: [
       "Solid wood construction",
@@ -464,7 +464,7 @@ export const productsData = [
     reviewCount: 42,
     isNew: true,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Modern bookshelf with adjustable shelves for books and decor.",
     features: [
@@ -490,7 +490,7 @@ export const productsData = [
     reviewCount: 26,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Compact filing cabinet with lockable drawers for document storage.",
     features: [
@@ -516,7 +516,7 @@ export const productsData = [
     reviewCount: 48,
     isNew: true,
     isSale: false,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description: "Adjustable standing desk for ergonomic work setup.",
     features: [
       "Electric height adjustment",
@@ -543,7 +543,7 @@ export const productsData = [
     reviewCount: 38,
     isNew: true,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description:
       "Complete patio dining set with table and 6 chairs for outdoor entertaining.",
     features: [
@@ -577,7 +577,7 @@ export const productsData = [
     reviewCount: 32,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description: "Comfortable outdoor lounge chair with adjustable backrest.",
     features: [
       "Weather-resistant",
@@ -602,7 +602,7 @@ export const productsData = [
     reviewCount: 45,
     isNew: true,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description: "Large patio umbrella with tilt function for optimal shade.",
     features: [
       "UV-resistant fabric",
@@ -626,7 +626,7 @@ export const productsData = [
     reviewCount: 56,
     isNew: false,
     isSale: true,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description: "Stylish outdoor fire pit for cozy gatherings.",
     features: [
       "Weather-resistant",
@@ -650,7 +650,7 @@ export const productsData = [
     reviewCount: 38,
     isNew: true,
     isSale: false,
-    image: "/placeholder.svg?height=300&width=300",
+    image: "/placeholder.png?height=300&width=300",
     description: "Elegant garden bench for outdoor seating.",
     features: [
       "Weather-resistant",
@@ -666,3 +666,219 @@ export const productsData = [
     },
   },
 ];
+
+//////next
+export const products = [
+  {
+    id: 1,
+    name: 'Samsung Galaxy A54 - 6.4" - 8GB RAM - 128GB - 50MP Camera - 5000mAh - Dual SIM',
+    price: 39999,
+    originalPrice: 45999,
+    image: "/placeholder.png?height=200&width=200&text=Samsung+Galaxy+A54",
+    rating: 4.5,
+    reviews: 120,
+    badge: "Official Store",
+    store: true,
+    express: true,
+  },
+  {
+    id: 2,
+    name: 'Tecno Spark 10 Pro - 6.8" - 8GB RAM - 128GB - 50MP Camera - 5000mAh',
+    price: 19999,
+    originalPrice: 24999,
+    image: "/placeholder.png?height=200&width=200&text=Tecno+Spark+10",
+    rating: 4.2,
+    reviews: 85,
+    badge: null,
+    store: false,
+    express: true,
+  },
+  {
+    id: 3,
+    name: 'Vitron 32" Smart Android TV - HD Ready - Netflix - YouTube - Black',
+    price: 15999,
+    originalPrice: 19999,
+    image: "/placeholder.png?height=200&width=200&text=Vitron+32+TV",
+    rating: 4.0,
+    reviews: 56,
+    badge: "Flash Sale",
+    store: false,
+    express: false,
+  },
+  {
+    id: 4,
+    name: "Nunix 6KG Semi-Automatic Twin Tub Washing Machine",
+    price: 12999,
+    originalPrice: 15999,
+    image: "/placeholder.png?height=200&width=200&text=Nunix+Washing+Machine",
+    rating: 3.8,
+    reviews: 42,
+    badge: null,
+    store: false,
+    express: true,
+  },
+  {
+    id: 5,
+    name: 'Xiaomi Redmi Note 12 - 6.67" - 8GB RAM - 128GB - 50MP Camera - 5000mAh',
+    price: 24999,
+    originalPrice: 29999,
+    image: "/placeholder.png?height=200&width=200&text=Xiaomi+Redmi+Note+12",
+    rating: 4.3,
+    reviews: 67,
+    badge: "Official Store",
+    store: true,
+    express: true,
+  },
+  {
+    id: 6,
+    name: 'Hisense 43" Smart TV - Full HD - Netflix - YouTube - Black',
+    price: 29999,
+    originalPrice: 34999,
+    image: "/placeholder.png?height=200&width=200&text=Hisense+43+TV",
+    rating: 4.4,
+    reviews: 89,
+    badge: "Flash Sale",
+    store: true,
+    express: true,
+  },
+  {
+    id: 7,
+    name: "Ramtons 2 Door Refrigerator - 118L - Silver",
+    price: 19999,
+    originalPrice: 23999,
+    image: "/placeholder.png?height=200&width=200&text=Ramtons+Refrigerator",
+    rating: 4.1,
+    reviews: 38,
+    badge: null,
+    store: false,
+    express: false,
+  },
+  {
+    id: 8,
+    name: 'Infinix Hot 30i - 6.6" - 4GB RAM - 128GB - 13MP Camera - 5000mAh',
+    price: 14999,
+    originalPrice: 17999,
+    image: "/placeholder.png?height=200&width=200&text=Infinix+Hot+30i",
+    rating: 4.0,
+    reviews: 52,
+    badge: null,
+    store: false,
+    express: true,
+  },
+  {
+    id: 9,
+    name: "Von 4 Burner Gas Cooker with Oven - 50x50 - Inox",
+    price: 24999,
+    originalPrice: 29999,
+    image: "/placeholder.png?height=200&width=200&text=Von+Gas+Cooker",
+    rating: 4.2,
+    reviews: 45,
+    badge: null,
+    store: false,
+    express: false,
+  },
+  {
+    id: 10,
+    name: 'Apple iPhone 14 - 6.1" - 128GB - 12MP Camera - 5G',
+    price: 129999,
+    originalPrice: 139999,
+    image: "/placeholder.png?height=200&width=200&text=iPhone+14",
+    rating: 4.7,
+    reviews: 134,
+    badge: "Official Store",
+    store: true,
+    express: true,
+  },
+];
+
+export const categories = {
+  phones: {
+    name: "Phones & Tablets",
+    description: "Discover the latest smartphones and tablets from top brands",
+    banner: "/category.gif?height=200&width=1200&text=Phones+and+Tablets",
+    subcategories: [
+      "Smartphones",
+      "Feature Phones",
+      "Tablets",
+      "Phone Accessories",
+      "Tablet Accessories",
+    ],
+    brands: [
+      "Samsung",
+      "Apple",
+      "Xiaomi",
+      "Tecno",
+      "Infinix",
+      "Oppo",
+      "Realme",
+      "Nokia",
+    ],
+  },
+  samsung: {
+    name: "TVs & Audio",
+    description: "Explore our range of TVs, home theaters, and audio systems",
+    banner: "/category.gif?height=200&width=1200&text=TVs+and+Audio",
+    subcategories: [
+      "Smart TVs",
+      "LED TVs",
+      "Sound Systems",
+      "Home Theaters",
+      "Audio Accessories",
+    ],
+    brands: [
+      "Samsung",
+      "LG",
+      "Sony",
+      "Hisense",
+      "TCL",
+      "Vitron",
+      "Vision Plus",
+      "Skyworth",
+    ],
+  },
+  computing: {
+    name: "Computing",
+    description: "Find laptops, desktops, and computing accessories",
+    banner: "/category.gif?height=200&width=1200&text=Computing",
+    subcategories: [
+      "Laptops",
+      "Desktops",
+      "Monitors",
+      "Printers",
+      "Computer Accessories",
+    ],
+    brands: [
+      "HP",
+      "Dell",
+      "Lenovo",
+      "Apple",
+      "Asus",
+      "Acer",
+      "Microsoft",
+      "Samsung",
+    ],
+  },
+  appliances: {
+    name: "Appliances",
+    description:
+      "Shop for refrigerators, washing machines, and other home appliances",
+    banner: "/category.gif?height=200&width=1200&text=Appliances",
+    subcategories: [
+      "Refrigerators",
+      "Washing Machines",
+      "Cookers",
+      "Microwaves",
+      "Small Appliances",
+    ],
+    brands: [
+      "Samsung",
+      "LG",
+      "Hisense",
+      "Ramtons",
+      "Mika",
+      "Nunix",
+      "Von",
+      "Hotpoint",
+    ],
+  },
+};

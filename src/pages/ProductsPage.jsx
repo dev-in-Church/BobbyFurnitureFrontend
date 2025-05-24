@@ -200,7 +200,7 @@ const ProductList = () => {
       stock: 5,
       rating: 4.5,
       featured: true,
-      images: ["https://via.placeholder.com/600x400?text=Modern+Leather+Sofa"],
+      images: ["/placeholder.png?text=Modern+Leather+Sofa"],
       date: "2023-05-15",
     },
     {
@@ -213,7 +213,7 @@ const ProductList = () => {
       stock: 8,
       rating: 4.2,
       featured: false,
-      images: ["https://via.placeholder.com/600x400?text=Wooden+Coffee+Table"],
+      images: ["/placeholder.png?text=Wooden+Coffee+Table"],
       date: "2023-06-20",
     },
     {
@@ -226,7 +226,7 @@ const ProductList = () => {
       stock: 3,
       rating: 4.8,
       featured: true,
-      images: ["https://via.placeholder.com/600x400?text=Queen+Size+Bed"],
+      images: ["/placeholder.png?text=Queen+Size+Bed"],
       date: "2023-04-10",
     },
     {
@@ -239,7 +239,7 @@ const ProductList = () => {
       stock: 4,
       rating: 4.0,
       featured: false,
-      images: ["https://via.placeholder.com/600x400?text=Wooden+Dresser"],
+      images: ["/placeholder.png?text=Wooden+Dresser"],
       date: "2023-07-05",
     },
     {
@@ -252,7 +252,7 @@ const ProductList = () => {
       stock: 2,
       rating: 4.3,
       featured: true,
-      images: ["https://via.placeholder.com/600x400?text=Glass+Dining+Table"],
+      images: ["/placeholder.png?text=Glass+Dining+Table"],
       date: "2023-03-25",
     },
     {
@@ -265,7 +265,7 @@ const ProductList = () => {
       stock: 6,
       rating: 4.1,
       featured: false,
-      images: ["https://via.placeholder.com/600x400?text=Office+Desk"],
+      images: ["/placeholder.png?text=Office+Desk"],
       date: "2023-08-12",
     },
     {
@@ -278,7 +278,7 @@ const ProductList = () => {
       stock: 3,
       rating: 4.6,
       featured: true,
-      images: ["https://via.placeholder.com/600x400?text=Patio+Set"],
+      images: ["/placeholder.png?text=Patio+Set"],
       date: "2023-05-30",
     },
     {
@@ -291,7 +291,7 @@ const ProductList = () => {
       stock: 7,
       rating: 4.4,
       featured: false,
-      images: ["https://via.placeholder.com/600x400?text=Bookshelf"],
+      images: ["/placeholder.png?text=Bookshelf"],
       date: "2023-06-15",
     },
     {
@@ -304,7 +304,7 @@ const ProductList = () => {
       stock: 10,
       rating: 4.7,
       featured: true,
-      images: ["https://via.placeholder.com/600x400?text=Wall+Mirror"],
+      images: ["/placeholder.png?text=Wall+Mirror"],
       date: "2023-07-20",
     },
     {
@@ -317,7 +317,7 @@ const ProductList = () => {
       stock: 4,
       rating: 4.2,
       featured: false,
-      images: ["https://via.placeholder.com/600x400?text=TV+Stand"],
+      images: ["/placeholder.png?text=TV+Stand"],
       date: "2023-08-05",
     },
     {
@@ -330,7 +330,7 @@ const ProductList = () => {
       stock: 6,
       rating: 4.0,
       featured: false,
-      images: ["https://via.placeholder.com/600x400?text=Accent+Chair"],
+      images: ["/placeholder.png?text=Accent+Chair"],
       date: "2023-09-10",
     },
     {
@@ -343,7 +343,7 @@ const ProductList = () => {
       stock: 8,
       rating: 4.3,
       featured: false,
-      images: ["https://via.placeholder.com/600x400?text=Nightstand"],
+      images: ["/placeholder.png?text=Nightstand"],
       date: "2023-07-25",
     },
   ];
@@ -726,8 +726,8 @@ const ProductList = () => {
             variant="destructive"
             className="absolute top-2 left-2 z-10 px-2 py-1 text-xs font-medium"
           >
-            <Percent className="mr-1 h-3 w-3" />
-            10% OFF
+            {/* <Percent className="mr-1 h-3 w-3" /> */}
+            25% OFF
           </Badge>
 
           <div
@@ -1439,9 +1439,9 @@ const ProductList = () => {
                   </div>
 
                   <div
-                    className={`grid gap-4 ${
+                    className={`grid gap-1 ${
                       viewMode === "grid"
-                        ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4"
+                        ? "grid-cols-2 sm:grid-cols-2 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3"
                         : "grid-cols-1"
                     }`}
                   >

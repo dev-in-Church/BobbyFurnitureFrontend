@@ -65,10 +65,10 @@ const HelpButton = () => {
       )}
 
       {/* Help Button Wrapper */}
-      <div className="fixed bottom-6 right-6 z-50 flex items-center justify-center">
+      <div className="fixed bottom-24 left-6 z-50 flex items-center justify-center">
         {/* Pulsing Effect - Separate from button */}
         {!isOpen && (
-          <div className="absolute w-14 h-14 rounded-full animate-ping bg-blue-500 opacity-30"></div>
+          <div className="absolute w-14 h-14 rounded-full animate-ping bg-orange-500 opacity-30"></div>
         )}
 
         {/* Help Options Panel */}
@@ -79,7 +79,7 @@ const HelpButton = () => {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 10 }}
               transition={{ duration: 0.2 }}
-              className="absolute bottom-16 right-0 bg-white rounded-lg shadow-lg border border-gray-200 w-64 overflow-hidden z-50"
+              className="absolute bottom-16 left-0 bg-white rounded-lg shadow-lg border border-gray-200 w-64 overflow-hidden z-50"
             >
               <div className="p-4 border-b border-gray-100">
                 <h3 className="font-medium text-gray-900">How can we help?</h3>
@@ -120,7 +120,7 @@ const HelpButton = () => {
           className={`relative p-4 rounded-full shadow-lg flex items-center justify-center transition-colors ${
             isOpen
               ? "bg-red-500 text-white"
-              : "bg-blue-600 text-white hover:bg-blue-700"
+              : "bg-orange-400 text-white hover:bg-orange-500"
           }`}
           initial={{ y: 100, opacity: 0 }}
           animate={{

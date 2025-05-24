@@ -10,7 +10,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Login from "./pages/Login";
 import ProductsPage from "./pages/ProductsPage";
 import ManageUsers from "./pages/ManageUsers";
-import ManageProducts from "./pages/ManageProducts";
+import EnhancedManageProducts from "./pages/ManageProducts";
 import ProfilePage from "./pages/ProfilePage";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
@@ -30,15 +30,20 @@ import ResetPassword from "./pages/ResetPassword";
 import NotFoundPage from "./pages/NotFoundPage";
 import { ReturnToTop } from "./components/LoadingReturnTop";
 import WhatsAppButton from "./components/WhatsAppButton";
-import AllProductsPage from "./pages/AllProductsPage";
+// import AllProductsPage from "./pages/AllProductsPage";
 import Wishlist from "./pages/wishlist";
-import CategoryPage from "./pages/category-page";
+// import CategoryPage from "./pages/category-page";
 import HelpButton from "./components/help-button";
 import PrivacyPolicy from "./pages/privacy-policy";
 import TermsOfService from "./pages/terms-of-service";
 import ShippingPolicy from "./pages/shipping-policy";
 import ReturnPolicy from "./pages/return-policy";
 import Collection from "./pages/collection";
+import AdsManagement from "./pages/AdsManagement";
+import Category from "./pages/Category";
+import CategoriesPage from "./pages/CategoriesPage";
+import SearchResultsPage from "./pages/SearchPage";
+import HomeDynamic from "./pages/home-dynamic";
 
 const App = () => {
   return (
@@ -60,7 +65,10 @@ const App = () => {
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/shipping-policy" element={<ShippingPolicy />} />
           <Route path="/return-policy" element={<ReturnPolicy />} />
-          <Route path="/category/:categorySlug" element={<CategoryPage />} />
+          {/* <Route path="/category/:categorySlug" element={<CategoryPage />} /> */}
+          <Route path="category/:slug" element={<Category />} />
+          <Route path="/search" element={<SearchResultsPage />} />
+          <Route path="/home" element={<HomeDynamic />} />
 
           <Route path="/help" element={<HelpPage />} />
           <Route path="/upload-img" element={<UploadComponent />} />
@@ -73,6 +81,7 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/categories" element={<CategoriesPage />} />
           <Route
             path="/order-confirmation"
             element={<OrderConfirmationPage />}
@@ -92,7 +101,7 @@ const App = () => {
             path="/admin/manage-products"
             element={
               <ProtectedRoute role="admin">
-                <ManageProducts />
+                <EnhancedManageProducts />
               </ProtectedRoute>
             }
           />
@@ -116,6 +125,15 @@ const App = () => {
           />
 
           <Route
+            path="/admin/manage-ads"
+            element={
+              <ProtectedRoute role="admin">
+                <AdsManagement />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/profile"
             element={
               <ProtectedRoute role="user">
@@ -127,7 +145,7 @@ const App = () => {
       </main>
       <Footer />
       <ReturnToTop />
-      <HelpButton />
+      {/* <HelpButton /> */}
       <WhatsAppButton />
     </div>
   );
