@@ -37,7 +37,7 @@ const furnitureCategories = {
   "living-room": {
     name: "Living Room",
     description: "Stylish and comfortable furniture for your living space",
-    banner: "/category.gif?height=400&width=1200",
+    banner: "/banners/banner-aux.jpg?height=400&width=1200",
     subcategories: [
       "Sofas",
       "Coffee Tables",
