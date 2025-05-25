@@ -165,7 +165,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 // Layout Components
-import Navbar from "./components/navbar";
+import Navbar from "./components/navbar"; //fix this disturbing fucking shit
 import EnhancedFooter from "./components/enhanced-footer";
 
 // Page Components
