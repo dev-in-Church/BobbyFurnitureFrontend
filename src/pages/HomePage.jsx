@@ -327,8 +327,8 @@ export default function HomeEnhanced() {
 
   return (
     <div>
-      <main className="container mx-auto min-h-screen px-1 md:px-6 lg:px-8 py-4 bg-[url('/textures/blue-snow.png')] bg-repeat">
-        <div className="mx-auto max-w-7xl rounded-lg shadow-md overflow-hidden">
+      <main className="container mx-auto min-h-screen px-1 md:px-7 lg:px-8 py-4 bg-[url('/textures/blue-snow.png')] bg-repeat">
+        <div className="mx-[1.9rem] max-w-7xl  overflow-hidden">
           <HeroSection />
           <div className="pt-4 md:p-4">
             <ProductSection
@@ -343,7 +343,7 @@ export default function HomeEnhanced() {
         {/* Furniture Banner */}
         <FurnitureBanner />
 
-        <div className="mx-auto max-w-7xl bg-white rounded-xl shadow-md overflow-hidden mt-6">
+        <div className="mx-auto md:mx-[1.9rem] max-w-7xl rounded-xl overflow-hidden mt-6">
           <div className="p-2 md:p-4">
             <ProductSection
               title="Living Room Furniture"
@@ -357,7 +357,7 @@ export default function HomeEnhanced() {
         {/* Furniture Grid */}
         <FurnitureGrid />
 
-        <div className="mx-auto max-w-7xl bg-white rounded-xl shadow-md overflow-hidden mt-6">
+        <div className="mx-auto md:mx-[1.9rem] max-w-7xl rounded-xl overflow-hidden mt-6">
           <div className="p-2 md:p-4">
             <ProductSection
               title="Bedroom Furniture"

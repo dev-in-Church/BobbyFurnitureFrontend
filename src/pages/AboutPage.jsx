@@ -98,7 +98,26 @@ const AboutPage = () => {
           >
             <div className="inline-flex items-center text-sm font-semibold text-blue-600 mb-4">
               <div className="w-12 h-0.5 bg-blue-600 mr-2"></div>
-              OUR JOURNEY
+              <span></span>
+              <svg
+                width="100"
+                height="100"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect width="100" height="100" rx="10" fill="#1e90ff" />
+                <text
+                  x="50"
+                  y="68"
+                  font-family="Arial"
+                  font-size="60"
+                  font-weight="bold"
+                  fill="white"
+                  text-anchor="middle"
+                >
+                  B
+                </text>
+              </svg>
             </div>
             <h2 className="text-4xl font-bold text-gray-800 mb-6">
               Our <span className="text-blue-600">Story</span>

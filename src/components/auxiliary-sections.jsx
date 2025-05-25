@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 // Single Landscape Banner Component
 export function FurnitureBanner() {
   return (
-    <section className="mt-6">
+    <section className="mt-6 md:mx-[1.9rem]">
       <div className="">
         <div className="rounded-lg overflow-hidden h-40 md:h-60">
           <img
@@ -96,7 +96,7 @@ export function FurnitureGrid() {
   ];
 
   return (
-    <section className="py-6 bg-white rounded-lg mt-6">
+    <section className="py-6 bg-white md:mx-[1.9rem] rounded-lg mt-6">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
           {categories.map((category, index) => (

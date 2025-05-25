@@ -2,18 +2,12 @@
 
 import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ShoppingCart,
-  Heart,
-  Loader2,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingCart, Heart } from "lucide-react";
 import {
   fetchProductsByCategory,
   fetchNewArrivals,
   fetchFeaturedProducts,
-} from "../lib/api-final";
+} from "../lib/api-production";
 
 export default function ProductSectionDynamic({
   title,
@@ -57,12 +51,14 @@ export default function ProductSectionDynamic({
 
         // Handle both array response and paginated response
         const productsData = data.products || data;
-        setProducts(productsData);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-        setError("Failed to load products. Please try again later.");
+        setProducts(productsData || []);
 
-        // Fallback to empty array
+        if (productsData && productsData.length > 0) {
+          console.log(`✅ Loaded ${productsData.length} products for ${title}`);
+        }
+      } catch (err) {
+        console.error(`Error fetching products for ${title}:`, err);
+        setError(`Unable to load ${title.toLowerCase()}. ${err.message}`);
         setProducts([]);
       } finally {
         setLoading(false);
@@ -70,7 +66,7 @@ export default function ProductSectionDynamic({
     };
 
     fetchProducts();
-  }, [category, type, limit]);
+  }, [category, type, limit, title]);
 
   // Check if scrolling is possible and update arrow visibility
   const checkScrollPosition = () => {
@@ -118,12 +114,10 @@ export default function ProductSectionDynamic({
 
   // Dynamic color classes
   const getColorClass = (baseColor) => {
-    // Ensure the color is properly formatted
     return baseColor.includes("-") ? baseColor : `${baseColor}-500`;
   };
 
   const bgColorClass = `bg-${getColorClass(color)}`;
-  const hoverColorClass = `hover:bg-${getColorClass(color)}`;
 
   return (
     <div className="mb-6 bg-white rounded-lg shadow-md overflow-hidden">
@@ -146,7 +140,7 @@ export default function ProductSectionDynamic({
         {showLeftArrow && (
           <button
             onClick={scrollLeft}
-            className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full shadow-lg p-2 transition-all duration-200 border border-gray-200 hidden md:flex items-center justify-center`}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full shadow-lg p-2 transition-all duration-200 border border-gray-200 hidden md:flex items-center justify-center"
             aria-label="Scroll left"
           >
             <ChevronLeft className="h-5 w-5 text-gray-700" />
@@ -156,17 +150,59 @@ export default function ProductSectionDynamic({
         {showRightArrow && (
           <button
             onClick={scrollRight}
-            className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full shadow-lg p-2 transition-all duration-200 border border-gray-200 hidden md:flex items-center justify-center`}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full shadow-lg p-2 transition-all duration-200 border border-gray-200 hidden md:flex items-center justify-center"
             aria-label="Scroll right"
           >
             <ChevronRight className="h-5 w-5 text-gray-700" />
           </button>
         )}
 
-        {/* Loading state */}
+        {/* Loading state with skeleton */}
         {loading && (
-          <div className="flex justify-center items-center py-16">
-            <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
+          <div className="px-4 py-6">
+            <div className="flex gap-4 overflow-hidden">
+              {Array(limit || 9)
+                .fill(0)
+                .map((_, index) => (
+                  <div
+                    key={index}
+                    className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[200px] bg-white rounded-lg overflow-hidden flex-shrink-0 border border-gray-100 animate-pulse"
+                  >
+                    <div className="relative h-40 w-full bg-gray-200">
+                      <div className="absolute top-2 right-2 h-6 w-12 bg-gray-300 rounded-md"></div>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
+                          <svg
+                            className="w-6 h-6 text-gray-400"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-2 bg-white/80 backdrop-blur-sm">
+                        <div className="h-7 w-7 bg-gray-300 rounded-full"></div>
+                        <div className="h-7 w-7 bg-gray-300 rounded-full"></div>
+                      </div>
+                    </div>
+                    <div className="px-3 py-3 space-y-2">
+                      <div className="space-y-1">
+                        <div className="h-3 bg-gray-200 rounded w-full"></div>
+                        <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                      </div>
+                      <div className="flex items-baseline space-x-2">
+                        <div className="h-4 bg-gray-300 rounded w-16"></div>
+                        <div className="h-3 bg-gray-200 rounded w-12"></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+            </div>
           </div>
         )}
 
@@ -188,7 +224,7 @@ export default function ProductSectionDynamic({
                   d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <p className="text-lg font-medium">{error}</p>
+              <p className="text-lg font-medium text-red-600">{error}</p>
             </div>
             <button
               onClick={() => window.location.reload()}
@@ -196,32 +232,6 @@ export default function ProductSectionDynamic({
             >
               Try Again
             </button>
-          </div>
-        )}
-
-        {!loading && !error && process.env.NODE_ENV === "development" && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 mx-4 mb-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <svg
-                  className="h-5 w-5 text-yellow-400"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-yellow-700">
-                  <strong>Development Mode:</strong> Using mock data because API
-                  endpoints are not available.
-                </p>
-              </div>
-            </div>
           </div>
         )}
 
@@ -311,7 +321,7 @@ export default function ProductSectionDynamic({
                           <p
                             className={`text-${getColorClass(color)} font-bold`}
                           >
-                            Ksh{" "}
+                            KSh{" "}
                             {product.price.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
@@ -319,7 +329,7 @@ export default function ProductSectionDynamic({
                           </p>
                           {product.original_price && (
                             <p className="text-xs text-gray-500 line-through ml-2">
-                              Ksh{" "}
+                              KSh{" "}
                               {product.original_price.toLocaleString(
                                 undefined,
                                 {

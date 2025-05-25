@@ -32,7 +32,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../components/ui/accordion";
-import { fetchProductById, fetchRelatedProducts } from "../lib/api";
+import { fetchProductById, fetchRelatedProducts } from "../lib/api-production";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -49,16 +49,21 @@ export default function ProductDetail() {
       setError(null);
 
       try {
-        // Fetch product details
+        // Fetch product details - your backend returns product with relatedProducts included
         const productData = await fetchProductById(id);
         setProduct(productData);
 
         // Set first image as selected
         setSelectedImage(0);
 
-        // Fetch related products
-        const relatedData = await fetchRelatedProducts(id, 4);
-        setRelatedProducts(relatedData);
+        // Use the relatedProducts from the API response, or fetch them separately if not included
+        if (productData.relatedProducts) {
+          setRelatedProducts(productData.relatedProducts);
+        } else {
+          // Fallback: fetch related products separately
+          const relatedData = await fetchRelatedProducts(id, 4);
+          setRelatedProducts(relatedData);
+        }
       } catch (err) {
         console.error("Error fetching product:", err);
         setError("Failed to load product details. Please try again later.");

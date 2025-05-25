@@ -25,9 +25,13 @@ const ProductCardEnhanced = ({ product, className = "" }) => {
 
   const inWishlist = isInWishlist(product.id);
 
+  const stockStatus = product.stock > 0 ? "in-stock" : "out-of-stock";
+  const lowStock = product.stock > 0 && product.stock <= 5;
+
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    if (stockStatus === "out-of-stock") return;
     addToCart(product);
   };
 
@@ -48,9 +52,6 @@ const ProductCardEnhanced = ({ product, className = "" }) => {
             100
         )
       : 0;
-
-  const stockStatus = product.stock > 0 ? "in-stock" : "out-of-stock";
-  const lowStock = product.stock > 0 && product.stock <= 5;
 
   return (
     <Card
@@ -127,7 +128,11 @@ const ProductCardEnhanced = ({ product, className = "" }) => {
               <Button
                 variant="secondary"
                 size="sm"
-                onClick={handleAddToCart}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handleAddToCart(e);
+                }}
                 disabled={stockStatus === "out-of-stock"}
                 className="bg-white hover:bg-gray-100"
               >
@@ -140,6 +145,11 @@ const ProductCardEnhanced = ({ product, className = "" }) => {
                 variant="secondary"
                 size="sm"
                 className="bg-white hover:bg-gray-100"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  // This could open a quick view modal in the future
+                }}
               >
                 <Eye className="h-4 w-4" />
               </Button>
@@ -219,7 +229,11 @@ const ProductCardEnhanced = ({ product, className = "" }) => {
       {/* Quick Add to Cart Button */}
       <div className="px-4 pb-4">
         <Button
-          onClick={handleAddToCart}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleAddToCart(e);
+          }}
           disabled={stockStatus === "out-of-stock"}
           className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300"
         >

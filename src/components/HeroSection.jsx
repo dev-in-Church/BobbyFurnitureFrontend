@@ -704,19 +704,19 @@ const HeroSection = () => {
   const banners = [
     {
       id: 1,
-      image: "/banners/banner.jpg?height=400&width=800&text=Banner+1",
+      image: "/banners/chester1.jpg?height=400&width=800&text=Banner+1",
       alt: "Banner 1",
       link: "/promo/banner-1",
     },
     {
       id: 2,
-      image: "/banners/banner.jpg?height=400&width=800&text=Banner+2",
+      image: "/banners/victoria.jpg?height=400&width=800&text=Banner+2",
       alt: "Banner 2",
       link: "/promo/banner-2",
     },
     {
       id: 3,
-      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      image: "/banners/dine.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 3",
       link: "/promo/banner-3",
     },
@@ -776,8 +776,8 @@ const HeroSection = () => {
 
   return (
     // <div className="bg-primary py-4 h-screen">
-    <div className="md:mb-4 md:px-[3.5rem]">
-      <div className="grid grid-cols-1 w-full h-auto md:grid-cols-[1fr_710px_1fr] gap-3 md:h-[384px]">
+    <div className="md:mb-4 md:px-4">
+      <div className="grid grid-cols-1 w-full h-auto md:grid-cols-[1fr_710px_1fr] gap-4 md:h-[384px]">
         {/* Categories sidebar - fixed width */}
         <div className="relative hidden md:block bg-white rounded-md h-full shadow-md ">
           <ul className="flex flex-col h-full py-3 justify-between">
@@ -836,7 +836,7 @@ const HeroSection = () => {
         </div>
 
         {/* Right sidebar - fixed width with two sections */}
-        <div className="hidden md:grid h-full overflow-hidden grid-rows-[1fr_184px] gap-3">
+        <div className="hidden md:grid h-full overflow-hidden grid-rows-[1fr_184px] gap-4">
           {/* Top section - white box with info items */}
           <div className="flex flex-col justify-between bg-white p-2 rounded-sm shadow-md gap-5">
             {/* Help Center */}
@@ -875,7 +875,11 @@ const HeroSection = () => {
 
           {/* Bottom section - Call/WhatsApp gif */}
           <div className="bg-white rounded-sm shadow-md overflow-hidden">
-            <img src="/banners/banner-bleft.jpg" alt="" className="h-full" />
+            <img
+              src="/banners/banner-bleft.jpg"
+              alt=""
+              className="h-full w-full object-cover"
+            />
           </div>
         </div>
       </div>
