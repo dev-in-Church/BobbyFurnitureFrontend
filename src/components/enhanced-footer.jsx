@@ -144,7 +144,7 @@ const EnhancedFooter = () => {
             <div>
               <div className="flex items-center mb-4">
                 <img
-                  src="/logo4.png"
+                  src="/logo5.png"
                   alt="Bobby Furniture Logo"
                   className="h-12 mr-3"
                 />

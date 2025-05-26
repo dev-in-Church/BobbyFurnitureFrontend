@@ -3,9 +3,9 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-const AuthContext = createContext();
+const AuthContext = createContext(undefined);
 
-export const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -29,14 +29,16 @@ export const AuthProvider = ({ children }) => {
       const mockUser = {
         id: 1,
         email,
-        name: "John Doe",
+        name: email === "admin@bobbyfurniture.com" ? "Admin User" : "John Doe",
         isAdmin: email === "admin@bobbyfurniture.com",
       };
 
       setUser(mockUser);
       localStorage.setItem("user", JSON.stringify(mockUser));
       toast.success("Login successful!");
-      return { success: true };
+
+      // Return user data for redirection logic
+      return { success: true, user: mockUser };
     } catch (error) {
       toast.error("Login failed");
       return { success: false, error: error.message };
@@ -79,12 +81,12 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
+const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
 
-export { AuthContext };
+export { AuthProvider, useAuth, AuthContext };

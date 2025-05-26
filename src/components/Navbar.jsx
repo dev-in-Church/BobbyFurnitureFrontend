@@ -42,6 +42,7 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 import Banner from "./Banner";
+import { useAuth } from "../contexts/auth-context";
 
 // Social media links
 const SOCIAL_LINKS = [
@@ -526,6 +527,7 @@ export default function Navbar() {
   const categoryDropdownRef = useRef(null);
   const location = useLocation();
   const [hoveredCategory, setHoveredCategory] = useState(null);
+  const { user, logout } = useAuth();
 
   // Check if mobile on mount and window resize
   useEffect(() => {
@@ -743,24 +745,69 @@ export default function Navbar() {
             </AccordionItem>
 
             <AccordionItem value="account">
-              <AccordionTrigger className="py-2">Account</AccordionTrigger>
+              <AccordionTrigger className="py-2">
+                {user
+                  ? user.isAdmin
+                    ? "Admin Menu"
+                    : "My Account"
+                  : "Account"}
+              </AccordionTrigger>
               <AccordionContent>
                 <div className="flex flex-col space-y-2 pl-4">
-                  <Link to="/login" className="py-2 text-sm">
-                    Login
-                  </Link>
-                  <Link to="/register" className="py-2 text-sm">
-                    Register
-                  </Link>
-                  <Link to="/account" className="py-2 text-sm">
-                    My Account
-                  </Link>
-                  <Link to="/orders" className="py-2 text-sm">
-                    Orders
-                  </Link>
-                  <Link to="/saved-items" className="py-2 text-sm">
-                    Saved Items
-                  </Link>
+                  {user ? (
+                    <>
+                      {user.isAdmin && (
+                        <>
+                          <Link to="/admin" className="py-2 text-sm">
+                            Admin Dashboard
+                          </Link>
+                          <Link to="/admin/products" className="py-2 text-sm">
+                            Manage Products
+                          </Link>
+                          <Link to="/admin/orders" className="py-2 text-sm">
+                            Manage Orders
+                          </Link>
+                          <Link to="/admin/users" className="py-2 text-sm">
+                            Manage Users
+                          </Link>
+                          <div className="border-t my-2"></div>
+                        </>
+                      )}
+                      <Link to="/account" className="py-2 text-sm">
+                        My Account
+                      </Link>
+                      {!user.isAdmin && (
+                        <>
+                          <Link to="/orders" className="py-2 text-sm">
+                            My Orders
+                          </Link>
+                          <Link to="/wishlist" className="py-2 text-sm">
+                            Wishlist
+                          </Link>
+                        </>
+                      )}
+                      <button
+                        onClick={() => {
+                          logout();
+                          if (location.pathname.startsWith("/admin")) {
+                            window.location.href = "/";
+                          }
+                        }}
+                        className="py-2 text-sm text-left text-red-600"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/login" className="py-2 text-sm">
+                        Login
+                      </Link>
+                      <Link to="/register" className="py-2 text-sm">
+                        Register
+                      </Link>
+                    </>
+                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -842,7 +889,7 @@ export default function Navbar() {
             {/* Logo */}
             <Link to="/" className="flex items-center">
               <div className="flex items-center">
-                <span className="hidden md:block text-xl md:text-2xl font-bold text-primary">
+                <span className="text-xl md:text-2xl font-bold text-primary">
                   Bobby Furniture
                 </span>
                 <div className="ml-1">
@@ -906,36 +953,94 @@ export default function Navbar() {
                   className="flex items-center space-x-1 p-1"
                 >
                   <User className="h-5 w-5" />
-                  <span className="hidden sm:inline">Account</span>
+                  <span className="hidden sm:inline">
+                    {user
+                      ? user.isAdmin
+                        ? "Admin"
+                        : user.name?.split(" ")[0] || "Account"
+                      : "Account"}
+                  </span>
                   <ChevronDown className="h-4 w-4 hidden sm:inline" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link to="/login" className="w-full">
-                    Login
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/register" className="w-full">
-                    Register
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/account" className="w-full">
-                    My Account
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/orders" className="w-full">
-                    Orders
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/saved-items" className="w-full">
-                    Saved Items
-                  </Link>
-                </DropdownMenuItem>
+                {user ? (
+                  <>
+                    {user.isAdmin && (
+                      <>
+                        <DropdownMenuItem>
+                          <Link to="/admin" className="w-full">
+                            Admin Dashboard
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link to="/admin/products" className="w-full">
+                            Manage Products
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link to="/admin/orders" className="w-full">
+                            Manage Orders
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link to="/admin/users" className="w-full">
+                            Manage Users
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="border-t">
+                          <Link to="/account" className="w-full">
+                            My Account
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                    {!user.isAdmin && (
+                      <>
+                        <DropdownMenuItem>
+                          <Link to="/account" className="w-full">
+                            My Account
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link to="/orders" className="w-full">
+                            My Orders
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                          <Link to="/wishlist" className="w-full">
+                            Wishlist
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                    <DropdownMenuItem
+                      className="border-t cursor-pointer text-red-600"
+                      onClick={() => {
+                        logout();
+                        // Redirect to home if on admin pages
+                        if (location.pathname.startsWith("/admin")) {
+                          window.location.href = "/";
+                        }
+                      }}
+                    >
+                      Logout
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <DropdownMenuItem>
+                      <Link to="/login" className="w-full">
+                        Login
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Link to="/register" className="w-full">
+                        Register
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 
