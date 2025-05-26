@@ -8,7 +8,7 @@ export function FurnitureBanner() {
       <div className="">
         <div className="rounded-lg overflow-hidden h-40 md:h-60">
           <img
-            src="/banners/banner-aux.jpg?height=400&width=1200"
+            src="/banners/banner.jpg?height=400&width=1200"
             alt="banner"
             className="w-full h-full object-cover"
           />
