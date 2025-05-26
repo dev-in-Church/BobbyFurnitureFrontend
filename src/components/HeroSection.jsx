@@ -704,49 +704,49 @@ const HeroSection = () => {
   const banners = [
     {
       id: 1,
-      image: "/banners/chester1.jpg?height=400&width=800&text=Banner+1",
+      image: "/banners/slider.jpg?height=400&width=800&text=Banner+1",
       alt: "Banner 1",
       link: "/promo/banner-1",
     },
     {
       id: 2,
-      image: "/banners/victoria.jpg?height=400&width=800&text=Banner+2",
+      image: "/banners/slider.jpg?height=400&width=800&text=Banner+2",
       alt: "Banner 2",
       link: "/promo/banner-2",
     },
     {
       id: 3,
-      image: "/banners/dine.jpg?height=400&width=800&text=Banner+3",
+      image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 3",
       link: "/promo/banner-3",
     },
     {
       id: 4,
-      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 4",
       link: "/promo/banner-4",
     },
     {
       id: 5,
-      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 5",
       link: "/promo/banner-5",
     },
     {
       id: 6,
-      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 6",
       link: "/promo/banner-6",
     },
     {
       id: 7,
-      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 7",
       link: "/promo/banner-7",
     },
     {
       id: 8,
-      image: "/banners/banner.jpg?height=400&width=800&text=Banner+3",
+      image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 8",
       link: "/promo/banner-8",
     },
@@ -876,7 +876,7 @@ const HeroSection = () => {
           {/* Bottom section - Call/WhatsApp gif */}
           <div className="bg-white rounded-sm shadow-md overflow-hidden">
             <img
-              src="/banners/banner-bleft.jpg"
+              src="/banners/bottom.jpg"
               alt=""
               className="h-full w-full object-cover"
             />

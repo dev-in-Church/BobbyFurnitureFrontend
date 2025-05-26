@@ -29,19 +29,19 @@ export function FurnitureGrid() {
     },
     {
       name: "Living Room",
-      image: "/placeholder.png?height=150&width=150",
+      image: "/placeholder.jpg?height=150&width=150",
       link: "/category/living-room",
       bgColor: "bg-blue-500",
     },
     {
       name: "Bedroom Sets",
-      image: "/placeholder.png?height=150&width=150",
+      image: "/placeholder.jpg?height=150&width=150",
       link: "/category/bedroom",
       bgColor: "bg-purple-500",
     },
     {
       name: "Dining Room",
-      image: "/placeholder.png?height=150&width=150",
+      image: "/placeholder.jpg?height=150&width=150",
       link: "/category/dining-room",
       bgColor: "bg-green-500",
     },
@@ -53,43 +53,43 @@ export function FurnitureGrid() {
     },
     {
       name: "Home Office",
-      image: "/banners/money.jpg?height=150&width=150",
+      image: "/banners/bottom.jpg?height=150&width=150",
       link: "/category/office",
       bgColor: "bg-indigo-500",
     },
     {
       name: "Outdoor Furniture",
-      image: "/placeholder.png?height=150&width=150",
+      image: "/placeholder.jpg?height=150&width=150",
       link: "/category/outdoor",
       bgColor: "bg-teal-500",
     },
     {
       name: "Storage Solutions",
-      image: "/placeholder.png?height=150&width=150",
+      image: "/placeholder.jpg?height=150&width=150",
       link: "/category/storage",
       bgColor: "bg-cyan-500",
     },
     {
       name: "Kids Furniture",
-      image: "/placeholder.png?height=150&width=150",
+      image: "/placeholder.jpg?height=150&width=150",
       link: "/category/kids",
       bgColor: "bg-pink-500",
     },
     {
       name: "Mattresses",
-      image: "/placeholder.png?height=150&width=150",
+      image: "/placeholder.jpg?height=150&width=150",
       link: "/category/mattresses",
       bgColor: "bg-emerald-500",
     },
     {
       name: "Home Decor",
-      image: "/placeholder.png?height=150&width=150",
+      image: "/placeholder.jpg?height=150&width=150",
       link: "/category/decor",
       bgColor: "bg-yellow-500",
     },
     {
       name: "Clearance Sale",
-      image: "/placeholder.png?height=150&width=150",
+      image: "/placeholder.jpg?height=150&width=150",
       link: "/clearance",
       bgColor: "bg-rose-500",
     },
@@ -109,9 +109,9 @@ export function FurnitureGrid() {
                 className={`bg-gray-100 h-[10rem] sm:h-[11rem] md:h-48 rounded-lg flex items-center justify-center relative overflow-hidden`}
               >
                 <img
-                  src={category.image || "/placeholder.png"}
+                  src={category.image || "/placeholder.jpg"}
                   alt={category.name}
-                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
               </div>
               <div className="p-2 text-center">
