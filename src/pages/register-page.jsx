@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../contexts/auth-context";
-import { Button } from "../components/ui/button";
+import { useAuth } from "../contexts/auth-context";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Mail, Lock, User, Phone } from "lucide-react";
 
 const RegisterPage = () => {
@@ -29,7 +29,7 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  const { register } = useContext(AuthContext);
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -97,6 +97,7 @@ const RegisterPage = () => {
         name: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
         phone: formData.phone,
+        password: formData.password, // Include password for backend
       };
 
       const result = await register(userData);

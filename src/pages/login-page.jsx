@@ -87,6 +87,10 @@ const LoginPage = () => {
     }
   };
 
+  const handleDemoLogin = (email, password) => {
+    setFormData({ email, password });
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -216,10 +220,7 @@ const LoginPage = () => {
                   variant="outline"
                   className="w-full"
                   onClick={() =>
-                    setFormData({
-                      email: "admin@bobbyfurniture.com",
-                      password: "password",
-                    })
+                    handleDemoLogin("admin@bobbyfurniture.com", "admin123")
                   }
                 >
                   Use Admin Account
@@ -229,10 +230,7 @@ const LoginPage = () => {
                   variant="outline"
                   className="w-full"
                   onClick={() =>
-                    setFormData({
-                      email: "user@example.com",
-                      password: "password",
-                    })
+                    handleDemoLogin("user@example.com", "password123")
                   }
                 >
                   Use Customer Account

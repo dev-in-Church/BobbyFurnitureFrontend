@@ -872,8 +872,8 @@ export default function Navbar() {
       {/* gif advert */}
       <Banner />
       {/* Top Bar */}
-      <div className="bg-[url('/textures/moroccan-flower-dark.png')] bg-repeat">
-        <div className="container mx-auto flex h-8 items-center justify-between px-4 text-white">
+      <div className="bg-[url('/textures/bananas.png')] bg-repeat">
+        <div className="container mx-auto flex h-8 items-center justify-between px-4 text-slate-900">
           {renderTopBarLeft()}
           {renderTopBarRight()}
         </div>

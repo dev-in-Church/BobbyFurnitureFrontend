@@ -114,7 +114,7 @@ const AdminDashboard = () => {
 
       // Mock data for orders and users (replace with real API calls when available)
       const mockOrdersData = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/orders/stats`
+        `${import.meta.env.NEXT_PUBLIC_API_URL}/api/orders/stats`
       )
         .then((res) => res.json())
         .catch(() => ({
@@ -124,7 +124,7 @@ const AdminDashboard = () => {
         }));
 
       const mockUsersData = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/stats`
+        `${import.meta.env.NEXT_PUBLIC_API_URL}/api/users/stats`
       )
         .then((res) => res.json())
         .catch(() => ({
