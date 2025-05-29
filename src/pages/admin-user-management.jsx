@@ -7,17 +7,18 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { Badge } from "../components/ui/badge";
-import { Input } from "../components/ui/input";
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select";
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -25,7 +26,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../components/ui/table";
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -33,7 +34,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../components/ui/dialog";
+} from "@/components/ui/dialog";
 import {
   Search,
   UserPlus,
@@ -42,73 +43,73 @@ import {
   User,
   Mail,
   Phone,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { toast } from "react-toastify";
+import { useAuth } from "../contexts/auth-context";
 
 const AdminUserManagement = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const [newUser, setNewUser] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    isAdmin: false,
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [actionLoading, setActionLoading] = useState(null);
 
-  useEffect(() => {
-    // Mock API call to fetch users
-    const fetchUsers = async () => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+  const { user: currentUser } = useAuth();
 
-        // Mock user data
-        const mockUsers = [
-          {
-            id: 1,
-            name: "John Doe",
-            email: "john@example.com",
-            phone: "(555) 123-4567",
-            role: "customer",
-            status: "active",
-            joinDate: "2024-01-15",
-            orders: 5,
-          },
-          {
-            id: 2,
-            name: "Jane Smith",
-            email: "jane@example.com",
-            phone: "(555) 234-5678",
-            role: "customer",
-            status: "active",
-            joinDate: "2024-01-20",
-            orders: 3,
-          },
-          {
-            id: 3,
-            name: "Admin User",
-            email: "admin@bobbyfurniture.com",
-            phone: "(555) 345-6789",
-            role: "admin",
-            status: "active",
-            joinDate: "2023-01-01",
-            orders: 0,
-          },
-          {
-            id: 4,
-            name: "Bob Johnson",
-            email: "bob@example.com",
-            phone: "(555) 456-7890",
-            role: "customer",
-            status: "inactive",
-            joinDate: "2024-01-25",
-            orders: 1,
-          },
-        ];
+  // API configuration
+  const API_BASE_URL = "http://localhost:5000/api";
 
-        setUsers(mockUsers);
-      } catch (error) {
-        console.error("Failed to fetch users:", error);
-      } finally {
-        setLoading(false);
-      }
+  // API helper function
+  const apiCall = async (endpoint, options = {}) => {
+    const token = localStorage.getItem("token");
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }),
+        ...options.headers,
+      },
+      ...options,
     };
 
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+
+    if (!response.ok) {
+      const error = await response
+        .json()
+        .catch(() => ({ message: "Network error" }));
+      throw new Error(error.message || "Request failed");
+    }
+
+    return response.json();
+  };
+
+  // Fetch users from API
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const response = await apiCall("/admin/users");
+      setUsers(response.users || []);
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+      toast.error("Failed to load users");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchUsers();
   }, []);
 
@@ -117,36 +118,124 @@ const AdminUserManagement = () => {
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesRole = roleFilter === "all" || user.role === roleFilter;
+    const matchesRole =
+      roleFilter === "all" ||
+      (roleFilter === "admin" ? user.isAdmin : !user.isAdmin);
 
     return matchesSearch && matchesRole;
   });
 
-  const updateUserRole = (userId, newRole) => {
-    setUsers(
-      users.map((user) =>
-        user.id === userId ? { ...user, role: newRole } : user
-      )
-    );
-    toast.success("User role updated successfully");
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+
+    if (!newUser.name || !newUser.email || !newUser.password) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    try {
+      setActionLoading("add");
+      const response = await apiCall("/admin/users", {
+        method: "POST",
+        body: JSON.stringify({
+          name: newUser.name,
+          email: newUser.email,
+          phone: newUser.phone,
+          password: newUser.password,
+          isAdmin: newUser.isAdmin,
+        }),
+      });
+
+      setUsers([...users, response.user]);
+      setNewUser({
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
+        isAdmin: false,
+      });
+      setIsAddUserOpen(false);
+      toast.success("User created successfully");
+    } catch (error) {
+      console.error("Failed to create user:", error);
+      toast.error(error.message || "Failed to create user");
+    } finally {
+      setActionLoading(null);
+    }
   };
 
-  const updateUserStatus = (userId, newStatus) => {
-    setUsers(
-      users.map((user) =>
-        user.id === userId ? { ...user, status: newStatus } : user
-      )
-    );
-    toast.success(
-      `User ${
-        newStatus === "active" ? "activated" : "deactivated"
-      } successfully`
-    );
+  const updateUserRole = async (userId, isAdmin) => {
+    if (userId === currentUser?.id) {
+      toast.error("You cannot change your own role");
+      return;
+    }
+
+    try {
+      setActionLoading(`role-${userId}`);
+      const response = await apiCall(`/admin/users/${userId}/role`, {
+        method: "PUT",
+        body: JSON.stringify({ isAdmin }),
+      });
+
+      setUsers(
+        users.map((user) => (user.id === userId ? { ...user, isAdmin } : user))
+      );
+      toast.success("User role updated successfully");
+    } catch (error) {
+      console.error("Failed to update user role:", error);
+      toast.error(error.message || "Failed to update user role");
+    } finally {
+      setActionLoading(null);
+    }
   };
 
-  const deleteUser = (userId) => {
-    setUsers(users.filter((user) => user.id !== userId));
-    toast.success("User deleted successfully");
+  const updateUserStatus = async (userId, isActive) => {
+    if (userId === currentUser?.id) {
+      toast.error("You cannot deactivate your own account");
+      return;
+    }
+
+    try {
+      setActionLoading(`status-${userId}`);
+      const response = await apiCall(`/admin/users/${userId}/status`, {
+        method: "PUT",
+        body: JSON.stringify({ isActive }),
+      });
+
+      setUsers(
+        users.map((user) => (user.id === userId ? { ...user, isActive } : user))
+      );
+      toast.success(
+        `User ${isActive ? "activated" : "deactivated"} successfully`
+      );
+    } catch (error) {
+      console.error("Failed to update user status:", error);
+      toast.error(error.message || "Failed to update user status");
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const deleteUser = async (userId) => {
+    if (userId === currentUser?.id) {
+      toast.error("You cannot delete your own account");
+      return;
+    }
+
+    try {
+      setActionLoading(`delete-${userId}`);
+      await apiCall(`/admin/users/${userId}`, {
+        method: "DELETE",
+      });
+
+      setUsers(users.filter((user) => user.id !== userId));
+      toast.success("User deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+      toast.error(error.message || "Failed to delete user");
+    } finally {
+      setActionLoading(null);
+    }
   };
 
   if (loading) {
@@ -178,10 +267,110 @@ const AdminUserManagement = () => {
             <p className="text-2xl font-bold">{users.length}</p>
             <p className="text-sm text-gray-600">Total Users</p>
           </div>
-          <Button>
-            <UserPlus className="h-4 w-4 mr-2" />
-            Add User
-          </Button>
+          <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <UserPlus className="h-4 w-4 mr-2" />
+                Add User
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Add New User</DialogTitle>
+                <DialogDescription>
+                  Create a new user account with the specified details.
+                </DialogDescription>
+              </DialogHeader>
+              <form onSubmit={handleAddUser} className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Full Name *</Label>
+                  <Input
+                    id="name"
+                    value={newUser.name}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, name: e.target.value })
+                    }
+                    placeholder="Enter full name"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="email">Email *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={newUser.email}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, email: e.target.value })
+                    }
+                    placeholder="Enter email address"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="phone">Phone</Label>
+                  <Input
+                    id="phone"
+                    value={newUser.phone}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, phone: e.target.value })
+                    }
+                    placeholder="Enter phone number"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="password">Password *</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={newUser.password}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, password: e.target.value })
+                      }
+                      placeholder="Enter password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    id="isAdmin"
+                    type="checkbox"
+                    checked={newUser.isAdmin}
+                    onChange={(e) =>
+                      setNewUser({ ...newUser, isAdmin: e.target.checked })
+                    }
+                    className="h-4 w-4"
+                  />
+                  <Label htmlFor="isAdmin">Admin User</Label>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsAddUserOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button type="submit" disabled={actionLoading === "add"}>
+                    {actionLoading === "add" ? "Creating..." : "Create User"}
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -230,7 +419,6 @@ const AdminUserManagement = () => {
                   <TableHead>Role</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Join Date</TableHead>
-                  <TableHead>Orders</TableHead>
                   <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -254,44 +442,42 @@ const AdminUserManagement = () => {
                           <Mail className="h-4 w-4 text-gray-400" />
                           {user.email}
                         </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <Phone className="h-4 w-4 text-gray-400" />
-                          {user.phone}
-                        </div>
+                        {user.phone && (
+                          <div className="flex items-center gap-2 text-sm">
+                            <Phone className="h-4 w-4 text-gray-400" />
+                            {user.phone}
+                          </div>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        variant={
-                          user.role === "admin" ? "default" : "secondary"
-                        }
-                      >
-                        {user.role === "admin" && (
-                          <Shield className="h-3 w-3 mr-1" />
-                        )}
-                        {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                      <Badge variant={user.isAdmin ? "default" : "secondary"}>
+                        {user.isAdmin && <Shield className="h-3 w-3 mr-1" />}
+                        {user.isAdmin ? "Admin" : "Customer"}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant={
-                          user.status === "active" ? "default" : "secondary"
+                          user.isActive !== false ? "default" : "secondary"
                         }
                       >
-                        {user.status.charAt(0).toUpperCase() +
-                          user.status.slice(1)}
+                        {user.isActive !== false ? "Active" : "Inactive"}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {new Date(user.joinDate).toLocaleDateString()}
+                      {new Date(user.createdAt).toLocaleDateString()}
                     </TableCell>
-                    <TableCell>{user.orders}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Select
-                          value={user.role}
+                          value={user.isAdmin ? "admin" : "customer"}
                           onValueChange={(value) =>
-                            updateUserRole(user.id, value)
+                            updateUserRole(user.id, value === "admin")
+                          }
+                          disabled={
+                            user.id === currentUser?.id ||
+                            actionLoading === `role-${user.id}`
                           }
                         >
                           <SelectTrigger className="w-24">
@@ -307,18 +493,30 @@ const AdminUserManagement = () => {
                           variant="outline"
                           size="sm"
                           onClick={() =>
-                            updateUserStatus(
-                              user.id,
-                              user.status === "active" ? "inactive" : "active"
-                            )
+                            updateUserStatus(user.id, user.isActive === false)
+                          }
+                          disabled={
+                            user.id === currentUser?.id ||
+                            actionLoading === `status-${user.id}`
                           }
                         >
-                          {user.status === "active" ? "Deactivate" : "Activate"}
+                          {actionLoading === `status-${user.id}`
+                            ? "..."
+                            : user.isActive !== false
+                            ? "Deactivate"
+                            : "Activate"}
                         </Button>
 
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button variant="outline" size="sm">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              disabled={
+                                user.id === currentUser?.id ||
+                                actionLoading === `delete-${user.id}`
+                              }
+                            >
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
@@ -327,7 +525,8 @@ const AdminUserManagement = () => {
                               <DialogTitle>Delete User</DialogTitle>
                               <DialogDescription>
                                 Are you sure you want to delete {user.name}?
-                                This action cannot be undone.
+                                This action cannot be undone and will remove all
+                                associated data.
                               </DialogDescription>
                             </DialogHeader>
                             <div className="flex justify-end gap-2 mt-4">
@@ -335,8 +534,11 @@ const AdminUserManagement = () => {
                               <Button
                                 variant="destructive"
                                 onClick={() => deleteUser(user.id)}
+                                disabled={actionLoading === `delete-${user.id}`}
                               >
-                                Delete
+                                {actionLoading === `delete-${user.id}`
+                                  ? "Deleting..."
+                                  : "Delete"}
                               </Button>
                             </div>
                           </DialogContent>

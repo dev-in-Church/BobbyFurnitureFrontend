@@ -198,6 +198,9 @@ import ForgotPasswordPage from "./pages/forgot-password";
 import NotFoundPage from "./pages/not-found";
 import ErrorBoundary from "./components/error-boundary";
 
+///others
+import UploadComponent from "./components/UploadComponent";
+
 // Protected Route Component
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
   const { user, loading } = React.useContext(AuthContext);
@@ -328,6 +331,14 @@ const App = () => {
                   element={
                     <ProtectedRoute requireAdmin>
                       <AdminOrderList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/upload-img"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <UploadComponent />
                     </ProtectedRoute>
                   }
                 />

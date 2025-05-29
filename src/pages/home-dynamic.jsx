@@ -16,8 +16,8 @@ export default function HomeDynamic() {
   }, []);
 
   return (
-    <div>
-      <main className="container mx-auto min-h-screen px-1 md:px-7 lg:px-8 py-4 bg-[url('/textures/blue-snow.png')] bg-repeat">
+    <div className="bg-[url('/textures/blue-snow.png')] bg-repeat">
+      <main className="container mx-auto min-h-screen px-1 md:px-7 lg:px-8 py-4 ">
         <div className="max-w-7xl  overflow-hidden">
           <HeroSection />
           <div className="p-2 md:p-4">

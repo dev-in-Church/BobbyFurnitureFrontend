@@ -704,13 +704,13 @@ const HeroSection = () => {
   const banners = [
     {
       id: 1,
-      image: "/banners/slider.jpg?height=400&width=800&text=Banner+1",
+      image: "/banners/one.jpg?height=400&width=800&text=Banner+1",
       alt: "Banner 1",
       link: "/promo/banner-1",
     },
     {
       id: 2,
-      image: "/banners/slider.jpg?height=400&width=800&text=Banner+2",
+      image: "/banners/two.jpg?height=400&width=800&text=Banner+2",
       alt: "Banner 2",
       link: "/promo/banner-2",
     },
