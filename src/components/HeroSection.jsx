@@ -716,13 +716,13 @@ const HeroSection = () => {
     },
     {
       id: 3,
-      image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
+      image: "/banners/three.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 3",
       link: "/promo/banner-3",
     },
     {
       id: 4,
-      image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
+      image: "/banners/four.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 4",
       link: "/promo/banner-4",
     },
@@ -801,7 +801,7 @@ const HeroSection = () => {
         </div>
 
         {/* Banner slider - flexible width */}
-        <div className="relative overflow-hidden h-fit rounded-md shadow-md">
+        <div className="relative bg-[url('/banners/slider.jpg')] overflow-hidden h-fit rounded-md shadow-md">
           <div
             className="flex transition-transform duration-500 ease-in-out h-full"
             style={{ transform: `translateX(-${currentBanner * 100}%)` }}
@@ -810,7 +810,7 @@ const HeroSection = () => {
               <div key={banner.id} className="h-full w-full flex-shrink-0">
                 <Link to={banner.link}>
                   <img
-                    src={banner.image || "/placeholder.svg"}
+                    src={banner.image || "/banners/slider.jpg"}
                     alt={banner.alt}
                     className="h-full"
                   />
