@@ -18,7 +18,7 @@ export default function HomeDynamic() {
   return (
     <div className="bg-[url('/textures/blue-snow.png')] bg-repeat">
       <main className="container mx-auto min-h-screen px-1 md:px-7 lg:px-8 py-4 ">
-        <div className="max-w-7xl  overflow-hidden">
+        <div className="mx-auto max-w-7xl  overflow-hidden">
           <HeroSection />
           <div className="p-2 md:p-4">
             <ProductSectionDynamic
@@ -34,13 +34,37 @@ export default function HomeDynamic() {
         {/* Furniture Banner */}
         <FurnitureBanner />
 
-        <div className="mx-auto max-w-7xl bg-white rounded-xl shadow-md overflow-hidden mt-6">
+        <div className="mx-auto max-w-7xl bg-white rounded-md shadow-md overflow-hidden mt-6">
           <div className="p-2 md:p-4">
             <ProductSectionDynamic
-              title="Living Room Furniture"
+              title="Living Room | Sectional Sofas"
               viewMoreLink="/category/living-room"
               color="orange-500"
-              category="living-room"
+              category="Living Room - Sectional Sofas"
+              type="category"
+              limit={9}
+            />
+            <ProductSectionDynamic
+              title="Living Room | Coffe Tables"
+              viewMoreLink="/category/living-room"
+              color="orange-500"
+              category="Living Room - Coffee Tables"
+              type="category"
+              limit={9}
+            />
+            <ProductSectionDynamic
+              title="Living Room | TV Stands"
+              viewMoreLink="/category/living-room"
+              color="orange-500"
+              category="Living Room - TV Stands"
+              type="category"
+              limit={9}
+            />
+            <ProductSectionDynamic
+              title="Living Room | Accent Chairs"
+              viewMoreLink="/category/living-room"
+              color="orange-500"
+              category="Living Room - Accent Chairs"
               type="category"
               limit={9}
             />
@@ -53,21 +77,22 @@ export default function HomeDynamic() {
         <div className="mx-auto max-w-7xl bg-white rounded-xl shadow-md overflow-hidden mt-6">
           <div className="p-2 md:p-4">
             <ProductSectionDynamic
-              title="Bedroom Furniture"
+              title="Bedroom | Beds"
               viewMoreLink="/category/bedroom"
               color="blue-500"
-              category="bedroom"
+              category="Bedroom - Beds"
               type="category"
               limit={9}
             />
             <ProductSectionDynamic
-              title="Dining Room"
+              title="Dining Room | Six Seater Dining Sets"
               viewMoreLink="/category/dining-room"
               color="red-500"
-              category="dining-room"
+              category="Dining Room - Six seater DIning Sets"
               type="category"
               limit={9}
             />
+
             <ProductSectionDynamic
               title="Featured Products"
               viewMoreLink="/featured"

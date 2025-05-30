@@ -120,7 +120,7 @@ export default function ProductSectionDynamic({
   const bgColorClass = `bg-${getColorClass(color)}`;
 
   return (
-    <div className="mb-6 bg-white rounded-lg shadow-md overflow-hidden">
+    <div className="mb-6 bg-white rounded-md shadow-md overflow-hidden">
       <div
         className={`flex justify-between px-6 py-3 items-center ${bgColorClass}`}
       >
