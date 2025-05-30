@@ -812,7 +812,7 @@ const HeroSection = () => {
                   <img
                     src={banner.image || "/banners/slider.jpg"}
                     alt={banner.alt}
-                    className="h-full  w-full rounded-md shadow-md hover:scale-105 transition-transform duration-300"
+                    className="h-full  w-full"
                     loading="lazy"
                   />
                 </Link>
