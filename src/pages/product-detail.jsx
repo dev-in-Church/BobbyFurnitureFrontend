@@ -33,6 +33,8 @@ import {
   AccordionTrigger,
 } from "../components/ui/accordion";
 import { fetchProductById, fetchRelatedProducts } from "../lib/api-production";
+import { useCart } from "../contexts/cart-context";
+import { useWishlist } from "../contexts/wishlist-context";
 
 export default function ProductDetail() {
   const { id } = useParams();
@@ -42,6 +44,12 @@ export default function ProductDetail() {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [addedToWishlist, setAddedToWishlist] = useState(false);
+
+  // Use cart and wishlist contexts
+  const { addToCart, isInCart, isLoading: cartLoading } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -86,8 +94,27 @@ export default function ProductDetail() {
   };
 
   const handleAddToCart = () => {
-    // Implement cart functionality
-    alert(`Added ${quantity} ${product.name} to cart`);
+    if (product && product.stock > 0) {
+      addToCart(product, quantity);
+      setAddedToCart(true);
+
+      // Reset feedback after 3 seconds
+      setTimeout(() => {
+        setAddedToCart(false);
+      }, 3000);
+    }
+  };
+
+  const handleToggleWishlist = () => {
+    if (product) {
+      toggleWishlist(product);
+      setAddedToWishlist(true);
+
+      // Reset feedback after 3 seconds
+      setTimeout(() => {
+        setAddedToWishlist(false);
+      }, 3000);
+    }
   };
 
   if (loading) {
@@ -192,7 +219,8 @@ export default function ProductDetail() {
                 <img
                   src={
                     product.images?.[selectedImage] ||
-                    "/placeholder.svg?height=500&width=500"
+                    "/placeholder.svg?height=500&width=500" ||
+                    "/placeholder.svg"
                   }
                   alt={product.name}
                   className="w-full h-full object-contain"
@@ -345,16 +373,59 @@ export default function ProductDetail() {
                 {/* Action buttons */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-3"
+                    className={`flex-1 py-3 transition-all duration-200 ${
+                      addedToCart || isInCart(product?.id)
+                        ? "bg-green-600 hover:bg-green-700 text-white"
+                        : "bg-blue-600 hover:bg-blue-700 text-white"
+                    }`}
                     onClick={handleAddToCart}
-                    disabled={product.stock <= 0}
+                    disabled={product.stock <= 0 || cartLoading || addedToCart}
                   >
-                    <ShoppingCart className="mr-2 h-5 w-5" />
-                    Add to Cart
+                    {addedToCart ? (
+                      <>
+                        <Check className="mr-2 h-5 w-5" />
+                        Added to Cart
+                      </>
+                    ) : isInCart(product?.id) ? (
+                      <>
+                        <Check className="mr-2 h-5 w-5" />
+                        In Cart
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="mr-2 h-5 w-5" />
+                        Add to Cart
+                      </>
+                    )}
                   </Button>
-                  <Button variant="outline" className="flex-1 py-3">
-                    <Heart className="mr-2 h-5 w-5" />
-                    Add to Wishlist
+                  <Button
+                    variant="outline"
+                    className={`flex-1 py-3 transition-all duration-200 ${
+                      addedToWishlist
+                        ? "border-green-500 text-green-600 bg-green-50"
+                        : isInWishlist(product?.id)
+                        ? "border-red-500 text-red-600 bg-red-50"
+                        : "border-gray-300 text-gray-700"
+                    }`}
+                    onClick={handleToggleWishlist}
+                    disabled={addedToWishlist}
+                  >
+                    {addedToWishlist ? (
+                      <>
+                        <Check className="mr-2 h-5 w-5" />
+                        Added!
+                      </>
+                    ) : isInWishlist(product?.id) ? (
+                      <>
+                        <Heart className="mr-2 h-5 w-5 fill-current" />
+                        In Wishlist
+                      </>
+                    ) : (
+                      <>
+                        <Heart className="mr-2 h-5 w-5" />
+                        Add to Wishlist
+                      </>
+                    )}
                   </Button>
                   <Button variant="outline" className="sm:flex-none py-3">
                     <Share2 className="h-5 w-5" />
@@ -649,7 +720,8 @@ export default function ProductDetail() {
                   <img
                     src={
                       relatedProduct.images?.[0] ||
-                      "/placeholder.svg?height=200&width=200"
+                      "/placeholder.svg?height=200&width=200" ||
+                      "/placeholder.svg"
                     }
                     alt={relatedProduct.name}
                     className="w-full h-full object-contain"

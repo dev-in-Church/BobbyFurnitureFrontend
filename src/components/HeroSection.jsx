@@ -776,8 +776,8 @@ const HeroSection = () => {
 
   return (
     // <div className="bg-primary py-4 h-screen">
-    <div className="md:mb-4 md:px-4">
-      <div className="grid grid-cols-1 w-full h-auto md:grid-cols-[1fr_710px_1fr] gap-4 md:h-[384px]">
+    <div className="md:mb-4">
+      <div className="grid grid-cols-1 w-full h-auto md:grid-cols-[1fr_750px_1fr] gap-5">
         {/* Categories sidebar - fixed width */}
         <div className="relative hidden md:block bg-white rounded-md h-full shadow-md ">
           <ul className="flex flex-col h-full py-3 justify-between">
@@ -801,7 +801,7 @@ const HeroSection = () => {
         </div>
 
         {/* Banner slider - flexible width */}
-        <div className="relative bg-[url('/banners/slider.jpg')] overflow-hidden h-fit rounded-md shadow-md">
+        <div className="relative bg-[url('/banners/slider.jpg')] overflow-hidden h-full rounded-md shadow-md">
           <div
             className="flex transition-transform duration-500 ease-in-out h-full"
             style={{ transform: `translateX(-${currentBanner * 100}%)` }}
@@ -812,7 +812,8 @@ const HeroSection = () => {
                   <img
                     src={banner.image || "/banners/slider.jpg"}
                     alt={banner.alt}
-                    className="h-full"
+                    className="h-full  w-full rounded-md shadow-md hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
                   />
                 </Link>
               </div>
@@ -836,9 +837,9 @@ const HeroSection = () => {
         </div>
 
         {/* Right sidebar - fixed width with two sections */}
-        <div className="hidden md:grid h-full overflow-hidden grid-rows-[1fr_184px] gap-4">
+        <div className="hidden md:grid overflow-hidden grid-rows-[1fr_1fr] gap-4">
           {/* Top section - white box with info items */}
-          <div className="flex flex-col justify-between bg-white p-2 rounded-sm shadow-md gap-5">
+          <div className="flex flex-col justify-between bg-white p-3 py-5 rounded-sm shadow-md gap-4">
             {/* Help Center */}
             <Link to="/help" className="flex items-center">
               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">

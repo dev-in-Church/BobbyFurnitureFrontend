@@ -2,12 +2,20 @@
 
 import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight, ShoppingCart, Heart } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ShoppingCart,
+  Heart,
+  Check,
+} from "lucide-react";
 import {
   fetchProductsByCategory,
   fetchNewArrivals,
   fetchFeaturedProducts,
 } from "../lib/api-production";
+import { useCart } from "../contexts/cart-context";
+import { useWishlist } from "../contexts/wishlist-context";
 
 export default function ProductSectionDynamic({
   title,
@@ -24,6 +32,12 @@ export default function ProductSectionDynamic({
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [addedToCart, setAddedToCart] = useState(null);
+  const [addedToWishlist, setAddedToWishlist] = useState(null);
+
+  // Use cart and wishlist contexts
+  const { addToCart, isInCart, isLoading: cartLoading } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -110,6 +124,34 @@ export default function ProductSectionDynamic({
         behavior: "smooth",
       });
     }
+  };
+
+  // Handle add to cart
+  const handleAddToCart = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    addToCart(product);
+    setAddedToCart(product.id);
+
+    // Reset the feedback after 2 seconds
+    setTimeout(() => {
+      setAddedToCart(null);
+    }, 2000);
+  };
+
+  // Handle add to wishlist
+  const handleToggleWishlist = (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    toggleWishlist(product);
+    setAddedToWishlist(product.id);
+
+    // Reset the feedback after 2 seconds
+    setTimeout(() => {
+      setAddedToWishlist(null);
+    }, 2000);
   };
 
   // Dynamic color classes
@@ -257,6 +299,11 @@ export default function ProductSectionDynamic({
                     )
                   : 0;
 
+                const productInWishlist = isInWishlist(product.id);
+                const productInCart = isInCart(product.id);
+                const showCartSuccess = addedToCart === product.id;
+                const showWishlistSuccess = addedToWishlist === product.id;
+
                 return (
                   <div
                     key={product.id}
@@ -280,7 +327,8 @@ export default function ProductSectionDynamic({
                         <img
                           src={
                             product.images?.[0] ||
-                            "/placeholder.svg?height=200&width=200"
+                            "/placeholder.svg?height=200&width=200" ||
+                            "/placeholder.svg"
                           }
                           alt={product.name}
                           className="h-full w-full object-contain transition-transform duration-500 hover:scale-105"
@@ -300,16 +348,50 @@ export default function ProductSectionDynamic({
                           }`}
                         >
                           <button
-                            className={`p-1.5 rounded-full ${bgColorClass} text-white hover:scale-110 transition-transform`}
-                            aria-label="Add to cart"
+                            onClick={(e) => handleAddToCart(e, product)}
+                            className={`p-1.5 rounded-full transition-all duration-200 ${
+                              showCartSuccess
+                                ? "bg-green-500 text-white"
+                                : productInCart
+                                ? "bg-green-500 text-white"
+                                : `${bgColorClass} text-white hover:scale-110`
+                            }`}
+                            aria-label={
+                              productInCart ? "Added to cart" : "Add to cart"
+                            }
+                            disabled={cartLoading || showCartSuccess}
                           >
-                            <ShoppingCart className="h-4 w-4" />
+                            {showCartSuccess || productInCart ? (
+                              <Check className="h-4 w-4" />
+                            ) : (
+                              <ShoppingCart className="h-4 w-4" />
+                            )}
                           </button>
                           <button
-                            className="p-1.5 rounded-full bg-gray-200 text-gray-700 hover:scale-110 transition-transform"
-                            aria-label="Add to wishlist"
+                            onClick={(e) => handleToggleWishlist(e, product)}
+                            className={`p-1.5 rounded-full transition-all duration-200 ${
+                              showWishlistSuccess
+                                ? "bg-green-500 text-white"
+                                : productInWishlist
+                                ? "bg-red-500 text-white hover:scale-110"
+                                : "bg-gray-200 text-gray-700 hover:scale-110"
+                            }`}
+                            aria-label={
+                              productInWishlist
+                                ? "Remove from wishlist"
+                                : "Add to wishlist"
+                            }
+                            disabled={showWishlistSuccess}
                           >
-                            <Heart className="h-4 w-4" />
+                            {showWishlistSuccess ? (
+                              <Check className="h-4 w-4" />
+                            ) : (
+                              <Heart
+                                className={`h-4 w-4 ${
+                                  productInWishlist ? "fill-current" : ""
+                                }`}
+                              />
+                            )}
                           </button>
                         </div>
                       </div>

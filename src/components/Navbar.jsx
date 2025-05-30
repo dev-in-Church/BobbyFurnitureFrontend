@@ -19,6 +19,7 @@ import {
   Instagram,
   Twitter,
   LayoutGrid,
+  Heart,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -43,6 +44,8 @@ import {
 } from "./ui/accordion";
 import Banner from "./Banner";
 import { useAuth } from "../contexts/auth-context";
+import { useCart } from "../contexts/cart-context";
+import { useWishlist } from "../contexts/wishlist-context";
 
 // Social media links
 const SOCIAL_LINKS = [
@@ -528,6 +531,10 @@ export default function Navbar() {
   const location = useLocation();
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const { user, logout } = useAuth();
+
+  // Add cart and wishlist context
+  const { getCartItemsCount } = useCart();
+  const { wishlistItems } = useWishlist();
 
   // Check if mobile on mount and window resize
   useEffect(() => {
@@ -1095,9 +1102,22 @@ export default function Navbar() {
               <Button variant="ghost" className="p-1">
                 <ShoppingCart className="h-5 w-5" />
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
-                  1
+                  {getCartItemsCount()}
                 </span>
                 <span className="ml-1 hidden sm:inline">Cart</span>
+              </Button>
+            </Link>
+
+            {/* Wishlist */}
+            <Link to="/wishlist" className="relative">
+              <Button variant="ghost" className="p-1">
+                <Heart className="h-5 w-5" />
+                {wishlistItems.length > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                    {wishlistItems.length}
+                  </span>
+                )}
+                <span className="ml-1 hidden sm:inline">Wishlist</span>
               </Button>
             </Link>
           </div>

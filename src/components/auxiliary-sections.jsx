@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 // Single Landscape Banner Component
 export function FurnitureBanner() {
   return (
-    <section className="mt-6 md:mx-[1.9rem]">
+    <section className="mt-2 md:mt-4">
       <div className="">
         <div className="rounded-lg overflow-hidden h-40 md:h-60">
           <img
@@ -29,19 +29,19 @@ export function FurnitureGrid() {
     },
     {
       name: "Living Room",
-      image: "/placeholder.jpg?height=150&width=150",
+      image: "/placeholder.png?height=150&width=150",
       link: "/category/living-room",
       bgColor: "bg-blue-500",
     },
     {
       name: "Bedroom Sets",
-      image: "/placeholder.jpg?height=150&width=150",
+      image: "/placeholder.png?height=150&width=150",
       link: "/category/bedroom",
       bgColor: "bg-purple-500",
     },
     {
       name: "Dining Room",
-      image: "/placeholder.jpg?height=150&width=150",
+      image: "/placeholder.png?height=150&width=150",
       link: "/category/dining-room",
       bgColor: "bg-green-500",
     },
@@ -59,44 +59,44 @@ export function FurnitureGrid() {
     },
     {
       name: "Outdoor Furniture",
-      image: "/placeholder.jpg?height=150&width=150",
+      image: "/placeholder.png?height=150&width=150",
       link: "/category/outdoor",
       bgColor: "bg-teal-500",
     },
     {
       name: "Storage Solutions",
-      image: "/placeholder.jpg?height=150&width=150",
+      image: "/placeholder.png?height=150&width=150",
       link: "/category/storage",
       bgColor: "bg-cyan-500",
     },
     {
       name: "Kids Furniture",
-      image: "/placeholder.jpg?height=150&width=150",
+      image: "/placeholder.png?height=150&width=150",
       link: "/category/kids",
       bgColor: "bg-pink-500",
     },
     {
       name: "Mattresses",
-      image: "/placeholder.jpg?height=150&width=150",
+      image: "/placeholder.png?height=150&width=150",
       link: "/category/mattresses",
       bgColor: "bg-emerald-500",
     },
     {
       name: "Home Decor",
-      image: "/placeholder.jpg?height=150&width=150",
+      image: "/placeholder.png?height=150&width=150",
       link: "/category/decor",
       bgColor: "bg-yellow-500",
     },
     {
       name: "Clearance Sale",
-      image: "/placeholder.jpg?height=150&width=150",
+      image: "/placeholder.png?height=150&width=150",
       link: "/clearance",
       bgColor: "bg-rose-500",
     },
   ];
 
   return (
-    <section className="py-6 bg-white md:mx-[1.9rem] rounded-lg mt-6">
+    <section className="py-6 bg-white rounded-md mt-2 md:mt-4">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
           {categories.map((category, index) => (
@@ -109,7 +109,7 @@ export function FurnitureGrid() {
                 className={`bg-gray-100 h-[10rem] sm:h-[11rem] md:h-48 rounded-lg flex items-center justify-center relative overflow-hidden`}
               >
                 <img
-                  src={category.image || "/placeholder.jpg"}
+                  src={category.image || "/placeholder.png"}
                   alt={category.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
