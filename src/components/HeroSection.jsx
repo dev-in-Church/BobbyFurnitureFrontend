@@ -647,7 +647,9 @@ const categories = [
 const CategoryItem = ({ category, isActive, setActiveCategory }) => {
   return (
     <li
-      className={clsx("relative", { "text-primary": isActive })}
+      className={clsx("relative h-full", {
+        "text-primary": isActive,
+      })}
       onMouseEnter={() => setActiveCategory(category.id)}
       onMouseLeave={() => setActiveCategory(null)}
     >
@@ -668,7 +670,7 @@ const SubcategoriesPanel = ({ category, setActiveCategory }) => {
 
   return (
     <div
-      className="absolute bg-white overflow-y-auto grid grid-cols-3 gap-6 top-0 left-[210px] border border-gray-200 z-50 w-[730px] h-full p-4 rounded-r-lg shadow-md"
+      className="absolute bg-white overflow-y-auto grid grid-cols-3 gap-6 top-0 left-[250px] border border-gray-200 z-50 w-[775px] h-full p-4 rounded-r-lg shadow-md"
       // style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       onMouseEnter={() => setActiveCategory(category.id)}
       onMouseLeave={() => setActiveCategory(null)}

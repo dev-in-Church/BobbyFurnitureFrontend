@@ -32,8 +32,8 @@ export default function InfoSection() {
   ];
 
   return (
-    <section className="container mx-auto px-2 md:px-6 lg:px-8 py-6 bg-[url('/textures/blue-snow.png')] bg-repeat">
-      <div className="max-w-7xl bg-white rounded-md shadow-md overflow-hidden">
+    <section className="container mx-auto max-w-[85rem]  overflow-hidden min-h-screen px-1 md:px-7 lg:px-8 py-4  ">
+      <div className="container mx-auto px-4 bg-white">
         <div className="p-2 md:p-4">
           {/* Company Introduction */}
           <div className="mb-10">
