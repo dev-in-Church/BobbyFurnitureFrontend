@@ -547,7 +547,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   <Link
-                    to="/admin-order-list"
+                    to="/admin/orders"
                     className="text-sm font-medium text-amber-600 hover:text-amber-800 flex items-center gap-1"
                   >
                     Manage orders
@@ -588,7 +588,7 @@ const AdminDashboard = () => {
                 color="purple"
               />
               <DashboardLink
-                to="/admin-order-list"
+                to="/admin/orders"
                 icon={<ClipboardList className="w-5 h-5" />}
                 label="Manage Orders"
                 description="Process and track customer orders"
@@ -737,7 +737,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="mt-4 pt-4 border-t border-gray-100">
                   <Link
-                    to="/admin-order-list"
+                    to="/admin/orders"
                     className="text-sm font-medium text-gray-600 hover:text-gray-800 flex items-center gap-1"
                   >
                     View all orders

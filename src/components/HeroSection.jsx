@@ -670,7 +670,7 @@ const SubcategoriesPanel = ({ category, setActiveCategory }) => {
 
   return (
     <div
-      className="absolute bg-white overflow-y-auto grid grid-cols-3 gap-6 top-0 left-[250px] border border-gray-200 z-50 w-[775px] h-full p-4 rounded-r-lg shadow-md"
+      className="absolute bg-white overflow-y-auto grid grid-cols-3 gap-6 top-0 left-[230px] border border-gray-200 z-50 w-[770px] h-full p-4 rounded-r-md shadow-md"
       // style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       onMouseEnter={() => setActiveCategory(category.id)}
       onMouseLeave={() => setActiveCategory(null)}
@@ -730,7 +730,7 @@ const HeroSection = () => {
     },
     // {
     //   id: 5,
-    //   image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
+    //   image: "/banners/five.gif?height=400&width=800&text=Banner+3",
     //   alt: "Banner 5",
     //   link: "/promo/banner-5",
     // },
@@ -779,7 +779,7 @@ const HeroSection = () => {
   return (
     // <div className="bg-primary py-4 h-screen">
     <div className="md:mb-4">
-      <div className="grid grid-cols-1 w-full h-auto md:grid-cols-[1fr_750px_1fr] gap-5">
+      <div className="grid grid-cols-1 w-full h-auto md:grid-cols-[1fr_3fr_1fr] gap-4">
         {/* Categories sidebar - fixed width */}
         <div className="relative hidden md:block bg-white rounded-md h-full shadow-md ">
           <ul className="flex flex-col h-full py-3 justify-between">

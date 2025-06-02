@@ -617,7 +617,7 @@ export default function Navbar() {
     return (
       <div
         ref={categoryDropdownRef}
-        className="relative"
+        className="relative hidden md:block"
         onMouseEnter={() => setShowCategoryDropdown(true)}
         onMouseLeave={() => {
           setShowCategoryDropdown(false);
@@ -720,9 +720,9 @@ export default function Navbar() {
           <span className="sr-only">Open menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[300px] sm:w-[350px]">
+      <SheetContent side="left" className="w-[300px] sm:w-[350px] z-[999]">
         <SheetHeader>
-          <SheetTitle>Bobby Furniture</SheetTitle>
+          <SheetTitle className="text-primary">Bobby Furniture</SheetTitle>
         </SheetHeader>
         <div className="py-4">
           <div className="mb-4">
@@ -877,7 +877,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-[90] w-full bg-white shadow-sm">
       {/* gif advert */}
-      <Banner />
+      {/* <Banner /> */}
       {/* Top Bar */}
       <div className="bg-blue-400 text-white">
         <div className="container mx-auto flex h-8 items-center justify-between px-4 ">

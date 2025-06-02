@@ -68,7 +68,7 @@ const AdminUserManagement = () => {
   const { user: currentUser } = useAuth();
 
   // API configuration
-  const API_BASE_URL = "http://localhost:5000/api";
+  const API_BASE_URL = "https://bobbyfurnitureonline.onrender.com";
 
   // API helper function
   const apiCall = async (endpoint, options = {}) => {
@@ -99,7 +99,7 @@ const AdminUserManagement = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await apiCall("/admin/users");
+      const response = await apiCall("/users");
       setUsers(response.users || []);
     } catch (error) {
       console.error("Failed to fetch users:", error);

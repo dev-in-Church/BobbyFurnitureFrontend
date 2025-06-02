@@ -10,7 +10,7 @@ export function FurnitureBanner() {
           <img
             src="/banners/banner.jpg?height=400&width=1200"
             alt="banner"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-fill"
           />
         </div>
       </div>

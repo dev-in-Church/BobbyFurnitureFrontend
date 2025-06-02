@@ -169,7 +169,7 @@ import Navbar from "./components/Navbar"; //fix this disturbing fucking shit
 import EnhancedFooter from "./components/enhanced-footer";
 
 // Page Components
-import HomePage from "./pages/home-dynamic";
+import HomeDynamic from "./pages/home-dynamic";
 import CategoryPage from "./pages/category-page-dynamic";
 import ProductDetailPage from "./pages/product-detail";
 import SearchResultsPage from "./pages/search-results-dynamic";
@@ -257,7 +257,7 @@ const App = () => {
             <Layout>
               <Routes>
                 {/* Public Routes */}
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<HomeDynamic />} />
                 <Route path="/category/:category" element={<CategoryPage />} />
                 <Route path="/product/:id" element={<ProductDetailPage />} />
                 <Route path="/search" element={<SearchResultsPage />} />
@@ -343,7 +343,7 @@ const App = () => {
                   }
                 />
                 <Route
-                  path="/admin/users"
+                  path="/admin/manage-users"
                   element={
                     <ProtectedRoute requireAdmin>
                       <AdminUserManagement />

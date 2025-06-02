@@ -26,73 +26,70 @@ import {
   TableHeader,
   TableRow,
 } from "../components/ui/table";
-import { Search, Eye, Package, Truck, CheckCircle, Clock } from "lucide-react";
+import {
+  Search,
+  Eye,
+  Package,
+  Truck,
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  Loader2,
+  RefreshCcw,
+  DollarSign,
+} from "lucide-react";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const AdminOrderList = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [totalSales, setTotalSales] = useState(0);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch orders
+      const ordersResponse = await fetch(
+        "https://bobbyfurnitureonline.onrender.com/api/orders"
+      );
+
+      if (!ordersResponse.ok) {
+        throw new Error(`Failed to fetch orders: ${ordersResponse.statusText}`);
+      }
+
+      const ordersData = await ordersResponse.json();
+      setOrders(ordersData);
+
+      // Fetch total sales
+      const salesResponse = await fetch(
+        "https://bobbyfurnitureonline.onrender.com/api/orders/total-sales"
+      );
+
+      if (salesResponse.ok) {
+        const salesData = await salesResponse.json();
+        setTotalSales(salesData.totalSales || 0);
+      }
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+      setError("Failed to load orders. Please try again.");
+      toast.error("Failed to load orders");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Mock API call to fetch orders
-    const fetchOrders = async () => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Mock order data
-        const mockOrders = [
-          {
-            id: "ORD-2024-001",
-            customer: "John Doe",
-            email: "john@example.com",
-            date: "2024-01-15",
-            status: "delivered",
-            total: 1299.99,
-            items: 1,
-          },
-          {
-            id: "ORD-2024-002",
-            customer: "Jane Smith",
-            email: "jane@example.com",
-            date: "2024-01-20",
-            status: "shipped",
-            total: 599.99,
-            items: 1,
-          },
-          {
-            id: "ORD-2024-003",
-            customer: "Bob Johnson",
-            email: "bob@example.com",
-            date: "2024-01-25",
-            status: "processing",
-            total: 899.99,
-            items: 2,
-          },
-          {
-            id: "ORD-2024-004",
-            customer: "Alice Brown",
-            email: "alice@example.com",
-            date: "2024-01-28",
-            status: "pending",
-            total: 1599.99,
-            items: 3,
-          },
-        ];
-
-        setOrders(mockOrders);
-      } catch (error) {
-        console.error("Failed to fetch orders:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchOrders();
   }, []);
 
   const getStatusIcon = (status) => {
-    switch (status) {
+    switch (status?.toLowerCase()) {
       case "pending":
         return <Clock className="h-4 w-4" />;
       case "processing":
@@ -101,56 +98,113 @@ const AdminOrderList = () => {
         return <Truck className="h-4 w-4" />;
       case "delivered":
         return <CheckCircle className="h-4 w-4" />;
+      case "cancelled":
+        return <AlertCircle className="h-4 w-4" />;
       default:
-        return <Package className="h-4 w-4" />;
+        return <Clock className="h-4 w-4" />;
     }
   };
 
   const getStatusColor = (status) => {
-    switch (status) {
+    switch (status?.toLowerCase()) {
       case "pending":
-        return "bg-gray-100 text-gray-800";
-      case "processing":
         return "bg-yellow-100 text-yellow-800";
-      case "shipped":
+      case "processing":
         return "bg-blue-100 text-blue-800";
+      case "shipped":
+        return "bg-indigo-100 text-indigo-800";
       case "delivered":
         return "bg-green-100 text-green-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
       default:
         return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const updateOrderStatus = async (orderId, newStatus) => {
+    try {
+      const response = await fetch(
+        `https://bobbyfurnitureonline.onrender.com/api/orders/${orderId}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ order_status: newStatus }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to update order status: ${response.statusText}`
+        );
+      }
+
+      // Update the order status locally
+      setOrders(
+        orders.map((order) =>
+          order.id === orderId ? { ...order, order_status: newStatus } : order
+        )
+      );
+
+      toast.success(`Order status updated to ${newStatus}`);
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      toast.error("Failed to update order status");
     }
   };
 
   const filteredOrders = orders.filter((order) => {
     const matchesSearch =
-      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.email.toLowerCase().includes(searchQuery.toLowerCase());
+      (order.public_id &&
+        order.public_id.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (order.customer_name &&
+        order.customer_name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())) ||
+      (order.phone &&
+        order.phone.toLowerCase().includes(searchQuery.toLowerCase()));
 
     const matchesStatus =
-      statusFilter === "all" || order.status === statusFilter;
+      statusFilter === "all" ||
+      (order.order_status &&
+        order.order_status.toLowerCase() === statusFilter.toLowerCase());
 
     return matchesSearch && matchesStatus;
   });
 
-  const updateOrderStatus = (orderId, newStatus) => {
-    setOrders(
-      orders.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      )
-    );
+  // Format date for display
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
   };
 
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-16 bg-gray-200 rounded"></div>
-            ))}
-          </div>
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="h-8 w-8 animate-spin text-blue-500 mr-2" />
+          <span>Loading orders...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center py-16">
+          <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">{error}</h3>
+          <Button onClick={fetchOrders} className="mt-4">
+            <RefreshCcw className="h-4 w-4 mr-2" />
+            Try Again
+          </Button>
         </div>
       </div>
     );
@@ -164,8 +218,19 @@ const AdminOrderList = () => {
           <p className="text-gray-600">Manage and track customer orders</p>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-bold">{orders.length}</p>
-          <p className="text-sm text-gray-600">Total Orders</p>
+          <div className="flex items-center justify-end gap-6">
+            <div>
+              <p className="text-2xl font-bold">{orders.length}</p>
+              <p className="text-sm text-gray-600">Total Orders</p>
+            </div>
+            <div>
+              <p className="text-2xl font-bold text-green-600 flex items-center">
+                <DollarSign className="h-5 w-5" />
+                {Number(totalSales).toLocaleString()}
+              </p>
+              <p className="text-sm text-gray-600">Total Sales</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -176,7 +241,7 @@ const AdminOrderList = () => {
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder="Search orders, customers, or emails..."
+                placeholder="Search orders, customers, or phone numbers..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -192,6 +257,7 @@ const AdminOrderList = () => {
                 <SelectItem value="processing">Processing</SelectItem>
                 <SelectItem value="shipped">Shipped</SelectItem>
                 <SelectItem value="delivered">Delivered</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -223,36 +289,44 @@ const AdminOrderList = () => {
               <TableBody>
                 {filteredOrders.map((order) => (
                   <TableRow key={order.id}>
-                    <TableCell className="font-medium">{order.id}</TableCell>
+                    <TableCell className="font-medium">
+                      {order.public_id || order.id}
+                    </TableCell>
                     <TableCell>
                       <div>
-                        <p className="font-medium">{order.customer}</p>
-                        <p className="text-sm text-gray-600">{order.email}</p>
+                        <p className="font-medium">{order.customer_name}</p>
+                        <p className="text-sm text-gray-600">{order.phone}</p>
                       </div>
                     </TableCell>
+                    <TableCell>{formatDate(order.created_at)}</TableCell>
                     <TableCell>
-                      {new Date(order.date).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={`${getStatusColor(order.status)}`}>
+                      <Badge
+                        className={`${getStatusColor(order.order_status)}`}
+                      >
                         <span className="flex items-center gap-1">
-                          {getStatusIcon(order.status)}
-                          {order.status.charAt(0).toUpperCase() +
-                            order.status.slice(1)}
+                          {getStatusIcon(order.order_status)}
+                          {order.order_status
+                            ? order.order_status.charAt(0).toUpperCase() +
+                              order.order_status.slice(1).toLowerCase()
+                            : "Pending"}
                         </span>
                       </Badge>
                     </TableCell>
-                    <TableCell>{order.items}</TableCell>
+                    <TableCell>
+                      {order.items ? order.items.length : 0}
+                    </TableCell>
                     <TableCell className="font-medium">
-                      ${order.total.toFixed(2)}
+                      KSh {Number(order.total_amount).toLocaleString()}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-4 w-4" />
-                        </Button>
+                        <Link to={`/admin/orders/${order.id}`}>
+                          <Button variant="outline" size="sm">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        </Link>
                         <Select
-                          value={order.status}
+                          value={order.order_status || "Pending"}
                           onValueChange={(value) =>
                             updateOrderStatus(order.id, value)
                           }
@@ -261,12 +335,13 @@ const AdminOrderList = () => {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="pending">Pending</SelectItem>
-                            <SelectItem value="processing">
+                            <SelectItem value="Pending">Pending</SelectItem>
+                            <SelectItem value="Processing">
                               Processing
                             </SelectItem>
-                            <SelectItem value="shipped">Shipped</SelectItem>
-                            <SelectItem value="delivered">Delivered</SelectItem>
+                            <SelectItem value="Shipped">Shipped</SelectItem>
+                            <SelectItem value="Delivered">Delivered</SelectItem>
+                            <SelectItem value="Cancelled">Cancelled</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
