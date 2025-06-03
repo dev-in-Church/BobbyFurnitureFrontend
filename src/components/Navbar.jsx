@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Menu,
   Search,
@@ -42,7 +42,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import Banner from "./Banner";
 import { useAuth } from "../contexts/auth-context";
 import { useCart } from "../contexts/cart-context";
 import { useWishlist } from "../contexts/wishlist-context";
@@ -501,36 +500,19 @@ const CATEGORIES = [
   },
 ];
 
-// Banner component
-// const Banner = () => {
-//   const [isVisible, setIsVisible] = useState(true);
-
-//   if (!isVisible) return null;
-
-//   return (
-//     <div className="relative bg-primary text-primary-foreground">
-//       <div className="container mx-auto px-4 py-1 text-center text-xs sm:text-sm">
-//         <p>Free delivery on orders over $100. Shop now!</p>
-//       </div>
-//       <button
-//         onClick={() => setIsVisible(false)}
-//         className="absolute right-2 top-1/2 -translate-y-1/2 text-primary-foreground"
-//         aria-label="Close banner"
-//       >
-//         <X className="h-4 w-4" />
-//       </button>
-//     </div>
-//   );
-// };
-
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const categoryDropdownRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const { user, logout } = useAuth();
+
+  // Search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
 
   // Add cart and wishlist context
   const { getCartItemsCount } = useCart();
@@ -566,6 +548,34 @@ export default function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Handle search functionality
+  const handleSearch = (query) => {
+    const trimmedQuery = query.trim();
+    if (trimmedQuery) {
+      navigate(`/catalog?q=${encodeURIComponent(trimmedQuery)}`);
+    }
+  };
+
+  // Handle desktop search form submission
+  const handleDesktopSearchSubmit = (e) => {
+    e.preventDefault();
+    handleSearch(searchQuery);
+  };
+
+  // Handle mobile search form submission
+  const handleMobileSearchSubmit = (e) => {
+    e.preventDefault();
+    handleSearch(mobileSearchQuery);
+  };
+
+  // Handle search input key press
+  const handleSearchKeyPress = (e, query) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch(query);
+    }
+  };
 
   const renderTopBarLeft = () => (
     <div className="flex items-center gap-4 text-xs">
@@ -726,10 +736,16 @@ export default function Navbar() {
         </SheetHeader>
         <div className="py-4">
           <div className="mb-4">
-            <div className="relative">
+            <form onSubmit={handleMobileSearchSubmit} className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
-              <Input placeholder="Search products..." className="pl-10 pr-4" />
-            </div>
+              <Input
+                placeholder="Search products..."
+                className="pl-10 pr-4"
+                value={mobileSearchQuery}
+                onChange={(e) => setMobileSearchQuery(e.target.value)}
+                onKeyPress={(e) => handleSearchKeyPress(e, mobileSearchQuery)}
+              />
+            </form>
           </div>
 
           <Accordion type="single" collapsible className="w-full">
@@ -919,7 +935,10 @@ export default function Navbar() {
 
           {/* Search Bar */}
           <div className="hidden md:flex w-full max-w-xl items-center px-4">
-            <div className="relative flex w-full items-center">
+            <form
+              onSubmit={handleDesktopSearchSubmit}
+              className="relative flex w-full items-center"
+            >
               <div className="relative flex w-full">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                   <Search className="h-5 w-5 text-gray-400" />
@@ -928,6 +947,9 @@ export default function Navbar() {
                   type="text"
                   placeholder="Search products, brands and categories"
                   className="h-10 w-full rounded-md border border-gray-300 pl-10 pr-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => handleSearchKeyPress(e, searchQuery)}
                 />
               </div>
               <Button
@@ -936,7 +958,7 @@ export default function Navbar() {
               >
                 Search
               </Button>
-            </div>
+            </form>
           </div>
 
           {/* Navigation */}
@@ -947,7 +969,12 @@ export default function Navbar() {
             )}
 
             {/* Search Button (Mobile) */}
-            <Button variant="ghost" size="icon" className="md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => navigate("/catalog")}
+            >
               <Search className="h-5 w-5" />
               <span className="sr-only">Search</span>
             </Button>

@@ -161,7 +161,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { CartProvider } from "./contexts/cart-context";
 import { WishlistProvider } from "./contexts/wishlist-context";
 import { AuthProvider, AuthContext } from "./contexts/auth-context";
-import { ToastContainer } from "react-toastify";
+// import { ToastContainer } from "react-toastify";
+import { ToastContainer } from "./components/ui/toast";
 import "react-toastify/dist/ReactToastify.css";
 
 // Layout Components
@@ -170,7 +171,10 @@ import EnhancedFooter from "./components/enhanced-footer";
 
 // Page Components
 import HomeDynamic from "./pages/home-dynamic";
-import CategoryPage from "./pages/category-page-dynamic";
+// import CategoryPage from "./pages/category-page-dynamic";
+import AllProductsPage from "./pages/AllProductsPage";
+import CatalogPage from "./pages/CatalogPage";
+import CategoryPage from "./pages/category/[category]";
 import ProductDetailPage from "./pages/product-detail";
 import SearchResultsPage from "./pages/search-results-dynamic";
 import CartPage from "./pages/cart-page";
@@ -259,7 +263,12 @@ const App = () => {
               <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<HomeDynamic />} />
+                {/* <Route path="/category/:category" element={<CategoryPage />} /> */}
+                {/* Category page - dynamic route */}
+                <Route path="/all-products" element={<AllProductsPage />} />
                 <Route path="/category/:category" element={<CategoryPage />} />
+                {/* Search/Catalog page */}
+                <Route path="/catalog" element={<CatalogPage />} />
                 <Route path="/product/:id" element={<ProductDetailPage />} />
                 <Route path="/search" element={<SearchResultsPage />} />
                 <Route path="/cart" element={<CartPage />} />
