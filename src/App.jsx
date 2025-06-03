@@ -188,6 +188,7 @@ import AdminDashboard from "./pages/admin-dashboard-enhanced";
 import EnhancedManageProducts from "./components/enhanced-manage-products-updated";
 import AdminOrderList from "./pages/admin-order-list";
 import AdminUserManagement from "./pages/admin-user-management";
+import AdminOrderDetail from "./pages/admin-order-details";
 
 // Auth Components
 import LoginPage from "./pages/login-page";
@@ -331,6 +332,14 @@ const App = () => {
                   element={
                     <ProtectedRoute requireAdmin>
                       <AdminOrderList />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/admin/orders/:orderId"
+                  element={
+                    <ProtectedRoute requireAdmin>
+                      <AdminOrderDetail />
                     </ProtectedRoute>
                   }
                 />

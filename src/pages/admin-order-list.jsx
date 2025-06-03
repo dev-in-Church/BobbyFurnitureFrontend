@@ -320,7 +320,10 @@ const AdminOrderList = () => {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <Link to={`/admin/orders/${order.id}`}>
+                        <Link
+                          to={`/admin/orders/${order.id}`}
+                          state={{ order: order }} // Pass the order data as state
+                        >
                           <Button variant="outline" size="sm">
                             <Eye className="h-4 w-4" />
                           </Button>
