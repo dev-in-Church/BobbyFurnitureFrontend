@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Menu,
@@ -511,6 +512,9 @@ export default function Navbar() {
   const [hoveredCategory, setHoveredCategory] = useState(null);
   const { user, logout } = useAuth();
 
+  // Show the button only on the /products page
+  const showSpecialButton = location.pathname === "/";
+
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileSearchQuery, setMobileSearchQuery] = useState("");
@@ -894,7 +898,8 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-[90] w-full bg-white shadow-sm">
       {/* gif advert */}
-      <Banner />
+      {/* <Banner /> */}
+      {showSpecialButton && <Banner />}
       {/* Top Bar */}
       <div className="bg-gray-100 text-primary">
         <div className="container mx-auto flex h-8 items-center justify-between px-4 ">
