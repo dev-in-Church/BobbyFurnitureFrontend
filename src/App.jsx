@@ -265,6 +265,7 @@ const App = () => {
                 <Route path="/" element={<HomeDynamic />} />
                 {/* <Route path="/category/:category" element={<CategoryPage />} /> */}
                 {/* Category page - dynamic route */}
+                <Route path="/products" element={<AllProductsPage />} />
                 <Route path="/all-products" element={<AllProductsPage />} />
                 <Route path="/category/:category" element={<CategoryPage />} />
                 {/* Search/Catalog page */}

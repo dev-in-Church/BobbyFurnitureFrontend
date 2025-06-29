@@ -42,7 +42,7 @@ export default function HomeDynamic() {
           <ProductSectionDynamic
             title="Sponsored"
             viewMoreLink="/featured"
-            color="red-500"
+            color="blue-500"
             text="white"
             type="featured"
             limit={9}
