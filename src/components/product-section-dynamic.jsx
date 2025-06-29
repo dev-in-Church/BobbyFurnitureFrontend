@@ -21,6 +21,7 @@ export default function ProductSectionDynamic({
   title,
   viewMoreLink,
   color = "blue-500",
+  text,
   category = null,
   type = "category", // category, new-arrivals, featured
   limit = 9,
@@ -156,28 +157,34 @@ export default function ProductSectionDynamic({
 
   // Dynamic color classes
   const getColorClass = (baseColor) => {
-    return baseColor.includes("-") ? baseColor : `${baseColor}-500`;
+    // return baseColor.includes("-") ? baseColor : `${baseColor}-500`;
+    return baseColor;
   };
 
   const bgColorClass = `bg-${getColorClass(color)}`;
+  const txtColor = `text-${getColorClass(text)}`;
+  // console.log(txtColor);
+  // console.log(bgColorClass);
 
   return (
     <div className="mb-6 bg-white rounded-sm shadow-md overflow-hidden">
       <div
         className={`flex justify-between px-6 py-2 items-center ${bgColorClass}`}
       >
-        <h2 className="text-md text-white md:text-lg font-medium tracking-wide">
+        <h2
+          className={`text-sm sm:text-md ${txtColor}  md:text-lg font-medium tracking-wide`}
+        >
           {title}
         </h2>
         <Link
           to={viewMoreLink}
-          className="flex text-white hover:text-gray-100 text-sm items-center transition-colors"
+          className={`flex ${txtColor} hover:text-gray-600 text-sm items-center transition-colors`}
         >
           <span>See All</span> <ChevronRight className="h-4 ml-1" />
         </Link>
       </div>
 
-      <div className="relative px-1 py-3 bg-gray-50">
+      <div className="relative px-1 py-1 bg-gray-50">
         {/* Slider navigation buttons */}
         {showLeftArrow && (
           <button
@@ -281,7 +288,7 @@ export default function ProductSectionDynamic({
         {!loading && !error && (
           <div
             ref={sliderRef}
-            className="flex overflow-x-auto scrollbar-hide gap-4 px-4 py-2 pb-4"
+            className="flex overflow-x-auto scrollbar-hide gap-2 px-1 py-1 pb-2"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",
@@ -307,7 +314,7 @@ export default function ProductSectionDynamic({
                 return (
                   <div
                     key={product.id}
-                    className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[200px] bg-white rounded-lg overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-lg border border-gray-100"
+                    className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px]  rounded-sm overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-lg border border-primary"
                     onMouseEnter={() => setIsHovering(product.id)}
                     onMouseLeave={() => setIsHovering(null)}
                   >
@@ -315,7 +322,7 @@ export default function ProductSectionDynamic({
                       to={`/product/${product.id}`}
                       className="block h-full"
                     >
-                      <div className="relative h-40 w-full overflow-hidden bg-gray-100">
+                      <div className="relative h-40 w-full overflow-hidden">
                         {/* Discount tag */}
                         {discountPercentage > 0 && (
                           <div
@@ -331,7 +338,7 @@ export default function ProductSectionDynamic({
                             "/placeholder.svg"
                           }
                           alt={product.name}
-                          className="h-full w-full object-contain transition-transform duration-500 hover:scale-105"
+                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                           loading="lazy"
                           onError={(e) => {
                             e.target.src =
@@ -354,7 +361,7 @@ export default function ProductSectionDynamic({
                                 ? "bg-green-500 text-white"
                                 : productInCart
                                 ? "bg-green-500 text-white"
-                                : `${bgColorClass} text-white hover:scale-110`
+                                : "bg-primary text-white hover:scale-110"
                             }`}
                             aria-label={
                               productInCart ? "Added to cart" : "Add to cart"
@@ -396,13 +403,11 @@ export default function ProductSectionDynamic({
                         </div>
                       </div>
                       <div className="px-3 py-3">
-                        <h3 className="text-sm line-clamp-2 h-10 font-medium text-gray-800 mb-1">
+                        <h3 className="truncate text-sm line-clamp-2 h-10 font-medium text-gray-800 mb-1">
                           {product.name}
                         </h3>
                         <div className="flex items-baseline">
-                          <p
-                            className={`text-${getColorClass(color)} font-bold`}
-                          >
+                          <p className={`text-gray-600 font-bold`}>
                             KSh{" "}
                             {product.price.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
@@ -410,7 +415,7 @@ export default function ProductSectionDynamic({
                             })}
                           </p>
                           {product.original_price && (
-                            <p className="text-xs text-gray-500 line-through ml-2">
+                            <p className="text-xs text-gray-400 line-through ml-2">
                               KSh{" "}
                               {product.original_price.toLocaleString(
                                 undefined,

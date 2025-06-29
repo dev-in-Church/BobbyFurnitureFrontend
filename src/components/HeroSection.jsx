@@ -670,7 +670,7 @@ const SubcategoriesPanel = ({ category, setActiveCategory }) => {
 
   return (
     <div
-      className="absolute bg-white overflow-y-auto grid grid-cols-3 gap-6 top-0 left-[230px] border border-gray-200 z-50 w-[770px] h-full p-4 rounded-r-md shadow-md"
+      className="absolute bg-white overflow-y-auto grid grid-cols-3 gap-6 top-0 left-[215px] border border-gray-200 z-50 w-[735px] h-full p-4 rounded-r-md shadow-md"
       // style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       onMouseEnter={() => setActiveCategory(category.id)}
       onMouseLeave={() => setActiveCategory(null)}
@@ -708,25 +708,25 @@ const HeroSection = () => {
       id: 1,
       image: "/banners/one.jpg?height=400&width=800&text=Banner+1",
       alt: "Banner 1",
-      link: "/promo/banner-1",
+      link: "/all-products",
     },
     {
       id: 2,
       image: "/banners/two.jpg?height=400&width=800&text=Banner+2",
       alt: "Banner 2",
-      link: "/promo/banner-2",
+      link: "/all-products",
     },
     {
       id: 3,
       image: "/banners/three.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 3",
-      link: "/promo/banner-3",
+      link: "/all-products",
     },
     {
       id: 4,
       image: "/banners/four.jpg?height=400&width=800&text=Banner+3",
       alt: "Banner 4",
-      link: "/promo/banner-4",
+      link: "/all-products",
     },
     // {
     //   id: 5,
@@ -779,7 +779,7 @@ const HeroSection = () => {
   return (
     // <div className="bg-primary py-4 h-screen">
     <div className="md:mb-4">
-      <div className="grid grid-cols-1 w-full h-auto md:grid-cols-[1fr_3fr_1fr] gap-4">
+      <div className="grid grid-cols-1 w-full h-auto md:grid-cols-[1fr_3fr_0.95fr] gap-5">
         {/* Categories sidebar - fixed width */}
         <div className="relative hidden md:block bg-white rounded-md h-full shadow-md ">
           <ul className="flex flex-col h-full py-3 justify-between">
@@ -814,7 +814,7 @@ const HeroSection = () => {
                   <img
                     src={banner.image || "/banners/slider.jpg"}
                     alt={banner.alt}
-                    className="h-full  w-full"
+                    className="h-full w-full"
                     loading="lazy"
                   />
                 </Link>
@@ -839,7 +839,7 @@ const HeroSection = () => {
         </div>
 
         {/* Right sidebar - fixed width with two sections */}
-        <div className="hidden md:grid overflow-hidden grid-rows-[1fr_1fr] gap-4">
+        <div className="hidden md:grid overflow-hidden grid-rows-[1fr_1fr] gap-3">
           {/* Top section - white box with info items */}
           <div className="flex flex-col justify-between bg-white p-3 py-5 rounded-sm shadow-md gap-4">
             {/* Help Center */}
@@ -877,12 +877,14 @@ const HeroSection = () => {
           </div>
 
           {/* Bottom section - Call/WhatsApp gif */}
-          <div className="bg-white rounded-sm shadow-md overflow-hidden">
+          <div className="flex justify-center items-center bg-white rounded-sm shadow-md overflow-hidden">
+            {/* <div className="bg-gray-300"> */}
             <img
               src="/banners/bottom.jpg"
               alt=""
               className="h-full w-full object-cover"
             />
+            {/* </div> */}
           </div>
         </div>
       </div>

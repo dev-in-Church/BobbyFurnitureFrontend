@@ -3,12 +3,12 @@ import React from "react";
 
 const Banner = () => {
   return (
-    <div className="w-full  overflow-hidden">
-      <a href="/products" className="block">
+    <div className="w-full flex justify-center overflow-hidden bg-blue-300">
+      <a href="/all-products" className="block">
         <img
-          src="/bobby_may.gif"
+          src="/banners/host_in_style.gif"
           alt="Just Got Paid - Shop Now"
-          className="w-full h-auto"
+          className=" h-full object-cover object-center"
         />
       </a>
     </div>

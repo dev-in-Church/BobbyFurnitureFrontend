@@ -45,6 +45,7 @@ import {
 import { useAuth } from "../contexts/auth-context";
 import { useCart } from "../contexts/cart-context";
 import { useWishlist } from "../contexts/wishlist-context";
+import Banner from "./Banner";
 
 // Social media links
 const SOCIAL_LINKS = [
@@ -893,9 +894,9 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-[90] w-full bg-white shadow-sm">
       {/* gif advert */}
-      {/* <Banner /> */}
+      <Banner />
       {/* Top Bar */}
-      <div className="bg-blue-400 text-white">
+      <div className="bg-gray-100 text-primary">
         <div className="container mx-auto flex h-8 items-center justify-between px-4 ">
           {renderTopBarLeft()}
           {renderTopBarRight()}
