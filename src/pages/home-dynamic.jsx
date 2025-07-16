@@ -53,10 +53,10 @@ export default function HomeDynamic() {
         <div className="mt-2 md:mt-4">
           <ProductSectionDynamic
             title="New Arrivals"
-            viewMoreLink="/featured"
+            viewMoreLink="/category/new-arrivals"
             color="white"
             text="gray-500"
-            type="featured"
+            type="new-arrivals"
             limit={9}
           />
         </div>
