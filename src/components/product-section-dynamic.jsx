@@ -13,16 +13,16 @@ import {
   fetchProductsByCategory,
   fetchNewArrivals,
   fetchFeaturedProducts,
-} from "../lib/api-production";
-import { useCart } from "../contexts/cart-context";
-import { useWishlist } from "../contexts/wishlist-context";
+} from "../lib/api-production"; // Assuming this path is correct
+import { useCart } from "../contexts/cart-context"; // Assuming this path is correct
+import { useWishlist } from "../contexts/wishlist-context"; // Assuming this path is correct
 
 export default function ProductSectionDynamic({
   title,
   viewMoreLink,
   color = "blue-500",
   text,
-  category = null,
+  category = null, // This should be the category slug (e.g., "living-room")
   type = "category", // category, new-arrivals, featured
   limit = 9,
 }) {
@@ -40,14 +40,25 @@ export default function ProductSectionDynamic({
   const { addToCart, isInCart, isLoading: cartLoading } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
 
+  // Declare scrollLeft and scrollRight functions
+  const scrollLeft = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollLeft -= 200; // Adjust the scroll amount as needed
+    }
+  };
+
+  const scrollRight = () => {
+    if (sliderRef.current) {
+      sliderRef.current.scrollLeft += 200; // Adjust the scroll amount as needed
+    }
+  };
+
   useEffect(() => {
-    const fetchProducts = async () => {
+    const loadProducts = async () => {
       setLoading(true);
       setError(null);
-
       try {
         let data;
-
         switch (type) {
           case "new-arrivals":
             data = await fetchNewArrivals(limit);
@@ -63,13 +74,15 @@ export default function ProductSectionDynamic({
             data = await fetchProductsByCategory(category, { limit });
             break;
         }
-
-        // Handle both array response and paginated response
-        const productsData = data.products || data;
-        setProducts(productsData || []);
-
-        if (productsData && productsData.length > 0) {
+        // MODIFIED LINE: Handle both array response and paginated response
+        // If data is an array (e.g., from /featured or /new-arrivals), use it directly.
+        // If data is an object with a 'products' key (e.g., from /products or /category), use data.products.
+        const productsData = Array.isArray(data) ? data : data.products || [];
+        setProducts(productsData);
+        if (productsData.length > 0) {
           console.log(`✅ Loaded ${productsData.length} products for ${title}`);
+        } else {
+          console.log(`ℹ️ No products found for ${title}`);
         }
       } catch (err) {
         console.error(`Error fetching products for ${title}:`, err);
@@ -79,14 +92,12 @@ export default function ProductSectionDynamic({
         setLoading(false);
       }
     };
-
-    fetchProducts();
-  }, [category, type, limit, title]);
+    loadProducts();
+  }, [category, type, limit, title]); // Re-run effect if these props change
 
   // Check if scrolling is possible and update arrow visibility
   const checkScrollPosition = () => {
     if (!sliderRef.current) return;
-
     const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
     setShowLeftArrow(scrollLeft > 0);
     setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10); // 10px buffer
@@ -99,42 +110,18 @@ export default function ProductSectionDynamic({
       slider.addEventListener("scroll", checkScrollPosition);
       // Initial check
       checkScrollPosition();
-
       return () => {
         slider.removeEventListener("scroll", checkScrollPosition);
       };
     }
-  }, [products]);
-
-  // Handle scroll actions
-  const scrollLeft = () => {
-    if (sliderRef.current) {
-      const containerWidth = sliderRef.current.clientWidth;
-      sliderRef.current.scrollBy({
-        left: -containerWidth * 0.8,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const scrollRight = () => {
-    if (sliderRef.current) {
-      const containerWidth = sliderRef.current.clientWidth;
-      sliderRef.current.scrollBy({
-        left: containerWidth * 0.8,
-        behavior: "smooth",
-      });
-    }
-  };
+  }, [products]); // Re-run when products change to re-evaluate scroll position
 
   // Handle add to cart
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
-
     addToCart(product);
     setAddedToCart(product.id);
-
     // Reset the feedback after 2 seconds
     setTimeout(() => {
       setAddedToCart(null);
@@ -145,10 +132,8 @@ export default function ProductSectionDynamic({
   const handleToggleWishlist = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
-
     toggleWishlist(product);
     setAddedToWishlist(product.id);
-
     // Reset the feedback after 2 seconds
     setTimeout(() => {
       setAddedToWishlist(null);
@@ -157,14 +142,10 @@ export default function ProductSectionDynamic({
 
   // Dynamic color classes
   const getColorClass = (baseColor) => {
-    // return baseColor.includes("-") ? baseColor : `${baseColor}-500`;
-    return baseColor;
+    return baseColor; // Assuming baseColor already includes the shade (e.g., "blue-500")
   };
-
   const bgColorClass = `bg-${getColorClass(color)}`;
   const txtColor = `text-${getColorClass(text)}`;
-  // console.log(txtColor);
-  // console.log(bgColorClass);
 
   return (
     <div className="mb-6 bg-white rounded-sm shadow-md overflow-hidden">
@@ -172,7 +153,7 @@ export default function ProductSectionDynamic({
         className={`flex justify-between px-6 py-2 items-center ${bgColorClass}`}
       >
         <h2
-          className={`text-sm sm:text-md ${txtColor}  md:text-lg font-medium tracking-wide`}
+          className={`text-sm sm:text-md ${txtColor} md:text-lg font-medium tracking-wide`}
         >
           {title}
         </h2>
@@ -183,7 +164,6 @@ export default function ProductSectionDynamic({
           <span>See All</span> <ChevronRight className="h-4 ml-1" />
         </Link>
       </div>
-
       <div className="relative px-1 py-1 bg-gray-50">
         {/* Slider navigation buttons */}
         {showLeftArrow && (
@@ -195,7 +175,6 @@ export default function ProductSectionDynamic({
             <ChevronLeft className="h-5 w-5 text-gray-700" />
           </button>
         )}
-
         {showRightArrow && (
           <button
             onClick={scrollRight}
@@ -205,17 +184,16 @@ export default function ProductSectionDynamic({
             <ChevronRight className="h-5 w-5 text-gray-700" />
           </button>
         )}
-
         {/* Loading state with skeleton */}
         {loading && (
           <div className="px-4 py-6">
-            <div className="flex gap-4 overflow-hidden">
+            <div className="flex gap-2 overflow-hidden">
               {Array(limit || 9)
                 .fill(0)
                 .map((_, index) => (
                   <div
                     key={index}
-                    className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[200px] bg-white rounded-lg overflow-hidden flex-shrink-0 border border-gray-100 animate-pulse"
+                    className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] bg-white rounded-lg overflow-hidden flex-shrink-0 border border-gray-100 animate-pulse"
                   >
                     <div className="relative h-40 w-full bg-gray-200">
                       <div className="absolute top-2 right-2 h-6 w-12 bg-gray-300 rounded-md"></div>
@@ -254,7 +232,6 @@ export default function ProductSectionDynamic({
             </div>
           </div>
         )}
-
         {/* Error state */}
         {error && (
           <div className="flex flex-col justify-center items-center py-12 px-4 text-center">
@@ -283,7 +260,6 @@ export default function ProductSectionDynamic({
             </button>
           </div>
         )}
-
         {/* Product slider */}
         {!loading && !error && (
           <div
@@ -305,16 +281,14 @@ export default function ProductSectionDynamic({
                         100
                     )
                   : 0;
-
                 const productInWishlist = isInWishlist(product.id);
                 const productInCart = isInCart(product.id);
                 const showCartSuccess = addedToCart === product.id;
                 const showWishlistSuccess = addedToWishlist === product.id;
-
                 return (
                   <div
                     key={product.id}
-                    className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px]  rounded-sm overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-lg border border-primary"
+                    className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] rounded-sm overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-lg border border-primary"
                     onMouseEnter={() => setIsHovering(product.id)}
                     onMouseLeave={() => setIsHovering(null)}
                   >
@@ -335,6 +309,7 @@ export default function ProductSectionDynamic({
                           src={
                             product.images?.[0] ||
                             "/placeholder.svg?height=200&width=200" ||
+                            "/placeholder.svg" ||
                             "/placeholder.svg"
                           }
                           alt={product.name}
@@ -345,7 +320,6 @@ export default function ProductSectionDynamic({
                               "/placeholder.svg?height=200&width=200";
                           }}
                         />
-
                         {/* Quick action buttons that appear on hover */}
                         <div
                           className={`absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-2 bg-white/80 backdrop-blur-sm transition-all duration-300 ${

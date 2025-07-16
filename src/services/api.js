@@ -2,7 +2,8 @@ import axios from "axios";
 
 const API_BASE_URL = "https://bobbyfurnitureonline.onrender.com";
 
-// Category mapping to convert URL slugs to database category names
+// Category mapping to convert URL slugs to a more readable format if needed for display.
+// For API calls, the backend's normalization handles the slug directly.
 const categoryMapping = {
   "living-room": "Living Room",
   bedroom: "Bedroom",
@@ -13,6 +14,7 @@ const categoryMapping = {
   decor: "Decor",
   "kids-room": "Kids Room",
   mattresses: "Mattresses",
+  lighting: "Lighting", // Added based on your fetchCategories fallback
 };
 
 // Fetch all products with filters
@@ -31,23 +33,30 @@ export const fetchAllProducts = async (
     params.append("sort", sort);
 
     if (search) params.append("search", search);
+    // The backend's /products endpoint now handles 'category' with ILIKE for partial matching
+    // It will normalize the category string (e.g., 'living-room' -> 'living room')
     if (category) params.append("category", category);
     if (minPrice) params.append("minPrice", minPrice);
     if (maxPrice) params.append("maxPrice", maxPrice);
-    if (featured !== null) params.append("featured", featured);
-    if (onSale !== null) params.append("onSale", onSale);
+    // Ensure boolean values are correctly appended as 'true' or 'false' strings
+    if (featured !== undefined && featured !== null)
+      params.append("featured", featured.toString());
+    if (onSale !== undefined && onSale !== null)
+      params.append("onSale", onSale.toString());
 
     const response = await axios.get(
       `${API_BASE_URL}/products?${params.toString()}`
     );
     return response.data;
   } catch (error) {
-    console.error("API Error:", error);
+    console.error("API Error in fetchAllProducts:", error);
     throw error;
   }
 };
 
-// Fetch products by category with filters - FIXED VERSION
+// Fetch products by category with filters - UPDATED VERSION
+// This function now uses the general /products endpoint with the 'category' parameter
+// for partial matching, aligning with the backend changes.
 export const fetchProductsByCategory = async (
   categorySlug,
   page = 1,
@@ -57,72 +66,33 @@ export const fetchProductsByCategory = async (
 ) => {
   try {
     const { minPrice, maxPrice, featured, onSale } = filters;
-
-    // Convert URL slug to database category name
-    const categoryName = categoryMapping[categorySlug] || categorySlug;
-
+    // Use the categorySlug directly. The backend will normalize it for ILIKE matching.
+    // The categoryMapping can still be used for display purposes on the frontend if needed.
     const params = new URLSearchParams();
+
     params.append("page", page);
     params.append("limit", limit);
     params.append("sort", sort);
-
-    // Use categoryContains parameter for partial matching
-    // This will match "Living Room - Sectional Sofas" when searching for "Living Room"
-    params.append("categoryContains", categoryName);
+    params.append("category", categorySlug); // Use 'category' parameter for partial matching
 
     if (minPrice) params.append("minPrice", minPrice);
     if (maxPrice) params.append("maxPrice", maxPrice);
-    if (featured !== null) params.append("featured", featured);
-    if (onSale !== null) params.append("onSale", onSale);
-
-    // Use the general products endpoint with categoryContains filter
-    const response = await axios.get(
-      `${API_BASE_URL}/products?${params.toString()}`
-    );
-    return response.data;
-  } catch (error) {
-    console.error("API Error:", error);
-    throw error;
-  }
-};
-
-// Alternative approach if your backend doesn't support categoryContains
-// You can modify this to use a different endpoint or parameter name
-export const fetchProductsByCategoryAlternative = async (
-  categorySlug,
-  page = 1,
-  limit = 12,
-  sort = "newest",
-  filters = {}
-) => {
-  try {
-    const { minPrice, maxPrice, featured, onSale } = filters;
-
-    // Convert URL slug to database category name
-    const categoryName = categoryMapping[categorySlug] || categorySlug;
-
-    const params = new URLSearchParams();
-    params.append("page", page);
-    params.append("limit", limit);
-    params.append("sort", sort);
-
-    // Use search parameter to find categories containing the category name
-    params.append("search", categoryName);
-
-    if (minPrice) params.append("minPrice", minPrice);
-    if (maxPrice) params.append("maxPrice", maxPrice);
-    if (featured !== null) params.append("featured", featured);
-    if (onSale !== null) params.append("onSale", onSale);
+    if (featured !== undefined && featured !== null)
+      params.append("featured", featured.toString());
+    if (onSale !== undefined && onSale !== null)
+      params.append("onSale", onSale.toString());
 
     const response = await axios.get(
       `${API_BASE_URL}/products?${params.toString()}`
     );
     return response.data;
   } catch (error) {
-    console.error("API Error:", error);
+    console.error("API Error in fetchProductsByCategory:", error);
     throw error;
   }
 };
+
+// Removed fetchProductsByCategoryAlternative as it's no longer needed.
 
 // Fetch a single product by ID
 export const fetchProductById = async (id) => {
@@ -130,19 +100,20 @@ export const fetchProductById = async (id) => {
     const response = await axios.get(`${API_BASE_URL}/products/${id}`);
     return response.data;
   } catch (error) {
-    console.error("API Error:", error);
+    console.error("API Error in fetchProductById:", error);
     throw error;
   }
 };
 
-// Fetch all categories
+// Fetch all categories - UPDATED ENDPOINT
 export const fetchCategories = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/products/categories`);
+    // Call the dedicated /categories endpoint from routes/categories.js
+    const response = await axios.get(`${API_BASE_URL}/categories`);
     return response.data;
   } catch (error) {
-    console.error("API Error:", error);
-    // Return default categories if the endpoint doesn't exist
+    console.error("API Error in fetchCategories:", error);
+    // Return default categories if the endpoint doesn't exist or fails
     return [
       { slug: "living-room", name: "Living Room" },
       { slug: "bedroom", name: "Bedroom" },
@@ -161,12 +132,17 @@ export const fetchCategories = async () => {
 // Get price range for products
 export const fetchPriceRange = async (category = null) => {
   try {
+    // If you want price range to also respect partial category matching,
+    // you might need a backend endpoint that supports it.
+    // For now, this assumes the backend's price-range endpoint handles 'category'
+    // in a way that aligns with your needs (exact or partial).
     const url = category
       ? `${API_BASE_URL}/products/price-range?category=${category}`
       : `${API_BASE_URL}/products/price-range`;
     const response = await axios.get(url);
     return response.data;
   } catch (error) {
+    console.error("API Error in fetchPriceRange:", error);
     // Fallback to default range if endpoint doesn't exist
     return { min: 0, max: 500000 };
   }
@@ -189,18 +165,21 @@ export const searchProducts = async (
     params.append("limit", limit);
     params.append("sort", sort);
 
+    // The backend's /products/search endpoint also uses 'category' for partial matching
     if (category) params.append("category", category);
     if (minPrice) params.append("minPrice", minPrice);
     if (maxPrice) params.append("maxPrice", maxPrice);
-    if (featured !== null) params.append("featured", featured);
-    if (onSale !== null) params.append("onSale", onSale);
+    if (featured !== undefined && featured !== null)
+      params.append("featured", featured.toString());
+    if (onSale !== undefined && onSale !== null)
+      params.append("onSale", onSale.toString());
 
     const response = await axios.get(
       `${API_BASE_URL}/products/search?${params.toString()}`
     );
     return response.data;
   } catch (error) {
-    console.error("API Error:", error);
+    console.error("API Error in searchProducts:", error);
     throw error;
   }
 };

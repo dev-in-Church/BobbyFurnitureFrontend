@@ -10,7 +10,6 @@ async function enhancedFetch(url, options = {}) {
 
   try {
     console.log(`🌐 API Request: ${url}`);
-
     const response = await fetch(url, {
       ...options,
       signal: controller.signal,
@@ -28,7 +27,6 @@ async function enhancedFetch(url, options = {}) {
 
     if (!response.ok) {
       let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
-
       // Try to get error details from response
       try {
         const errorData = await response.json();
@@ -36,7 +34,6 @@ async function enhancedFetch(url, options = {}) {
       } catch (e) {
         // If response is not JSON, use status text
       }
-
       console.error(`❌ API Error: ${errorMessage} for ${url}`);
       throw new Error(errorMessage);
     }
@@ -46,12 +43,10 @@ async function enhancedFetch(url, options = {}) {
     return data;
   } catch (error) {
     clearTimeout(timeoutId);
-
     if (error.name === "AbortError") {
       console.error(`⏰ API Timeout: ${url}`);
       throw new Error("Request timeout - please check your connection");
     }
-
     console.error(`🚫 API Failed: ${url}`, error.message);
     throw error;
   }
@@ -62,24 +57,24 @@ async function enhancedFetch(url, options = {}) {
  */
 function buildURL(endpoint, params = {}) {
   const url = new URL(endpoint, API_BASE_URL);
-
   Object.entries(params).forEach(([key, value]) => {
+    // Ensure boolean values are correctly appended as 'true' or 'false' strings
     if (value !== undefined && value !== null && value !== "") {
       url.searchParams.append(key, value.toString());
     }
   });
-
   return url.toString();
 }
 
 /**
  * Fetch products with advanced filtering and pagination
+ * This function now sends the 'category' parameter for partial matching on the backend.
  */
 export async function fetchProducts(options = {}) {
   const {
     page = 1,
     limit = 12,
-    category,
+    category, // This will be used for partial matching on the backend
     search,
     sort = "newest",
     minPrice,
@@ -96,6 +91,7 @@ export async function fetchProducts(options = {}) {
     ...(search && { search }),
     ...(minPrice !== undefined && { minPrice }),
     ...(maxPrice !== undefined && { maxPrice }),
+    // Ensure boolean values are correctly passed
     ...(featured !== undefined && { featured }),
     ...(onSale !== undefined && { onSale }),
   };
@@ -106,45 +102,20 @@ export async function fetchProducts(options = {}) {
 
 /**
  * Fetch a single product by ID - Updated to match your backend response
+ * This function already returns relatedProducts from the backend.
  */
 export async function fetchProductById(id) {
   if (!id) {
     throw new Error("Product ID is required");
   }
-
   const url = buildURL(`/products/${id}`);
   const data = await enhancedFetch(url);
-
   // Your backend returns the product with relatedProducts included
-  // So we don't need a separate API call for related products
   return data;
 }
 
-/**
- * Fetch related products for a given product ID
- * This uses the same category to find related products
- */
-export async function fetchRelatedProducts(productId, limit = 4) {
-  try {
-    // First get the product to know its category
-    const product = await fetchProductById(productId);
-
-    // Then fetch products from the same category, excluding the current product
-    const relatedData = await fetchProductsByCategory(product.category, {
-      limit: limit + 1,
-    });
-
-    // Filter out the current product and limit results
-    const relatedProducts = relatedData.products
-      .filter((p) => p.id !== Number.parseInt(productId))
-      .slice(0, limit);
-
-    return relatedProducts;
-  } catch (error) {
-    console.warn("Could not fetch related products, returning empty array");
-    return [];
-  }
-}
+// Removed fetchRelatedProducts as it's now redundant.
+// The related products are returned directly by fetchProductById.
 
 /**
  * Fetch featured products
@@ -163,15 +134,15 @@ export async function fetchNewArrivals(limit = 8) {
 }
 
 /**
- * Fetch products by category
+ * Fetch products by category (using URL parameter)
+ * This function uses the /products/category/:category endpoint, which also
+ * supports partial matching on the backend.
  */
 export async function fetchProductsByCategory(category, options = {}) {
   if (!category) {
     throw new Error("Category is required");
   }
-
   const { page = 1, limit = 12, sort = "newest", minPrice, maxPrice } = options;
-
   const params = {
     page,
     limit,
@@ -179,7 +150,6 @@ export async function fetchProductsByCategory(category, options = {}) {
     ...(minPrice !== undefined && { minPrice }),
     ...(maxPrice !== undefined && { maxPrice }),
   };
-
   const url = buildURL(
     `/products/category/${encodeURIComponent(category)}`,
     params
@@ -189,19 +159,21 @@ export async function fetchProductsByCategory(category, options = {}) {
 
 /**
  * Search products
+ * This function now includes 'featured' and 'onSale' filters for consistency.
  */
 export async function searchProducts(query, options = {}) {
   if (!query || query.trim() === "") {
     throw new Error("Search query is required");
   }
-
   const {
     page = 1,
     limit = 12,
     sort = "relevance",
-    category,
+    category, // This will be used for partial matching on the backend
     minPrice,
     maxPrice,
+    featured, // Added for consistency
+    onSale, // Added for consistency
   } = options;
 
   const params = {
@@ -212,6 +184,8 @@ export async function searchProducts(query, options = {}) {
     ...(category && { category }),
     ...(minPrice !== undefined && { minPrice }),
     ...(maxPrice !== undefined && { maxPrice }),
+    ...(featured !== undefined && { featured }), // Ensure boolean values are correctly passed
+    ...(onSale !== undefined && { onSale }), // Ensure boolean values are correctly passed
   };
 
   const url = buildURL("/products/search", params);
@@ -219,21 +193,26 @@ export async function searchProducts(query, options = {}) {
 }
 
 /**
- * Fetch all categories (you might need to add this endpoint to your backend)
+ * Fetch all categories (now correctly points to the /categories endpoint)
  */
 export async function fetchCategories() {
   try {
-    const url = buildURL("/categories");
+    const url = buildURL("/categories"); // Correct endpoint from routes/categories.js
     return await enhancedFetch(url);
   } catch (error) {
     // Fallback to extracting categories from products if categories endpoint doesn't exist
-    console.warn("Categories endpoint not available, using fallback");
+    console.warn("Categories endpoint not available, using fallback", error);
     return [
       { id: 1, name: "Living Room", slug: "living-room" },
       { id: 2, name: "Bedroom", slug: "bedroom" },
       { id: 3, name: "Dining Room", slug: "dining-room" },
       { id: 4, name: "Office", slug: "office" },
       { id: 5, name: "Outdoor", slug: "outdoor" },
+      { id: 6, name: "Storage", slug: "storage" },
+      { id: 7, name: "Lighting", slug: "lighting" }, // Added based on common categories
+      { id: 8, name: "Decor", slug: "decor" },
+      { id: 9, name: "Kids Room", slug: "kids-room" },
+      { id: 10, name: "Mattresses", slug: "mattresses" },
     ];
   }
 }
@@ -244,6 +223,25 @@ export async function fetchCategories() {
 export async function fetchTotalProducts() {
   const url = buildURL("/products/total-products");
   return await enhancedFetch(url);
+}
+
+/**
+ * Get price range for products
+ * This function assumes your backend's price-range endpoint handles 'category'
+ * in a way that aligns with your needs (exact or partial).
+ */
+export async function fetchPriceRange(category = null) {
+  try {
+    const url = category
+      ? buildURL("/products/price-range", { category })
+      : buildURL("/products/price-range");
+    const response = await enhancedFetch(url);
+    return response.data;
+  } catch (error) {
+    console.error("API Error in fetchPriceRange:", error);
+    // Fallback to default range if endpoint doesn't exist
+    return { min: 0, max: 500000 };
+  }
 }
 
 /**
@@ -298,13 +296,14 @@ export async function deleteProduct(id) {
 export default {
   fetchProducts,
   fetchProductById,
-  fetchRelatedProducts,
+  // fetchRelatedProducts, // Removed as it's redundant
   fetchFeaturedProducts,
   fetchNewArrivals,
   fetchProductsByCategory,
   searchProducts,
   fetchCategories,
   fetchTotalProducts,
+  fetchPriceRange,
   checkApiHealth,
   createProduct,
   updateProduct,

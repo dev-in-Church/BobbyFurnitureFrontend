@@ -32,7 +32,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../components/ui/accordion";
-import { fetchProductById, fetchRelatedProducts } from "../lib/api-production";
+import { fetchProductById } from "../lib/api-production"; // Removed fetchRelatedProducts import
 import { useCart } from "../contexts/cart-context";
 import { useWishlist } from "../contexts/wishlist-context";
 
@@ -43,7 +43,7 @@ export default function ProductDetail() {
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [relatedProducts, setRelatedProducts] = useState([]); // State for related products
   const [addedToCart, setAddedToCart] = useState(false);
   const [addedToWishlist, setAddedToWishlist] = useState(false);
 
@@ -55,23 +55,14 @@ export default function ProductDetail() {
     const fetchProductData = async () => {
       setLoading(true);
       setError(null);
-
       try {
         // Fetch product details - your backend returns product with relatedProducts included
         const productData = await fetchProductById(id);
         setProduct(productData);
-
         // Set first image as selected
         setSelectedImage(0);
-
-        // Use the relatedProducts from the API response, or fetch them separately if not included
-        if (productData.relatedProducts) {
-          setRelatedProducts(productData.relatedProducts);
-        } else {
-          // Fallback: fetch related products separately
-          const relatedData = await fetchRelatedProducts(id, 4);
-          setRelatedProducts(relatedData);
-        }
+        // Directly use the relatedProducts from the API response
+        setRelatedProducts(productData.relatedProducts || []); // Ensure it's an array even if empty
       } catch (err) {
         console.error("Error fetching product:", err);
         setError("Failed to load product details. Please try again later.");
@@ -79,12 +70,10 @@ export default function ProductDetail() {
         setLoading(false);
       }
     };
-
     fetchProductData();
-
     // Reset scroll position when product ID changes
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [id]); // Dependency array includes 'id' to refetch when product changes
 
   const handleQuantityChange = (value) => {
     const newQuantity = quantity + value;
@@ -97,7 +86,6 @@ export default function ProductDetail() {
     if (product && product.stock > 0) {
       addToCart(product, quantity);
       setAddedToCart(true);
-
       // Reset feedback after 3 seconds
       setTimeout(() => {
         setAddedToCart(false);
@@ -109,7 +97,6 @@ export default function ProductDetail() {
     if (product) {
       toggleWishlist(product);
       setAddedToWishlist(true);
-
       // Reset feedback after 3 seconds
       setTimeout(() => {
         setAddedToWishlist(false);
@@ -149,9 +136,10 @@ export default function ProductDetail() {
   }
 
   // Calculate discount percentage if originalPrice exists
-  const discountPercentage = product.originalPrice
+  const discountPercentage = product.original_price
     ? Math.round(
-        ((product.originalPrice - product.price) / product.originalPrice) * 100
+        ((product.original_price - product.price) / product.original_price) *
+          100
       )
     : 0;
 
@@ -176,7 +164,8 @@ export default function ProductDetail() {
                 <Link
                   to={`/category/${product.category
                     ?.split(" - ")[0]
-                    .toLowerCase()}`}
+                    .toLowerCase()
+                    .replace(/\s/g, "-")}`}
                   className="text-gray-700 hover:text-blue-500"
                 >
                   {product.category?.split(" - ")[0] || "Products"}
@@ -194,7 +183,6 @@ export default function ProductDetail() {
           </ol>
         </nav>
       </div>
-
       {/* Product Details */}
       <div className="container mx-auto px-4 py-6">
         <div className="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -208,19 +196,16 @@ export default function ProductDetail() {
                     -{discountPercentage}% OFF
                   </div>
                 )}
-
                 {/* Featured badge */}
                 {product.featured && (
                   <div className="absolute top-4 right-4 z-10 bg-yellow-500 text-white text-sm font-bold px-2 py-1 rounded-md">
                     FEATURED
                   </div>
                 )}
-
                 <img
                   src={
                     product.images?.[selectedImage] ||
-                    "/placeholder.svg?height=500&width=500" ||
-                    "/placeholder.svg"
+                    "/placeholder.svg?height=500&width=500"
                   }
                   alt={product.name}
                   className="w-full h-full object-contain"
@@ -229,7 +214,6 @@ export default function ProductDetail() {
                   }}
                 />
               </div>
-
               {/* Thumbnail images */}
               {product.images?.length > 1 && (
                 <div className="flex gap-2 overflow-x-auto pb-2">
@@ -257,14 +241,12 @@ export default function ProductDetail() {
                 </div>
               )}
             </div>
-
             {/* Product Info */}
             <div className="space-y-6">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
                   {product.name}
                 </h1>
-
                 {/* Rating */}
                 <div className="flex items-center mb-4">
                   <div className="flex">
@@ -291,22 +273,19 @@ export default function ProductDetail() {
                     {product.rating || 4} ({product.reviews || 0} reviews)
                   </span>
                 </div>
-
                 {/* Price */}
                 <div className="flex items-baseline mb-4">
                   <span className="text-3xl font-bold text-blue-600">
                     KSh {product.price.toLocaleString()}
                   </span>
-                  {product.originalPrice && (
+                  {product.original_price && (
                     <span className="text-lg text-gray-500 line-through ml-3">
-                      KSh {product.originalPrice.toLocaleString()}
+                      KSh {product.original_price.toLocaleString()}
                     </span>
                   )}
                 </div>
-
                 {/* Short description */}
                 <p className="text-gray-600 mb-6">{product.description}</p>
-
                 {/* Key features */}
                 <div className="space-y-2 mb-6">
                   <div className="flex items-start">
@@ -340,7 +319,6 @@ export default function ProductDetail() {
                     </div>
                   )}
                 </div>
-
                 {/* Quantity selector */}
                 <div className="flex items-center mb-6">
                   <span className="text-gray-700 mr-4">Quantity:</span>
@@ -369,7 +347,6 @@ export default function ProductDetail() {
                       : "Out of stock"}
                   </span>
                 </div>
-
                 {/* Action buttons */}
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button
@@ -427,12 +404,14 @@ export default function ProductDetail() {
                       </>
                     )}
                   </Button>
-                  <Button variant="outline" className="sm:flex-none py-3">
+                  <Button
+                    variant="outline"
+                    className="sm:flex-none py-3 bg-transparent"
+                  >
                     <Share2 className="h-5 w-5" />
                   </Button>
                 </div>
               </div>
-
               {/* Delivery info */}
               <div className="border-t border-gray-200 pt-6 space-y-4">
                 <div className="flex items-start">
@@ -456,7 +435,6 @@ export default function ProductDetail() {
               </div>
             </div>
           </div>
-
           {/* Product details tabs */}
           <div className="border-t border-gray-200 p-6">
             <Tabs defaultValue="description">
@@ -465,7 +443,6 @@ export default function ProductDetail() {
                 <TabsTrigger value="specifications">Specifications</TabsTrigger>
                 <TabsTrigger value="shipping">Shipping & Returns</TabsTrigger>
               </TabsList>
-
               <TabsContent
                 value="description"
                 className="text-gray-700 space-y-4"
@@ -483,7 +460,6 @@ export default function ProductDetail() {
                   variety of interior design styles.
                 </p>
               </TabsContent>
-
               <TabsContent value="specifications" className="text-gray-700">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -545,7 +521,6 @@ export default function ProductDetail() {
                       </tbody>
                     </table>
                   </div>
-
                   <div>
                     <h3 className="font-medium text-gray-900 mb-3">
                       Care Instructions
@@ -579,7 +554,6 @@ export default function ProductDetail() {
                   </div>
                 </div>
               </TabsContent>
-
               <TabsContent value="shipping" className="text-gray-700">
                 <div className="space-y-6">
                   <div>
@@ -610,7 +584,6 @@ export default function ProductDetail() {
                       </li>
                     </ul>
                   </div>
-
                   <div>
                     <h3 className="font-medium text-gray-900 mb-3">
                       Returns & Refunds
@@ -640,7 +613,6 @@ export default function ProductDetail() {
               </TabsContent>
             </Tabs>
           </div>
-
           {/* FAQs */}
           <div className="border-t border-gray-200 p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">
@@ -694,7 +666,6 @@ export default function ProductDetail() {
           </div>
         </div>
       </div>
-
       {/* Related Products */}
       <div className="container mx-auto px-4 mt-12">
         <div className="flex items-center justify-between mb-6">
@@ -702,13 +673,15 @@ export default function ProductDetail() {
             You May Also Like
           </h2>
           <Link
-            to={`/category/${product.category?.split(" - ")[0].toLowerCase()}`}
+            to={`/category/${product.category
+              ?.split(" - ")[0]
+              .toLowerCase()
+              .replace(/\s/g, "-")}`}
             className="text-blue-600 hover:text-blue-800 flex items-center"
           >
             View More <ArrowRight className="ml-1 h-4 w-4" />
           </Link>
         </div>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {relatedProducts.map((relatedProduct) => (
             <div
@@ -720,8 +693,7 @@ export default function ProductDetail() {
                   <img
                     src={
                       relatedProduct.images?.[0] ||
-                      "/placeholder.svg?height=200&width=200" ||
-                      "/placeholder.svg"
+                      "/placeholder.svg?height=200&width=200"
                     }
                     alt={relatedProduct.name}
                     className="w-full h-full object-contain"
@@ -729,11 +701,12 @@ export default function ProductDetail() {
                       e.target.src = "/placeholder.svg?height=200&width=200";
                     }}
                   />
-                  {relatedProduct.originalPrice && (
+                  {relatedProduct.original_price && (
                     <Badge className="absolute top-2 right-2 bg-red-500 text-white">
                       {Math.round(
-                        ((relatedProduct.originalPrice - relatedProduct.price) /
-                          relatedProduct.originalPrice) *
+                        ((relatedProduct.original_price -
+                          relatedProduct.price) /
+                          relatedProduct.original_price) *
                           100
                       )}
                       % OFF
@@ -748,9 +721,9 @@ export default function ProductDetail() {
                     <span className="text-blue-600 font-bold">
                       KSh {relatedProduct.price.toLocaleString()}
                     </span>
-                    {relatedProduct.originalPrice && (
+                    {relatedProduct.original_price && (
                       <span className="text-sm text-gray-500 line-through ml-2">
-                        KSh {relatedProduct.originalPrice.toLocaleString()}
+                        KSh {relatedProduct.original_price.toLocaleString()}
                       </span>
                     )}
                   </div>
