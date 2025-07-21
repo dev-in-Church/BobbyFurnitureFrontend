@@ -102,6 +102,7 @@ export default function HomeDynamic() {
         {/* Furniture Grid */}
         <FurnitureGrid />
         {/* dine & divine */}
+
         <div className="mt-2 md:mt-4">
           <ProductSectionDynamic
             title="Dine divine | Table Sets"

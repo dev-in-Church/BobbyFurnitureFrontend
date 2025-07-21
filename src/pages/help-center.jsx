@@ -138,7 +138,7 @@ const HelpCenterPage = () => {
             <CardContent className="pt-6">
               <Phone className="h-8 w-8 mx-auto mb-4 text-blue-600" />
               <h3 className="font-bold mb-2">Call Us</h3>
-              <p className="text-gray-600 mb-4">(555) 123-4567</p>
+              <p className="text-gray-600 mb-4">+254 708 156 310</p>
               <Button variant="outline" size="sm">
                 Call Now
               </Button>
@@ -160,7 +160,7 @@ const HelpCenterPage = () => {
             <CardContent className="pt-6">
               <Mail className="h-8 w-8 mx-auto mb-4 text-blue-600" />
               <h3 className="font-bold mb-2">Email Us</h3>
-              <p className="text-gray-600 mb-4">support@bobbyfurniture.com</p>
+              <p className="text-gray-600 mb-4">bobbyfurnitures254@gmail.com</p>
               <Button variant="outline" size="sm">
                 Send Email
               </Button>

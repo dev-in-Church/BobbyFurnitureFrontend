@@ -684,11 +684,7 @@ const SubcategoriesPanel = ({ category, setActiveCategory }) => {
             {subcategory.items.map((item, idx) => (
               <li key={idx}>
                 <Link
-                  to={`/category/${subcategory.title
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")}/${item
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")}`}
+                  to={`/category/${item.toLowerCase().replace(/\s+/g, "-")}`}
                   className="text-sm text-gray-600 hover:text-primary"
                 >
                   {item}
@@ -812,7 +808,7 @@ const HeroSection = () => {
               <div key={banner.id} className="h-full w-full flex-shrink-0">
                 <Link to={banner.link}>
                   <img
-                    src={banner.image || "/banners/slider.jpg"}
+                    src={banner.image}
                     alt={banner.alt}
                     className="h-full w-full"
                     loading="lazy"
@@ -880,7 +876,7 @@ const HeroSection = () => {
           <div className="flex justify-center items-center bg-white rounded-sm shadow-md overflow-hidden">
             {/* <div className="bg-gray-300"> */}
             <img
-              src="/banners/bottom.jpg"
+              src="/banners/2.gif"
               alt=""
               className="h-full w-full object-cover"
             />

@@ -154,8 +154,8 @@ const EnhancedFooter = () => {
               </div>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Crafting exceptional furniture with passion, precision, and a
-                commitment to quality since 2015. We bring your dream living
-                spaces to life with our handcrafted furniture pieces.
+                commitment to quality. We bring your dream living spaces to life
+                with our handcrafted furniture pieces.
               </p>
             </div>
 

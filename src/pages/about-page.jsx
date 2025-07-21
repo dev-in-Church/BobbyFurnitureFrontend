@@ -66,7 +66,7 @@ const AboutPage = () => {
         </div>
 
         {/* Story Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           <div>
             <h2 className="text-3xl font-bold mb-6">Our Story</h2>
             <div className="space-y-4 text-gray-600">
@@ -102,7 +102,7 @@ const AboutPage = () => {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Values Section */}
         <div className="mb-16">

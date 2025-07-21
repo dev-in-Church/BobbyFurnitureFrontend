@@ -8,7 +8,7 @@ const Banner = () => {
         <img
           src="/banners/host_in_style.gif"
           alt="Just Got Paid - Shop Now"
-          className=" h-full object-cover object-center"
+          className="h-full object-cover object-center"
         />
       </a>
     </div>

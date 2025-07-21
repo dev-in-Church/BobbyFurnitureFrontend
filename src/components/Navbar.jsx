@@ -898,7 +898,6 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-[90] w-full bg-white shadow-sm">
       {/* gif advert */}
-      {/* <Banner /> */}
       {showSpecialButton && <Banner />}
       {/* Top Bar */}
       <div className="bg-gray-100 text-primary">
@@ -910,7 +909,7 @@ export default function Navbar() {
 
       {/* Main Navigation Bar */}
       <div className="w-full border-b border-gray-200 bg-white">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+        <div className="container mx-auto flex h-[3rem] sm:h-16 items-end sm:items-center justify-between px-4">
           <div className="flex items-center gap-2">
             {/* Mobile Menu */}
             {renderMobileMenu()}

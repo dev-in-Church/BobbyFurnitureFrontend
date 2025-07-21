@@ -15,7 +15,6 @@ import EnhancedFooter from "./components/enhanced-footer";
 
 // Page Components
 import HomeDynamic from "./pages/home-dynamic";
-// import CategoryPage from "./pages/category-page-dynamic";
 import AllProductsPage from "./pages/AllProductsPage";
 import CatalogPage from "./pages/CatalogPage";
 import CategoryPage from "./pages/category/[category]";
