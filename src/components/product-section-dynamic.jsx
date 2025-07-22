@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import {
   ChevronLeft,
@@ -8,7 +8,7 @@ import {
   ShoppingCart,
   Heart,
   Check,
-} from "lucide-react";
+} from "lucide-react"; // Removed Loader2, CloudOff
 import {
   fetchProductsByCategory,
   fetchNewArrivals,
@@ -16,6 +16,9 @@ import {
 } from "../lib/api-production"; // Assuming this path is correct
 import { useCart } from "../contexts/cart-context"; // Assuming this path is correct
 import { useWishlist } from "../contexts/wishlist-context"; // Assuming this path is correct
+
+const RETRY_INTERVAL_MS = 3000; // Retry every 3 seconds
+// const MAX_RETRIES_BEFORE_HINT = 3 // No longer needed as hint text is removed
 
 export default function ProductSectionDynamic({
   title,
@@ -32,7 +35,10 @@ export default function ProductSectionDynamic({
   const [isHovering, setIsHovering] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [retryCount, setRetryCount] = useState(0);
+  const retryTimeoutRef = useRef(null);
+  // const [connectionIssueHint, setConnectionIssueHint] = useState(false) // No longer needed
+
   const [addedToCart, setAddedToCart] = useState(null);
   const [addedToWishlist, setAddedToWishlist] = useState(null);
 
@@ -46,54 +52,66 @@ export default function ProductSectionDynamic({
       sliderRef.current.scrollLeft -= 200; // Adjust the scroll amount as needed
     }
   };
-
   const scrollRight = () => {
     if (sliderRef.current) {
       sliderRef.current.scrollLeft += 200; // Adjust the scroll amount as needed
     }
   };
 
+  const loadProducts = useCallback(async () => {
+    setLoading(true);
+    // setConnectionIssueHint(false) // No longer needed
+    if (retryTimeoutRef.current) {
+      clearTimeout(retryTimeoutRef.current);
+    }
+
+    try {
+      let data;
+      switch (type) {
+        case "new-arrivals":
+          data = await fetchNewArrivals(limit);
+          break;
+        case "featured":
+          data = await fetchFeaturedProducts(limit);
+          break;
+        case "category":
+        default:
+          if (!category) {
+            throw new Error('Category is required when type is "category"');
+          }
+          data = await fetchProductsByCategory(category, { limit });
+          break;
+      }
+
+      const productsData = Array.isArray(data) ? data : data.products || [];
+      setProducts(productsData);
+      setLoading(false); // Only set loading to false on success
+      setRetryCount(0); // Reset retry count on success
+      console.log(`✅ Loaded ${productsData.length} products for ${title}`);
+    } catch (err) {
+      console.error(`Error fetching products for ${title}:`, err);
+      setRetryCount((prev) => prev + 1);
+
+      // if (retryCount >= MAX_RETRIES_BEFORE_HINT) { // No longer needed
+      //   setConnectionIssueHint(true)
+      // }
+
+      // Schedule retry
+      retryTimeoutRef.current = setTimeout(() => {
+        loadProducts(); // Re-call loadProducts to retry
+      }, RETRY_INTERVAL_MS);
+    }
+  }, [category, type, limit, title, retryCount]);
+
   useEffect(() => {
-    const loadProducts = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        let data;
-        switch (type) {
-          case "new-arrivals":
-            data = await fetchNewArrivals(limit);
-            break;
-          case "featured":
-            data = await fetchFeaturedProducts(limit);
-            break;
-          case "category":
-          default:
-            if (!category) {
-              throw new Error('Category is required when type is "category"');
-            }
-            data = await fetchProductsByCategory(category, { limit });
-            break;
-        }
-        // MODIFIED LINE: Handle both array response and paginated response
-        // If data is an array (e.g., from /featured or /new-arrivals), use it directly.
-        // If data is an object with a 'products' key (e.g., from /products or /category), use data.products.
-        const productsData = Array.isArray(data) ? data : data.products || [];
-        setProducts(productsData);
-        if (productsData.length > 0) {
-          console.log(`✅ Loaded ${productsData.length} products for ${title}`);
-        } else {
-          console.log(`ℹ️ No products found for ${title}`);
-        }
-      } catch (err) {
-        console.error(`Error fetching products for ${title}:`, err);
-        setError(`Unable to load ${title.toLowerCase()}. ${err.message}`);
-        setProducts([]);
-      } finally {
-        setLoading(false);
+    loadProducts();
+    // Cleanup function to clear timeout if component unmounts
+    return () => {
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
       }
     };
-    loadProducts();
-  }, [category, type, limit, title]); // Re-run effect if these props change
+  }, [loadProducts]);
 
   // Check if scrolling is possible and update arrow visibility
   const checkScrollPosition = () => {
@@ -114,7 +132,7 @@ export default function ProductSectionDynamic({
         slider.removeEventListener("scroll", checkScrollPosition);
       };
     }
-  }, [products]); // Re-run when products change to re-evaluate scroll position
+  }, [products]);
 
   // Handle add to cart
   const handleAddToCart = (e, product) => {
@@ -184,8 +202,9 @@ export default function ProductSectionDynamic({
             <ChevronRight className="h-5 w-5 text-gray-700" />
           </button>
         )}
-        {/* Loading state with skeleton */}
-        {loading && (
+
+        {/* Loading state with skeleton only */}
+        {loading && products.length === 0 && (
           <div className="px-4 py-6">
             <div className="flex gap-2 overflow-hidden">
               {Array(limit || 9)
@@ -232,36 +251,9 @@ export default function ProductSectionDynamic({
             </div>
           </div>
         )}
-        {/* Error state */}
-        {error && (
-          <div className="flex flex-col justify-center items-center py-12 px-4 text-center">
-            <div className="text-red-500 mb-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-10 w-10 mx-auto mb-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <p className="text-lg font-medium text-red-600">{error}</p>
-            </div>
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              Try Again
-            </button>
-          </div>
-        )}
+
         {/* Product slider */}
-        {!loading && !error && (
+        {!loading && products.length > 0 && (
           <div
             ref={sliderRef}
             className="flex overflow-x-auto scrollbar-hide gap-2 px-1 py-1 pb-2"
@@ -271,146 +263,140 @@ export default function ProductSectionDynamic({
               WebkitOverflowScrolling: "touch",
             }}
           >
-            {products.length > 0 ? (
-              products.map((product) => {
-                // Calculate discount percentage if original_price exists
-                const discountPercentage = product.original_price
-                  ? Math.round(
-                      ((product.original_price - product.price) /
-                        product.original_price) *
-                        100
-                    )
-                  : 0;
-                const productInWishlist = isInWishlist(product.id);
-                const productInCart = isInCart(product.id);
-                const showCartSuccess = addedToCart === product.id;
-                const showWishlistSuccess = addedToWishlist === product.id;
-                return (
-                  <div
-                    key={product.id}
-                    className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] rounded-sm overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-lg border border-primary"
-                    onMouseEnter={() => setIsHovering(product.id)}
-                    onMouseLeave={() => setIsHovering(null)}
-                  >
-                    <Link
-                      to={`/product/${product.id}`}
-                      className="block h-full"
-                    >
-                      <div className="relative h-40 w-full overflow-hidden">
-                        {/* Discount tag */}
-                        {discountPercentage > 0 && (
-                          <div
-                            className={`absolute top-2 right-2 ${bgColorClass} text-white text-xs font-bold px-2 py-1 rounded-md z-10`}
-                          >
-                            -{discountPercentage}%
-                          </div>
-                        )}
-                        <img
-                          src={
-                            product.images?.[0] ||
-                            "/placeholder.svg?height=200&width=200" ||
-                            "/placeholder.svg" ||
-                            "/placeholder.svg"
-                          }
-                          alt={product.name}
-                          className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                          loading="lazy"
-                          onError={(e) => {
-                            e.target.src =
-                              "/placeholder.svg?height=200&width=200";
-                          }}
-                        />
-                        {/* Quick action buttons that appear on hover */}
+            {products.map((product) => {
+              // Calculate discount percentage if original_price exists
+              const discountPercentage = product.original_price
+                ? Math.round(
+                    ((product.original_price - product.price) /
+                      product.original_price) *
+                      100
+                  )
+                : 0;
+              const productInWishlist = isInWishlist(product.id);
+              const productInCart = isInCart(product.id);
+              const showCartSuccess = addedToCart === product.id;
+              const showWishlistSuccess = addedToWishlist === product.id;
+              return (
+                <div
+                  key={product.id}
+                  className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] rounded-sm overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-lg border border-primary"
+                  onMouseEnter={() => setIsHovering(product.id)}
+                  onMouseLeave={() => setIsHovering(null)}
+                >
+                  <Link to={`/product/${product.id}`} className="block h-full">
+                    <div className="relative h-40 w-full overflow-hidden">
+                      {/* Discount tag */}
+                      {discountPercentage > 0 && (
                         <div
-                          className={`absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-2 bg-white/80 backdrop-blur-sm transition-all duration-300 ${
-                            isHovering === product.id
-                              ? "opacity-100"
-                              : "opacity-0"
-                          }`}
+                          className={`absolute top-2 right-2 ${bgColorClass} text-white text-xs font-bold px-2 py-1 rounded-md z-10`}
                         >
-                          <button
-                            onClick={(e) => handleAddToCart(e, product)}
-                            className={`p-1.5 rounded-full transition-all duration-200 ${
-                              showCartSuccess
-                                ? "bg-green-500 text-white"
-                                : productInCart
-                                ? "bg-green-500 text-white"
-                                : "bg-primary text-white hover:scale-110"
-                            }`}
-                            aria-label={
-                              productInCart ? "Added to cart" : "Add to cart"
-                            }
-                            disabled={cartLoading || showCartSuccess}
-                          >
-                            {showCartSuccess || productInCart ? (
-                              <Check className="h-4 w-4" />
-                            ) : (
-                              <ShoppingCart className="h-4 w-4" />
-                            )}
-                          </button>
-                          <button
-                            onClick={(e) => handleToggleWishlist(e, product)}
-                            className={`p-1.5 rounded-full transition-all duration-200 ${
-                              showWishlistSuccess
-                                ? "bg-green-500 text-white"
-                                : productInWishlist
-                                ? "bg-red-500 text-white hover:scale-110"
-                                : "bg-gray-200 text-gray-700 hover:scale-110"
-                            }`}
-                            aria-label={
-                              productInWishlist
-                                ? "Remove from wishlist"
-                                : "Add to wishlist"
-                            }
-                            disabled={showWishlistSuccess}
-                          >
-                            {showWishlistSuccess ? (
-                              <Check className="h-4 w-4" />
-                            ) : (
-                              <Heart
-                                className={`h-4 w-4 ${
-                                  productInWishlist ? "fill-current" : ""
-                                }`}
-                              />
-                            )}
-                          </button>
+                          -{discountPercentage}%
                         </div>
+                      )}
+                      <img
+                        src={
+                          product.images?.[0] ||
+                          "/placeholder.svg?height=200&width=200" ||
+                          "/placeholder.svg"
+                        }
+                        alt={product.name}
+                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                        loading="lazy" // This helps defer image loading
+                        onError={(e) => {
+                          e.target.src =
+                            "/placeholder.svg?height=200&width=200";
+                        }}
+                      />
+                      {/* Quick action buttons that appear on hover */}
+                      <div
+                        className={`absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-2 bg-white/80 backdrop-blur-sm transition-all duration-300 ${
+                          isHovering === product.id
+                            ? "opacity-100"
+                            : "opacity-0"
+                        }`}
+                      >
+                        <button
+                          onClick={(e) => handleAddToCart(e, product)}
+                          className={`p-1.5 rounded-full transition-all duration-200 ${
+                            showCartSuccess
+                              ? "bg-green-500 text-white"
+                              : productInCart
+                              ? "bg-green-500 text-white"
+                              : "bg-primary text-white hover:scale-110"
+                          }`}
+                          aria-label={
+                            productInCart ? "Added to cart" : "Add to cart"
+                          }
+                          disabled={cartLoading || showCartSuccess}
+                        >
+                          {showCartSuccess || productInCart ? (
+                            <Check className="h-4 w-4" />
+                          ) : (
+                            <ShoppingCart className="h-4 w-4" />
+                          )}
+                        </button>
+                        <button
+                          onClick={(e) => handleToggleWishlist(e, product)}
+                          className={`p-1.5 rounded-full transition-all duration-200 ${
+                            showWishlistSuccess
+                              ? "bg-green-500 text-white"
+                              : productInWishlist
+                              ? "bg-red-500 text-white hover:scale-110"
+                              : "bg-gray-200 text-gray-700 hover:scale-110"
+                          }`}
+                          aria-label={
+                            productInWishlist
+                              ? "Remove from wishlist"
+                              : "Add to wishlist"
+                          }
+                          disabled={showWishlistSuccess}
+                        >
+                          {showWishlistSuccess ? (
+                            <Check className="h-4 w-4" />
+                          ) : (
+                            <Heart
+                              className={`h-4 w-4 ${
+                                productInWishlist ? "fill-current" : ""
+                              }`}
+                            />
+                          )}
+                        </button>
                       </div>
-                      <div className="px-3 py-3">
-                        <h3 className="truncate text-sm line-clamp-2 h-10 font-medium text-gray-800 mb-1">
-                          {product.name}
-                        </h3>
-                        <div className="flex items-baseline">
-                          <p className={`text-gray-600 font-bold`}>
+                    </div>
+                    <div className="px-3 py-3">
+                      <h3 className="truncate text-sm line-clamp-2 h-10 font-medium text-gray-800 mb-1">
+                        {product.name}
+                      </h3>
+                      <div className="flex items-baseline">
+                        <p className={`text-gray-600 font-bold`}>
+                          KSh{" "}
+                          {product.price.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </p>
+                        {product.original_price && (
+                          <p className="text-xs text-gray-400 line-through ml-2">
                             KSh{" "}
-                            {product.price.toLocaleString(undefined, {
+                            {product.original_price.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2,
                             })}
                           </p>
-                          {product.original_price && (
-                            <p className="text-xs text-gray-400 line-through ml-2">
-                              KSh{" "}
-                              {product.original_price.toLocaleString(
-                                undefined,
-                                {
-                                  minimumFractionDigits: 2,
-                                  maximumFractionDigits: 2,
-                                }
-                              )}
-                            </p>
-                          )}
-                        </div>
+                        )}
                       </div>
-                    </Link>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="w-full py-8 text-center text-gray-500">
-                <p>No products found in this category.</p>
-              </div>
-            )}
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* No products found state */}
+        {!loading && products.length === 0 && (
+          <div className="w-full py-8 text-center text-gray-500">
+            <p>No products found in this category.</p>
           </div>
         )}
       </div>
