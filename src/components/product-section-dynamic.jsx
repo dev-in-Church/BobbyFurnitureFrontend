@@ -279,7 +279,7 @@ export default function ProductSectionDynamic({
               return (
                 <div
                   key={product.id}
-                  className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] rounded-sm overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-lg border border-primary"
+                  className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] rounded-[2px] overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-sm border border-primary"
                   onMouseEnter={() => setIsHovering(product.id)}
                   onMouseLeave={() => setIsHovering(null)}
                 >
@@ -287,9 +287,7 @@ export default function ProductSectionDynamic({
                     <div className="relative h-40 w-full overflow-hidden">
                       {/* Discount tag */}
                       {discountPercentage > 0 && (
-                        <div
-                          className={`absolute top-2 right-2 ${bgColorClass} text-white text-xs font-bold px-2 py-1 rounded-md z-10`}
-                        >
+                        <div className="absolute top-1 right-1 bg-blue-100 text-primary text-xs font-bold px-2 py-1 rounded-sm z-10">
                           -{discountPercentage}%
                         </div>
                       )}
@@ -363,11 +361,11 @@ export default function ProductSectionDynamic({
                         </button>
                       </div>
                     </div>
-                    <div className="px-3 py-3">
-                      <h3 className="truncate text-sm line-clamp-2 h-10 font-medium text-gray-800 mb-1">
+                    <div className="p-3">
+                      <h3 className="truncate text-sm line-clamp-2 font-medium text-gray-800 mb-1">
                         {product.name}
                       </h3>
-                      <div className="flex items-baseline">
+                      <div className="flex flex-col items-start">
                         <p className={`text-gray-600 font-bold`}>
                           KSh{" "}
                           {product.price.toLocaleString(undefined, {
