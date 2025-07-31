@@ -21,6 +21,8 @@ import {
   Twitter,
   LayoutGrid,
   Heart,
+  Grid3X3,
+  FolderTree,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -641,15 +643,15 @@ export default function Navbar() {
       >
         <Button
           variant="ghost"
-          className="flex items-center space-x-1 p-1"
+          className="flex items-center text-gray-400 space-x-1 p-1"
           aria-label="Categories"
         >
-          <LayoutGrid className="h-5 w-5" />
+          <Menu className="h-5 w-5" />
           <span className="sr-only">Categories</span>
         </Button>
 
         {showCategoryDropdown && (
-          <div className="absolute left-0 top-full z-50 mt-1 flex rounded-md border border-gray-200 bg-white shadow-lg">
+          <div className="absolute left-0 top-full z-50 mt-0 flex rounded-md border border-gray-200 bg-white shadow-lg">
             {/* Main Categories */}
             <div className="w-56 p-2">
               <div className="py-1">
@@ -664,7 +666,7 @@ export default function Navbar() {
                     }
                   >
                     <Link
-                      to={category.url}
+                      href={category.url}
                       className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
                     >
                       {category.icon}
@@ -989,7 +991,7 @@ export default function Navbar() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="flex items-center space-x-1 p-1"
+                  className="flex items-center space-x-1 p-1 text-gray-500"
                 >
                   <User className="h-5 w-5" />
                   <span className="hidden sm:inline">
@@ -1088,7 +1090,7 @@ export default function Navbar() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="hidden sm:flex items-center space-x-1 p-1"
+                  className="hidden sm:flex items-center space-x-1 p-1 text-gray-500"
                 >
                   <HelpCircle className="h-5 w-5" />
                   <span>Help</span>
@@ -1131,7 +1133,7 @@ export default function Navbar() {
 
             {/* Cart */}
             <Link to="/cart" className="relative">
-              <Button variant="ghost" className="p-1">
+              <Button variant="ghost" className="p-1 text-gray-500">
                 <ShoppingCart className="h-5 w-5" />
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
                   {getCartItemsCount()}
@@ -1142,7 +1144,7 @@ export default function Navbar() {
 
             {/* Wishlist */}
             <Link to="/wishlist" className="relative">
-              <Button variant="ghost" className="p-1">
+              <Button variant="ghost" className="p-1 text-gray-500">
                 <Heart className="h-5 w-5" />
                 {wishlistItems.length > 0 && (
                   <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
