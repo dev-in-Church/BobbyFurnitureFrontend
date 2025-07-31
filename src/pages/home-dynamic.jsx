@@ -14,6 +14,7 @@ import {
   SingleRowGrid,
 } from "../components/auxiliary-sections";
 import InfoSection from "../components/info-section";
+import bannerImage from "../assets/bg-banner.jpg";
 
 export default function HomeDynamic() {
   // Scroll to top when component mounts
@@ -22,7 +23,15 @@ export default function HomeDynamic() {
   }, []);
 
   return (
-    <div className="bg-[url('/textures/blue-snow.png')] bg-repeat md:px-[3rem]">
+    <div
+      className="min-h-screen md:px-[3rem] bg-[url('/textures/wintery-sunburst.png')] bg-repeat"
+      // style={{
+      //   backgroundImage:
+      //     window.innerWidth >= 1200 ? `url(${bannerImage})` : "none",
+      //   backgroundRepeat: "no-repeat",
+      //   backgroundPosition: "center top",
+      // }}
+    >
       <main className="container max-w-[85rem] overflow-hidden min-h-screen px-1 lg:px-8 md:px-12 py-1 sm:py-2 md:py-4 ">
         <HeroSection />
         {/* Sponsored */}
