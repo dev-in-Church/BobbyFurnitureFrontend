@@ -279,7 +279,7 @@ export default function ProductSectionDynamic({
               return (
                 <div
                   key={product.id}
-                  className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] rounded-[2px] overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-sm border border-primary"
+                  className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] rounded-[2px] overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-sm"
                   onMouseEnter={() => setIsHovering(product.id)}
                   onMouseLeave={() => setIsHovering(null)}
                 >
@@ -374,7 +374,7 @@ export default function ProductSectionDynamic({
                           })}
                         </p>
                         {product.original_price && (
-                          <p className="text-xs text-gray-400 line-through ml-2">
+                          <p className="text-xs text-gray-400 line-through">
                             KSh{" "}
                             {product.original_price.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
