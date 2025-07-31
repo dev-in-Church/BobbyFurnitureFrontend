@@ -26,7 +26,7 @@ import {
 // Single Landscape Banner Component
 export function FurnitureBanner() {
   return (
-    <section className="mt-2 md:mt-4 w-full flex justify-center overflow-hidden bg-blue-300">
+    <section className="mt-2 md:mt-4 w-full flex justify-center overflow-hidden bg-blue-300 shadow-md">
       <img
         src="/banners/category.gif"
         alt="Just Got Paid - Shop Now"
