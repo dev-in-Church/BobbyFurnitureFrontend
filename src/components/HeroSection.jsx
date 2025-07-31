@@ -724,30 +724,6 @@ const HeroSection = () => {
       alt: "Banner 4",
       link: "/all-products",
     },
-    // {
-    //   id: 5,
-    //   image: "/banners/five.gif?height=400&width=800&text=Banner+3",
-    //   alt: "Banner 5",
-    //   link: "/promo/banner-5",
-    // },
-    // {
-    //   id: 6,
-    //   image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
-    //   alt: "Banner 6",
-    //   link: "/promo/banner-6",
-    // },
-    // {
-    //   id: 7,
-    //   image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
-    //   alt: "Banner 7",
-    //   link: "/promo/banner-7",
-    // },
-    // {
-    //   id: 8,
-    //   image: "/banners/slider.jpg?height=400&width=800&text=Banner+3",
-    //   alt: "Banner 8",
-    //   link: "/promo/banner-8",
-    // },
   ];
 
   const [currentBanner, setCurrentBanner] = useState(0);
