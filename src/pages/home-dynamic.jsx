@@ -14,7 +14,6 @@ import {
   SingleRowGrid,
 } from "../components/auxiliary-sections";
 import InfoSection from "../components/info-section";
-import bannerImage from "../assets/bg-banner.jpg";
 
 export default function HomeDynamic() {
   // Scroll to top when component mounts
