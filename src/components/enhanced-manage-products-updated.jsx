@@ -248,14 +248,14 @@ const EnhancedManageProducts = () => {
     name: "",
     description: "",
     price: "",
-    originalPrice: "",
+    original_price: "",
     category: "",
     subcategory: "",
     stock: "",
     images: [],
     featured: false,
-    onSale: false,
     tags: "",
+    on_sale: false,
     dimensions: "",
     material: "",
     color: "",
@@ -467,8 +467,8 @@ const EnhancedManageProducts = () => {
         images: processedImages,
         tags,
         price: Number.parseFloat(formData.price),
-        originalPrice: formData.originalPrice
-          ? Number.parseFloat(formData.originalPrice)
+        original_price: formData.original_price
+          ? Number.parseFloat(formData.original_price)
           : null,
         stock: Number.parseInt(formData.stock),
       };
@@ -526,7 +526,7 @@ const EnhancedManageProducts = () => {
           ? product.tags.join(", ")
           : product.tags
         : "",
-      originalPrice: product.originalPrice || "",
+      original_price: product.original_price || "",
     });
     setExpandedCategory(mainCategory);
     setIsFormVisible(true);
@@ -613,7 +613,7 @@ const EnhancedManageProducts = () => {
       name: "",
       description: "",
       price: "",
-      originalPrice: "",
+      original_price: "",
       category: "",
       subcategory: "",
       stock: "",
@@ -888,9 +888,9 @@ const EnhancedManageProducts = () => {
                           <FaDollarSign className="absolute left-3 top-3 text-gray-400" />
                           <Input
                             type="number"
-                            name="originalPrice"
+                            name="original_price"
                             placeholder="Enter original price"
-                            value={formData.originalPrice}
+                            value={formData.original_price}
                             onChange={handleChange}
                             className="pl-10"
                           />
@@ -1446,9 +1446,9 @@ const EnhancedManageProducts = () => {
                               <p className="text-lg font-bold text-blue-600">
                                 KSh {product.price?.toLocaleString()}
                               </p>
-                              {product.originalPrice && (
+                              {product.original_price && (
                                 <p className="text-sm text-gray-500 line-through">
-                                  KSh {product.originalPrice.toLocaleString()}
+                                  KSh {product.original_price.toLocaleString()}
                                 </p>
                               )}
                             </div>
