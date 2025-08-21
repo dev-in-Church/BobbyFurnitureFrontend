@@ -902,7 +902,7 @@ export default function Navbar() {
       {/* gif advert */}
       {showSpecialButton && <Banner />}
       {/* Top Bar */}
-      <div className="bg-gray-100 text-primary">
+      <div className="hidden sm:block bg-gray-100 text-primary">
         <div className="container mx-auto flex h-8 items-center justify-between px-4 ">
           {renderTopBarLeft()}
           {renderTopBarRight()}
