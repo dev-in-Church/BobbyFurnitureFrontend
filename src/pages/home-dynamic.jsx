@@ -22,10 +22,7 @@ export default function HomeDynamic() {
   }, []);
 
   return (
-    <div
-      className="min-h-screen md:px-[3rem] bg-[url('/textures/wintery-sunburst.png')] bg-repeat"
-     
-    >
+    <div className="min-h-screen md:px-[3rem] bg-blue-300">
       <main className="container max-w-[85rem] overflow-hidden min-h-screen px-1 lg:px-8 md:px-12 py-1 sm:py-2 md:py-4 ">
         <HeroSection />
         {/* Sponsored */}
@@ -105,7 +102,6 @@ export default function HomeDynamic() {
         {/* Furniture Grid */}
         <FurnitureGrid />
         {/* dine & divine */}
-
         <div className="mt-2 md:mt-4">
           <ProductSectionDynamic
             title="Dine divine | Table Sets"

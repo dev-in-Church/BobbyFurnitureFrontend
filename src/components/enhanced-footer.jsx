@@ -398,7 +398,7 @@ const EnhancedFooter = () => {
           <h3 className="text-center text-lg font-semibold mb-6">
             Awards & Certifications
           </h3>
-          <div className="flex flex-wrap justify-center gap-8">
+          <div className="flex flex-wrap justify-center gap-2 md:gap-8">
             <div className="flex flex-col items-center">
               <img
                 src="/iso.png?height=60&width=60"
