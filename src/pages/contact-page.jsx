@@ -77,11 +77,14 @@ const ContactPage = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  123 Furniture Street
+                  Kahawa Sukari
                   <br />
-                  Design District
-                  <br />
-                  New York, NY 10001
+                  Nairobi, Kenya
+                  <img
+                    src="kenya.svg"
+                    alt="kenya"
+                    className="h-4 inline-block ml-2"
+                  />
                 </p>
               </CardContent>
             </Card>
@@ -95,11 +98,9 @@ const ContactPage = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Sales: (555) 123-4567
+                  Sales: +254 708 156 310
                   <br />
-                  Support: (555) 123-4568
-                  <br />
-                  Toll-free: 1-800-FURNITURE
+                  Support: +254 708 156 310
                 </p>
               </CardContent>
             </Card>
@@ -113,11 +114,11 @@ const ContactPage = () => {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  General: info@bobbyfurniture.com
+                  General: bobbyfurnitures254@gmail.com
                   <br />
-                  Sales: sales@bobbyfurniture.com
+                  Sales: bobbyfurnitures254@gmail.com
                   <br />
-                  Support: support@bobbyfurniture.com
+                  Support: bobbyfurnitures254@gmail.com
                 </p>
               </CardContent>
             </Card>
@@ -222,6 +223,36 @@ const ContactPage = () => {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </div>
+
+      {/* Full-width Map Section */}
+      <div className="mt-16 text-center">
+        <h2 className="text-2xl font-semibold mb-2">Find Us Here</h2>
+        <p className="text-gray-600 mb-6">
+          Our showroom is located in Kahawa Sukari, Nairobi Kenya{" "}
+          <img src="kenya.svg" alt="kenya" className="h-4 inline-block ml-2" />.
+          Drop by to explore our collections in person.
+        </p>
+        <div className="w-full h-[400px] rounded-lg overflow-hidden shadow-lg">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.9565439734324!2d36.9295247!3d-1.190875!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f3f490d90bfa9%3A0xdfdac20f63c1557a!2sBobby%20Furniture%20kenya!5e0!3m2!1sen!2ske!4v1756743512418!5m2!1sen!2ske"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+          {/* <iframe
+            src="https://maps.app.goo.gl/WKhavzNkE97aLiUL8"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          ></iframe> */}
         </div>
       </div>
     </div>
