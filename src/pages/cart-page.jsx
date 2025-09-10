@@ -40,21 +40,21 @@ const CartPage = () => {
 
   // Mock coupon data
   const availableCoupons = {
-    SAVE10: {
-      discount: 0.1,
-      type: "percentage",
-      description: "10% off your order",
-    },
-    WELCOME20: {
-      discount: 0.2,
-      type: "percentage",
-      description: "20% off for new customers",
-    },
-    FLAT500: {
-      discount: 500,
-      type: "fixed",
-      description: "KSh 500 off your order",
-    },
+    // SAVE10: {
+    //   discount: 0.1,
+    //   type: "percentage",
+    //   description: "10% off your order",
+    // },
+    // WELCOME20: {
+    //   discount: 0.2,
+    //   type: "percentage",
+    //   description: "20% off for new customers",
+    // },
+    // FLAT500: {
+    //   discount: 500,
+    //   type: "fixed",
+    //   description: "KSh 500 off your order",
+    // },
     FREESHIP: { discount: 0, type: "shipping", description: "Free shipping" },
   };
 
@@ -65,9 +65,11 @@ const CartPage = () => {
       : appliedCoupon.discount
     : 0;
   const shipping =
-    subtotal > 5000 || appliedCoupon?.type === "shipping" ? 0 : 200;
-  const tax = (subtotal - discount) * 0.16; // 16% VAT
-  const total = subtotal - discount + shipping + tax;
+    subtotal > 500000 || appliedCoupon?.type === "shipping"
+      ? 0
+      : 0.003 * subtotal;
+  // const tax = (subtotal - discount) * 0.16; // 16% VAT
+  const total = subtotal - discount + shipping;
 
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity < 1) return;
@@ -94,6 +96,10 @@ const CartPage = () => {
     setAppliedCoupon(null);
     toast.info("Coupon removed");
   };
+
+  //monday promo
+  const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const isMonday = today === 1;
 
   const handleCheckout = () => {
     if (!user) {
@@ -239,56 +245,58 @@ const CartPage = () => {
         {/* Order Summary */}
         <div className="space-y-6">
           {/* Coupon Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Tag className="mr-2 h-5 w-5" />
-                Coupon Code
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {!appliedCoupon ? (
-                <div className="flex space-x-2">
-                  <Input
-                    placeholder="Enter coupon code"
-                    value={couponCode}
-                    onChange={(e) => setCouponCode(e.target.value)}
-                    className="flex-1"
-                  />
-                  <Button
-                    onClick={handleApplyCoupon}
-                    disabled={!couponCode.trim() || isApplyingCoupon}
-                    size="sm"
-                  >
-                    {isApplyingCoupon ? "Applying..." : "Apply"}
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                  <div>
-                    <p className="font-medium text-green-800">
-                      {appliedCoupon.code}
-                    </p>
-                    <p className="text-sm text-green-600">
-                      {appliedCoupon.description}
-                    </p>
+          {isMonday && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Tag className="mr-2 h-5 w-5" />
+                  Promo Code
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {!appliedCoupon ? (
+                  <div className="flex space-x-2">
+                    <Input
+                      placeholder="Enter coupon code"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={handleApplyCoupon}
+                      disabled={!couponCode.trim() || isApplyingCoupon}
+                      size="sm"
+                    >
+                      {isApplyingCoupon ? "Applying..." : "Apply"}
+                    </Button>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleRemoveCoupon}
-                    className="text-green-700 hover:text-green-800"
-                  >
-                    Remove
-                  </Button>
-                </div>
-              )}
+                ) : (
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-green-800">
+                        {appliedCoupon.code}
+                      </p>
+                      <p className="text-sm text-green-600">
+                        {appliedCoupon.description}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRemoveCoupon}
+                      className="text-green-700 hover:text-green-800"
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                )}
 
-              <div className="text-xs text-gray-500">
-                <p>Available coupons: SAVE10, WELCOME20, FLAT500, FREESHIP</p>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="text-xs text-gray-500">
+                  <p>Available Promo: FREESHIP</p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Order Summary */}
           <Card>
@@ -311,7 +319,7 @@ const CartPage = () => {
 
                 <div className="flex justify-between">
                   <span className="flex items-center">
-                    Shipping
+                    Shipping Cost
                     {shipping === 0 && (
                       <Badge variant="secondary" className="ml-2">
                         Free
@@ -321,10 +329,10 @@ const CartPage = () => {
                   <span>KSh {shipping.toLocaleString()}</span>
                 </div>
 
-                <div className="flex justify-between">
+                {/* <div className="flex justify-between">
                   <span>Tax (16%)</span>
                   <span>KSh {tax.toLocaleString()}</span>
-                </div>
+                </div> */}
 
                 <Separator />
 
@@ -375,7 +383,7 @@ const CartPage = () => {
           </Card>
 
           {/* Gift Message */}
-          <Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Gift className="mr-2 h-5 w-5" />
@@ -389,7 +397,7 @@ const CartPage = () => {
                 rows={3}
               />
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
     </div>
