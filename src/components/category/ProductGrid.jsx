@@ -186,12 +186,13 @@ const ProductGrid = ({ products, loading }) => {
                     "/placeholder.svg?height=200&width=200"
                   }
                   alt={product.name}
-                  className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-200"
+                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                  loading="lazy" // This helps defer image loading
                 />
 
                 {/* Discount Badge */}
                 {discountPercentage && (
-                  <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs font-semibold px-2 py-1 rounded">
+                  <div className="absolute top-2 left-2 bg-blue-100 text-primary text-xs font-bold px-2 py-1 rounded-sm z-10">
                     -{discountPercentage}%
                   </div>
                 )}
@@ -214,9 +215,9 @@ const ProductGrid = ({ products, loading }) => {
 
               <div className="p-3 pb-2">
                 {/* Product Category */}
-                <div className="text-xs text-gray-500 mb-1 capitalize">
+                {/* <div className="text-xs text-gray-500 mb-1 capitalize">
                   {product.category?.replace(/-/g, " ")}
-                </div>
+                </div> */}
 
                 {/* Product Name */}
                 <h3 className="text-sm text-gray-900 mb-2 line-clamp-2 leading-tight group-hover:text-primary transition-colors">
@@ -244,14 +245,14 @@ const ProductGrid = ({ products, loading }) => {
                 {/* Price */}
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-lg text-primary">
+                    <span className="text-gray-600 font-bold">
                       {formatPrice(product.price)}
                     </span>
                   </div>
 
                   {product.original_price && (
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500 line-through">
+                      <span className="text-sm text-gray-400 line-through">
                         {formatPrice(product.original_price)}
                       </span>
                       {discountPercentage && (
