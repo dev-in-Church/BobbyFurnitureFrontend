@@ -403,7 +403,7 @@ const EnhancedFooter = () => {
               <img
                 src="/iso.png?height=60&width=60"
                 alt="Quality Certification"
-                className="h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
+                className="grayscale h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
               />
               <span className="text-xs text-gray-400">ISO 9001</span>
             </div>
@@ -411,7 +411,7 @@ const EnhancedFooter = () => {
               <img
                 src="/eco.png?height=60&width=60"
                 alt="Eco-Friendly"
-                className="h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
+                className="grayscale h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
               />
               <span className="text-xs text-gray-400">Eco-Certified</span>
             </div>
@@ -419,7 +419,7 @@ const EnhancedFooter = () => {
               <img
                 src="/design.png?height=60&width=60"
                 alt="Best Furniture Award"
-                className="h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
+                className="grayscale h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
               />
               <span className="text-xs text-gray-400">Design Excellence</span>
             </div>
@@ -427,7 +427,7 @@ const EnhancedFooter = () => {
               <img
                 src="/choice.png?height=60&width=60"
                 alt="Customer Satisfaction"
-                className="h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
+                className="grayscale h-12 mb-2 opacity-80 hover:opacity-100 transition-opacity"
               />
               <span className="text-xs text-gray-400">Customer Choice</span>
             </div>

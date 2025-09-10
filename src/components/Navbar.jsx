@@ -919,7 +919,7 @@ export default function Navbar() {
             {/* Logo */}
             <Link to="/" className="flex items-center">
               <div className="flex items-center">
-                <span className="hidden md:block text-xl md:text-2xl font-bold text-primary">
+                <span className="hidden md:block text-xl font-bold text-primary">
                   Bobby Furniture
                 </span>
                 <div className="ml-1">

@@ -750,8 +750,8 @@ const HeroSection = () => {
 
   return (
     // <div className="bg-primary py-4 h-screen">
-    <div className="md:mb-4">
-      <div className="grid grid-cols-1 w-full h-auto md:grid-cols-[1fr_3fr_0.95fr] gap-5">
+    <div className="">
+      <div className="grid grid-cols-1 w-full h-auto sm:grid-cols-[1fr_3fr_0.95fr] gap-5">
         {/* Categories sidebar - fixed width */}
         <div className="relative hidden md:block bg-white rounded-md h-full shadow-md ">
           <ul className="flex flex-col h-full py-3 justify-between">
@@ -811,7 +811,7 @@ const HeroSection = () => {
         </div>
 
         {/* Right sidebar - fixed width with two sections */}
-        <div className="hidden md:grid overflow-hidden grid-rows-[1fr_1fr] gap-3">
+        <div className="hidden md:grid grid-rows-[1fr_1fr] gap-5 h-full overflow-hidden">
           {/* Top section - white box with info items */}
           <div className="flex flex-col justify-between bg-white p-3 py-5 rounded-sm shadow-md gap-4">
             {/* Help Center */}
@@ -849,7 +849,7 @@ const HeroSection = () => {
           </div>
 
           {/* Bottom section - Call/WhatsApp gif */}
-          <div className="flex justify-center items-center bg-white rounded-sm shadow-md overflow-hidden">
+          <div className="flex justify-center items-center bg-white rounded-sm shadow-md">
             {/* <div className="bg-gray-300"> */}
             <img
               src="/banners/2.gif"

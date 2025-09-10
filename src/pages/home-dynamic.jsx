@@ -22,7 +22,7 @@ export default function HomeDynamic() {
   }, []);
 
   return (
-    <div className="min-h-screen md:px-[3rem] bg-blue-300">
+    <div className="min-h-screen md:px-[2rem] bg-blue-300">
       <main className="container max-w-[85rem] overflow-hidden min-h-screen px-1 lg:px-8 md:px-12 py-1 sm:py-2 md:py-4 ">
         <HeroSection />
         {/* Sponsored */}
