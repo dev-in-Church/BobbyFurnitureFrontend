@@ -26,7 +26,7 @@ import {
 // Single Landscape Banner Component
 export function FurnitureBanner() {
   return (
-    <section className="w-full flex justify-center overflow-hidden bg-blue-300 shadow-md">
+    <section className="hidden w-full sm:flex justify-center overflow-hidden bg-blue-300 shadow-md">
       <img
         src="/banners/category.gif"
         alt="Just Got Paid - Shop Now"
@@ -115,8 +115,8 @@ export function FurnitureGrid() {
 
   return (
     <section className="py-6 bg-white rounded-md mt-2 md:mt-4">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+      <div className="container mx-auto px-1 sm:px-4">
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 gap-1 md:gap-4">
           {categories.map((category, index) => (
             <Link
               key={index}
@@ -124,7 +124,7 @@ export function FurnitureGrid() {
               className="group overflow-hidden transition-all duration-300 hover:scale-105"
             >
               <div
-                className={`bg-gray-100 shadow-md h-[10rem] sm:h-[11rem] md:h-48 rounded-lg flex items-center justify-center relative overflow-hidden`}
+                className={`bg-gray-100 shadow-md h-32 sm:h-[11rem] md:h-48 rounded-lg flex items-center justify-center overflow-hidden`}
               >
                 <img
                   src={category.image || "/placeholder.png"}

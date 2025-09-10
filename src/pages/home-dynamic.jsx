@@ -26,23 +26,23 @@ export default function HomeDynamic() {
       <main className="container max-w-[85rem] overflow-hidden min-h-screen px-1 lg:px-8 md:px-12 py-1 sm:py-2 md:py-4 ">
         <HeroSection />
         {/* Sponsored */}
-        <div className="mt-2 md:mt-4">
+        <div className="mt-2 ">
           <ProductSectionDynamic
             title="Sponsored"
             viewMoreLink="/featured"
-            color="blue-500"
+            color="red-500"
             text="white"
             type="featured"
             limit={9}
           />
         </div>
         {/* new arrivals */}
-        <div className="mt-2 md:mt-4">
+        <div className="mt-2 ">
           <ProductSectionDynamic
             title="New Arrivals"
             viewMoreLink="/category/new-arrivals"
-            color="white"
-            text="gray-500"
+            color="yellow-500"
+            text="white"
             type="new-arrivals"
             limit={9}
           />
@@ -50,7 +50,7 @@ export default function HomeDynamic() {
         {/* Furniture Banner */}
         <FurnitureBanner />
         {/* play & sleep */}
-        <div className="mt-2 md:mt-4">
+        <div className="mt-2 ">
           <ProductSectionDynamic
             title="Play & Sleep | Kids' Favourites"
             viewMoreLink="/category/kids-room"
@@ -62,7 +62,7 @@ export default function HomeDynamic() {
           />
         </div>
         {/* little comforts */}
-        <div className="mt-2 md:mt-4">
+        <div className="mt-2 ">
           <ProductSectionDynamic
             title="Little Comforts | Bright Picks"
             viewMoreLink="/category/kids-room-double-deckers"
@@ -74,7 +74,7 @@ export default function HomeDynamic() {
           />
         </div>
         {/* weekly drops */}
-        <div className="mt-2 md:mt-4">
+        <div className="mt-2 ">
           <ProductSectionDynamic
             title="Weekly Drops | Limited Deals"
             viewMoreLink="/category/living-room-sectional-sofas"
@@ -88,7 +88,7 @@ export default function HomeDynamic() {
         {/* some 12-item gride here */}
         <SingleRowGrid />
         {/* sit & style */}
-        <div className="mt-2 md:mt-4">
+        <div className="mt-2">
           <ProductSectionDynamic
             title="Sit & Style | Living Room Picks"
             viewMoreLink="/category/living-room"
@@ -102,7 +102,7 @@ export default function HomeDynamic() {
         {/* Furniture Grid */}
         <FurnitureGrid />
         {/* dine & divine */}
-        <div className="mt-2 md:mt-4">
+        <div className="mt-2">
           <ProductSectionDynamic
             title="Dine divine | Table Sets"
             viewMoreLink="/category/dining-room-eight-seater-dining-sets"
