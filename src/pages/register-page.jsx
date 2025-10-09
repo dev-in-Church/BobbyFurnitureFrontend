@@ -91,7 +91,8 @@ const RegisterPage = () => {
 
   // Google signup handler
   const handleGoogleSignup = () => {
-    window.location.href = "http://localhost:5000/api/auth/google"; // Redirect to backend OAuth route
+    window.location.href =
+      "https://bobbyfurnitureonline.onrender.com/api/auth/google"; // Redirect to backend OAuth route
   };
 
   return (
