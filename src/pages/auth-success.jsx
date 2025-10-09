@@ -37,7 +37,7 @@ const AuthSuccessPage = () => {
   }, [navigate, setUser]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-white">
       <p className="text-gray-700 text-lg">Logging in with Google...</p>
     </div>
   );
