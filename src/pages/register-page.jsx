@@ -38,49 +38,30 @@ const RegisterPage = () => {
       ...prev,
       [name]: value,
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.firstName.trim()) {
+    if (!formData.firstName.trim())
       newErrors.firstName = "First name is required";
-    }
-
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = "Last name is required";
-    }
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.phone) {
-      newErrors.phone = "Phone number is required";
-    } else if (!/^\d{10}$/.test(formData.phone.replace(/\D/g, ""))) {
+    if (!formData.phone) newErrors.phone = "Phone number is required";
+    else if (!/^\d{10}$/.test(formData.phone.replace(/\D/g, "")))
       newErrors.phone = "Phone number must be 10 digits";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
+    if (!formData.password) newErrors.password = "Password is required";
+    else if (formData.password.length < 6)
       newErrors.password = "Password must be at least 6 characters";
-    }
-
-    if (!formData.confirmPassword) {
+    if (!formData.confirmPassword)
       newErrors.confirmPassword = "Please confirm your password";
-    } else if (formData.password !== formData.confirmPassword) {
+    else if (formData.password !== formData.confirmPassword)
       newErrors.confirmPassword = "Passwords do not match";
-    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -88,7 +69,6 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     setLoading(true);
@@ -97,18 +77,21 @@ const RegisterPage = () => {
         name: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
         phone: formData.phone,
-        password: formData.password, // Include password for backend
+        password: formData.password,
       };
 
       const result = await register(userData);
-      if (result.success) {
-        navigate("/");
-      }
+      if (result.success) navigate("/");
     } catch (error) {
       console.error("Registration error:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Google signup handler
+  const handleGoogleSignup = () => {
+    window.location.href = "http://localhost:5000/api/auth/google"; // Redirect to backend OAuth route
   };
 
   return (
@@ -137,6 +120,21 @@ const RegisterPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Google signup button */}
+            <div className="mb-4">
+              <Button
+                onClick={handleGoogleSignup}
+                className="w-full text-gray-500 bg-white hover:bg-slate-100 shadow-sm hover:shadow-md flex items-center justify-center space-x-2"
+              >
+                <img src="/google-icon.svg" alt="Google" className="h-5 w-5" />
+                <span>Sign up with Google</span>
+              </Button>
+              <div className="text-center text-gray-500 mt-2">
+                or continue with email
+              </div>
+            </div>
+
+            {/* Registration form */}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-2 gap-4">
                 <div>

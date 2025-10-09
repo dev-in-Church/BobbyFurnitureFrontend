@@ -7,11 +7,14 @@ import {
   FurnitureBanner,
   FurnitureGrid,
   // TwoColumnBanners, // Uncomment if needed
-  // ThreeColumnGrid, // Uncomment if needed
+  FourColumnGrid, // Uncomment if needed
   // FourColumnGrid, // Uncomment if needed
   // MixedLayoutGrid, // Uncomment if needed
-  // HorizontalScrollGrid, // Uncomment if needed
+  HorizontalScrollGrid, // Uncomment if needed
   SingleRowGrid,
+  CircularGrid,
+  DealsCategoryGrid,
+  QuickLinks,
 } from "../components/auxiliary-sections";
 import InfoSection from "../components/info-section";
 
@@ -22,7 +25,7 @@ export default function HomeDynamic() {
   }, []);
 
   return (
-    <div className="min-h-screen md:px-[2rem] bg-blue-300">
+    <div className="min-h-screen md:px-[2rem]">
       <main className="container max-w-[85rem] overflow-hidden min-h-screen px-1 lg:px-8 md:px-12 py-1 sm:py-2 md:py-4 ">
         <HeroSection />
         {/* Sponsored */}
@@ -30,7 +33,7 @@ export default function HomeDynamic() {
           <ProductSectionDynamic
             title="Sponsored"
             viewMoreLink="/featured"
-            color="red-500"
+            color="red-600"
             text="white"
             type="featured"
             limit={9}
@@ -41,14 +44,17 @@ export default function HomeDynamic() {
           <ProductSectionDynamic
             title="New Arrivals"
             viewMoreLink="/category/new-arrivals"
-            color="yellow-500"
+            color="green-600"
             text="white"
             type="new-arrivals"
             limit={9}
           />
         </div>
+        <DealsCategoryGrid />
+
         {/* Furniture Banner */}
-        <FurnitureBanner />
+        {/* <FurnitureBanner /> */}
+        {/* <FourColumnGrid /> */}
         {/* play & sleep */}
         <div className="mt-2 ">
           <ProductSectionDynamic
@@ -73,6 +79,8 @@ export default function HomeDynamic() {
             limit={9}
           />
         </div>
+
+        <CircularGrid />
         {/* weekly drops */}
         <div className="mt-2 ">
           <ProductSectionDynamic
@@ -86,7 +94,7 @@ export default function HomeDynamic() {
           />
         </div>
         {/* some 12-item gride here */}
-        <SingleRowGrid />
+        <FourColumnGrid />
         {/* sit & style */}
         <div className="mt-2">
           <ProductSectionDynamic
@@ -113,6 +121,8 @@ export default function HomeDynamic() {
             limit={9}
           />
         </div>
+        {/* <CircularGrid /> */}
+        <QuickLinks />
       </main>
       {/* Info Section - Before Footer */}
       <InfoSection />

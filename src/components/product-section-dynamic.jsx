@@ -166,9 +166,9 @@ export default function ProductSectionDynamic({
   const txtColor = `text-${getColorClass(text)}`;
 
   return (
-    <div className="mb-6 bg-white rounded-sm shadow-md overflow-hidden">
+    <div className="mb-4 bg-white rounded-sm shadow-md overflow-hidden">
       <div
-        className={`flex justify-between px-6 py-2 items-center ${bgColorClass}`}
+        className={`flex justify-between px-4 py-1 items-center ${bgColorClass}`}
       >
         <h2
           className={`text-sm sm:text-md ${txtColor} md:text-lg font-medium tracking-wide`}

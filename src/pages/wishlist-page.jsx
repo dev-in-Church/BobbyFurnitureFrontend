@@ -90,7 +90,7 @@ const WishlistPage = () => {
 
   if (wishlistItems.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 bg-white">
         <div className="text-center py-16">
           <Heart className="mx-auto h-24 w-24 text-gray-300 mb-6" />
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -111,7 +111,7 @@ const WishlistPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-white">
       {/* Header */}
       <div className="mb-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">

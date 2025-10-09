@@ -101,7 +101,7 @@ export function FurnitureGrid() {
     },
     {
       name: "Home Decor",
-      image: "/banners/decor.jpeg?height=150&width=150",
+      image: "/banners/decor.jpg?height=150&width=150",
       link: "/category/decor",
       bgColor: "bg-yellow-500",
     },
@@ -114,31 +114,323 @@ export function FurnitureGrid() {
   ];
 
   return (
-    <section className="py-6 bg-white rounded-md mt-2 md:mt-4">
-      <div className="container mx-auto px-1 sm:px-4">
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 gap-1 md:gap-4">
-          {categories.map((category, index) => (
-            <Link
-              key={index}
-              to={category.link}
-              className="group overflow-hidden transition-all duration-300 hover:scale-105"
-            >
-              <div
-                className={`bg-gray-100 shadow-md h-32 sm:h-[11rem] md:h-48 rounded-lg flex items-center justify-center overflow-hidden`}
+    <section className="py-4 sm:py-6 bg-white rounded-sm">
+      <div className="px-2 sm:px-4">
+        <div
+          className="
+            grid 
+            grid-cols-2
+            xs:grid-cols-3
+            sm:grid-cols-4
+            md:grid-cols-5
+            lg:grid-cols-6
+            gap-2 sm:gap-3 md:gap-4
+          "
+        >
+          {categories.map((item, index) => {
+            return (
+              <Link
+                key={index}
+                to={item.link}
+                className="
+                  group 
+                  flex flex-col items-center text-center 
+                  transition-transform duration-200
+                  hover:scale-105
+                  active:scale-95
+                "
               >
-                <img
-                  src={category.image || "/placeholder.png"}
-                  alt={category.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-              </div>
-              <div className="p-2 text-center">
-                <h3 className="text-xs sm:text-sm font-medium text-gray-800 truncate">
-                  {category.name}
+                <div
+                  className="
+                    relative 
+                    w-full 
+                    aspect-square
+                    rounded-lg
+                    overflow-hidden
+                    bg-white
+                    shadow-sm hover:shadow-md
+                    transition-shadow duration-200
+                    flex items-center justify-center
+                  "
+                >
+                  <img
+                    src={item.image || "/placeholder.png"}
+                    alt={item.name}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+
+                <h3 className="mt-2 text-xs sm:text-sm font-medium text-gray-600 line-clamp-2 px-1 leading-tight">
+                  {item.name}
                 </h3>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function CircularGrid() {
+  const categories = [
+    {
+      name: "Flash Sales",
+      image: "/sections/tv-stand.jpg",
+      link: "/flash-sales",
+      badge: "⚡",
+    },
+    {
+      name: "Phone Deals",
+      image: "/sections/dining.jpg",
+      link: "/category/phones",
+    },
+    {
+      name: "Fridge Deals",
+      image: "/sections/sofa.jpg",
+      link: "/category/fridges",
+    },
+    {
+      name: "Fashion Deals",
+      image: "/sections/office-chair.jpg",
+      link: "/category/fashion",
+    },
+    {
+      name: "Electronic Deals",
+      image: "/sections/living.jpg",
+      link: "/category/electronics",
+    },
+    {
+      name: "China Town",
+      image: "/placeholder.png",
+      link: "/category/china-town",
+      badge: "🔥",
+    },
+    {
+      name: "Laptops Deals",
+      image: "/placeholder.png",
+      link: "/category/laptops",
+    },
+    {
+      name: "Bedding",
+      image: "/placeholder.png",
+      link: "/category/bedding",
+    },
+    {
+      name: "Supermarket Deals",
+      image: "/placeholder.png",
+      link: "/category/supermarket",
+    },
+    {
+      name: "Washing Machines",
+      image: "/placeholder.png",
+      link: "/category/washing",
+    },
+    {
+      name: "TV Deals",
+      image: "/placeholder.png",
+      link: "/category/tv",
+    },
+    {
+      name: "Home Appliances",
+      image: "/placeholder.png",
+      link: "/category/appliances",
+    },
+  ];
+
+  return (
+    <section className="py-4 sm:py-6">
+      <div className="px-2 sm:px-4">
+        <div
+          className="
+            grid 
+            grid-cols-2
+            xs:grid-cols-3
+            sm:grid-cols-4
+            md:grid-cols-5
+            lg:grid-cols-6
+            gap-2 sm:gap-3 md:gap-4
+          "
+        >
+          {categories.map((item, index) => {
+            return (
+              <Link
+                key={index}
+                to={item.link}
+                className="
+                  group 
+                  flex flex-col items-center text-center 
+                  transition-transform duration-200
+                  hover:scale-105
+                  active:scale-95
+                "
+              >
+                <div
+                  className="
+                    relative 
+                    w-full 
+                    aspect-square
+                    rounded-full
+                    overflow-hidden
+                    bg-gray-100
+                    shadow-sm hover:shadow-md
+                    transition-shadow duration-200
+                    flex items-center justify-center
+                    "
+                >
+                  <img
+                    src={item.image || "/placeholder.png"}
+                    alt={item.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover rounded-full"
+                  />
+
+                  {/* {item.badge && (
+                    <div className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-xs sm:text-sm font-bold shadow-md">
+                      {item.badge}
+                    </div>
+                  )} */}
+                </div>
+
+                {/* <h3 className="mt-2 text-xs sm:text-sm font-medium text-gray-800 line-clamp-2 px-1 leading-tight">
+                  {item.name}
+                </h3> */}
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export function DealsCategoryGrid() {
+  const categories = [
+    {
+      name: "TV-stand deals",
+      image: "/sections/tv-stand.jpg",
+      link: "/category/tv-stands",
+      badge: "⚡",
+    },
+    {
+      name: "Dining Sets",
+      image: "/sections/dining.jpg",
+      link: "/category/dining",
+    },
+    {
+      name: "Sofa Deals",
+      image: "/sections/sofa.jpg",
+      link: "/category/fridges",
+    },
+    {
+      name: "Office Chairs",
+      image: "/sections/office-chair.jpg",
+      link: "/category/office-chair",
+    },
+    {
+      name: "3-Seater",
+      image: "/sections/living.jpg",
+      link: "/category/3-seater",
+    },
+    {
+      name: "Shoe Racks",
+      image: "/placeholder.png",
+      link: "/category/china-town",
+      badge: "🔥",
+    },
+    {
+      name: "kid Beds",
+      image: "/placeholder.png",
+      link: "/category/kid-beds",
+    },
+    {
+      name: "Office Desks",
+      image: "/placeholder.png",
+      link: "/category/office-desks",
+    },
+    {
+      name: "Queen beds",
+      image: "/placeholder.png",
+      link: "/category/queen-beds",
+    },
+    {
+      name: "Double Beds",
+      image: "/placeholder.png",
+      link: "/category/double-beds",
+    },
+    {
+      name: "Recliners Deals",
+      image: "/placeholder.png",
+      link: "/category/recliners",
+    },
+    {
+      name: "Conference Tables",
+      image: "/placeholder.png",
+      link: "/category/appliances",
+    },
+  ];
+
+  return (
+    <section className="py-4 sm:py-6">
+      <div className="px-2 sm:px-4">
+        <div
+          className="
+            grid 
+            grid-cols-2
+            xs:grid-cols-3
+            sm:grid-cols-4
+            md:grid-cols-5
+            lg:grid-cols-6
+            gap-2 sm:gap-3 md:gap-4
+          "
+        >
+          {categories.map((item, index) => {
+            return (
+              <Link
+                key={index}
+                to={item.link}
+                className="
+                  group 
+                  flex flex-col items-center text-center 
+                  transition-transform duration-200
+                  hover:scale-105
+                  active:scale-95
+                "
+              >
+                <div
+                  className="
+                    relative 
+                    w-full 
+                    aspect-square
+                    rounded-lg
+                    overflow-hidden
+                    bg-gray-100
+                    shadow-sm hover:shadow-md
+                    transition-shadow duration-200
+                    flex items-center justify-center
+                  "
+                >
+                  <img
+                    src={item.image || "/placeholder.png"}
+                    alt={item.name}
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                  />
+
+                  {/* {item.badge && (
+                    <div className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-xs sm:text-sm font-bold shadow-md">
+                      {item.badge}
+                    </div>
+                  )} */}
+                </div>
+
+                <h3 className="mt-2 text-xs sm:text-sm font-medium text-gray-200 line-clamp-2 px-1 leading-tight">
+                  {item.name}
+                </h3>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -226,22 +518,22 @@ export function ThreeColumnGrid() {
 export function FourColumnGrid() {
   const items = [
     {
-      image: "/banners/placeholder.png?height=200&width=300",
+      image: "/sections/tv-stand.jpg",
       alt: "Sofas",
       link: "/category/sofas",
     },
     {
-      image: "/banners/placeholder.png?height=200&width=300",
+      image: "/sections/office-chair.jpg",
       alt: "Dining",
       link: "/category/dining",
     },
     {
-      image: "/banners/placeholder.png?height=200&width=300",
+      image: "/sections/sofa.jpg",
       alt: "Office",
       link: "/category/office",
     },
     {
-      image: "/banners/placeholder.png?height=200&width=300",
+      image: "/sections/living.jpg",
       alt: "Outdoor",
       link: "/category/outdoor",
     },

@@ -13,13 +13,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, LogIn } from "lucide-react"; // <- LogIn icon
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -27,58 +24,36 @@ const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-
   const from = location.state?.from?.pathname || "/";
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    if (!formData.email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Email is invalid";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
+    if (!formData.password) newErrors.password = "Password is required";
+    else if (formData.password.length < 6)
       newErrors.password = "Password must be at least 6 characters";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     setLoading(true);
     try {
       const result = await login(formData.email, formData.password);
       if (result.success) {
-        // Redirect admin users to admin dashboard, others to intended page
-        if (result.user.isAdmin) {
-          navigate("/admin", { replace: true });
-        } else {
-          navigate(from, { replace: true });
-        }
+        if (result.user.isAdmin) navigate("/admin", { replace: true });
+        else navigate(from, { replace: true });
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -87,8 +62,8 @@ const LoginPage = () => {
     }
   };
 
-  const handleDemoLogin = (email, password) => {
-    setFormData({ email, password });
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:5000/api/auth/google";
   };
 
   return (
@@ -116,7 +91,9 @@ const LoginPage = () => {
               Enter your credentials to access your account
             </CardDescription>
           </CardHeader>
+
           <CardContent>
+            {/* Email/Password Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <Label htmlFor="email">Email address</Label>
@@ -125,11 +102,10 @@ const LoginPage = () => {
                     id="email"
                     name="email"
                     type="email"
-                    autoComplete="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
                     placeholder="Enter your email"
+                    className={`pl-10 ${errors.email ? "border-red-500" : ""}`}
                   />
                   <Mail className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                 </div>
@@ -145,13 +121,12 @@ const LoginPage = () => {
                     id="password"
                     name="password"
                     type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
                     value={formData.password}
                     onChange={handleChange}
+                    placeholder="Enter your password"
                     className={`pl-10 pr-10 ${
                       errors.password ? "border-red-500" : ""
                     }`}
-                    placeholder="Enter your password"
                   />
                   <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                   <button
@@ -171,73 +146,26 @@ const LoginPage = () => {
                 )}
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label
-                    htmlFor="remember-me"
-                    className="ml-2 block text-sm text-gray-900"
-                  >
-                    Remember me
-                  </label>
-                </div>
-
-                <div className="text-sm">
-                  <Link
-                    to="/forgot-password"
-                    className="font-medium text-blue-600 hover:text-blue-500"
-                  >
-                    Forgot your password?
-                  </Link>
-                </div>
-              </div>
-
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Signing in..." : "Sign in"}
               </Button>
             </form>
 
-            {/* Demo accounts */}
-            {/* <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">
-                    Demo Accounts
-                  </span>
-                </div>
-              </div>
+            {/* Divider */}
+            <div className="my-4 flex items-center">
+              <hr className="flex-1 border-gray-300" />
+              <span className="mx-2 text-gray-500">OR</span>
+              <hr className="flex-1 border-gray-300" />
+            </div>
 
-              <div className="mt-4 space-y-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={() =>
-                    handleDemoLogin("admin@bobbyfurniture.com", "admin123")
-                  }
-                >
-                  Use Admin Account
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={() =>
-                    handleDemoLogin("user@example.com", "password123")
-                  }
-                >
-                  Use Customer Account
-                </Button>
-              </div>
-            </div> */}
+            {/* Google Login Button */}
+            <Button
+              onClick={handleGoogleLogin}
+              className="w-full text-gray-500 bg-white hover:bg-slate-100 shadow-sm hover:shadow-md flex items-center justify-center space-x-2"
+            >
+              <img src="/google-icon.svg" alt="Google" className="h-5 w-5" />
+              <span>Sign in with Google</span>
+            </Button>
           </CardContent>
         </Card>
       </div>

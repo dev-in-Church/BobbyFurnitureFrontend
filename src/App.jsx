@@ -29,6 +29,7 @@ import OrderHistoryPage from "./pages/order-history";
 import ContactPage from "./pages/contact-page";
 import AboutPage from "./pages/about-page";
 import HelpCenterPage from "./pages/help-center";
+import AuthSuccess from "./pages/auth-success.jsx";
 
 // Admin Components
 import AdminDashboard from "./pages/admin-dashboard-enhanced";
@@ -75,7 +76,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 // Layout Component
 const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-orange-400">
       <Navbar />
       <main className="flex-1">{children}</main>
       <EnhancedFooter />
@@ -128,6 +129,7 @@ const App = () => {
                   path="/forgot-password"
                   element={<ForgotPasswordPage />}
                 />
+                <Route path="/auth/success" element={<AuthSuccess />} />
 
                 {/* Protected User Routes */}
                 <Route

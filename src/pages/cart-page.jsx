@@ -112,7 +112,7 @@ const CartPage = () => {
 
   if (cartItems.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 bg-white">
         <div className="text-center py-16">
           <ShoppingCart className="mx-auto h-24 w-24 text-gray-300 mb-6" />
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
@@ -133,7 +133,7 @@ const CartPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-white">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Shopping Cart</h1>
         <p className="text-gray-600">

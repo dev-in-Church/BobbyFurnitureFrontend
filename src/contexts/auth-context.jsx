@@ -6,13 +6,13 @@ import { toast } from "react-toastify";
 const AuthContext = createContext(undefined);
 
 // API configuration
-const API_BASE_URL = "https://bobbyfurnitureonline.onrender.com/api"; //"http://localhost:5000/api";
+const API_BASE_URL = "https://bobbyfurnitureonline.onrender.com/api";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // API helper function
+  // Helper for API calls
   const apiCall = async (endpoint, options = {}) => {
     const token = localStorage.getItem("token");
 
@@ -37,37 +37,34 @@ const AuthProvider = ({ children }) => {
     return response.json();
   };
 
-  // Check authentication status on app load
+  // Check if user is logged in on app load
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem("token");
+      const userData = localStorage.getItem("user");
 
-      if (!token) {
-        setLoading(false);
-        return;
+      if (token && userData) {
+        try {
+          // Optionally verify token with backend
+          // const verified = await apiCall("/auth/verify");
+          setUser(JSON.parse(userData));
+        } catch (error) {
+          console.error("Token verification failed:", error);
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+        }
       }
 
-      try {
-        // Verify token with backend
-        const userData = await apiCall("/auth/verify");
-        setUser(userData.user);
-      } catch (error) {
-        console.error("Token verification failed:", error);
-        // Clear invalid token
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-      } finally {
-        setLoading(false);
-      }
+      setLoading(false);
     };
 
     checkAuth();
   }, []);
 
+  // Login with email/password
   const login = async (email, password) => {
     try {
       setLoading(true);
-
       const response = await apiCall("/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
@@ -75,7 +72,6 @@ const AuthProvider = ({ children }) => {
 
       const { user: userData, token } = response;
 
-      // Store token and user data
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
@@ -91,23 +87,17 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  // Register new user
   const register = async (userData) => {
     try {
       setLoading(true);
-
       const response = await apiCall("/auth/register", {
         method: "POST",
-        body: JSON.stringify({
-          name: userData.name,
-          email: userData.email,
-          phone: userData.phone,
-          password: userData.password, // Add password field
-        }),
+        body: JSON.stringify(userData),
       });
 
       const { user: newUser, token } = response;
 
-      // Store token and user data
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(newUser));
       setUser(newUser);
@@ -123,23 +113,7 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = async () => {
-    try {
-      // Optional: Call logout endpoint to invalidate token on server
-      await apiCall("/auth/logout", { method: "POST" }).catch(() => {
-        // Ignore errors for logout endpoint
-      });
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
-      // Always clear local storage and state
-      setUser(null);
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      toast.info("Logged out successfully");
-    }
-  };
-
+  // Update user profile
   const updateUser = async (updatedData) => {
     try {
       const response = await apiCall("/auth/profile", {
@@ -160,6 +134,7 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  // Refresh user data from backend
   const refreshUser = async () => {
     try {
       const userData = await apiCall("/auth/me");
@@ -168,13 +143,28 @@ const AuthProvider = ({ children }) => {
       return userData.user;
     } catch (error) {
       console.error("Refresh user error:", error);
-      logout(); // Force logout if refresh fails
+      logout();
       throw error;
+    }
+  };
+
+  // Logout
+  const logout = async () => {
+    try {
+      await apiCall("/auth/logout", { method: "POST" }).catch(() => {});
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setUser(null);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      toast.info("Logged out successfully");
     }
   };
 
   const value = {
     user,
+    setUser, // needed for Google OAuth redirect
     loading,
     login,
     register,

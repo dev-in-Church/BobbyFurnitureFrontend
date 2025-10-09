@@ -515,7 +515,7 @@ export default function Navbar() {
   const { user, logout } = useAuth();
 
   // Show the button only on the /products page
-  const showSpecialButton = location.pathname === "/";
+  // const showSpecialButton = location.pathname === "/";
 
   // Search state
   const [searchQuery, setSearchQuery] = useState("");
@@ -898,9 +898,9 @@ export default function Navbar() {
   );
 
   return (
-    <header className="sticky top-0 z-[90] w-full bg-white shadow-sm">
+    <>
       {/* gif advert */}
-      {showSpecialButton && <Banner />}
+      {<Banner />}
       {/* Top Bar */}
       <div className="hidden sm:block bg-gray-100 text-primary">
         <div className="container mx-auto flex h-8 items-center justify-between px-4 ">
@@ -908,255 +908,256 @@ export default function Navbar() {
           {renderTopBarRight()}
         </div>
       </div>
+      <header className="sticky top-0 z-[999] w-full border-b transition-all duration-300">
+        {/* Main Navigation Bar */}
+        <div className="w-full bg-white">
+          <div className="container mx-auto flex h-[3rem] sm:h-16 items-end sm:items-center justify-between px-4">
+            <div className="flex items-center gap-2">
+              {/* Mobile Menu */}
+              {renderMobileMenu()}
 
-      {/* Main Navigation Bar */}
-      <div className="w-full border-b border-gray-200 bg-white">
-        <div className="container mx-auto flex h-[3rem] sm:h-16 items-end sm:items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            {/* Mobile Menu */}
-            {renderMobileMenu()}
+              {/* Category Dropdown (Desktop) */}
+              {location.pathname !== "/" && (
+                <div className="hidden md:block ml-2">
+                  {renderCategoryDropdown()}
+                </div>
+              )}
 
-            {/* Logo */}
-            <Link to="/" className="flex items-center">
-              <div className="flex items-center">
-                <span className="hidden md:block text-xl font-bold text-primary">
-                  Bobby Furniture
-                </span>
-                <div className="ml-1">
-                  <img
-                    src="/logo5.png"
-                    alt="Bobby Furniture Logo"
-                    className="h-6"
+              {/* Logo */}
+              <Link to="/" className="flex items-center">
+                <div className="flex items-center">
+                  <span className="hidden md:block text-xl font-bold text-primary">
+                    Bobby Furniture
+                  </span>
+                  <div className="ml-1">
+                    <img
+                      src="/logo5.png"
+                      alt="Bobby Furniture Logo"
+                      className="h-6"
+                    />
+                  </div>
+                </div>
+              </Link>
+            </div>
+
+            {/* Search Bar */}
+            <div className="hidden md:flex w-full max-w-xl items-center px-4">
+              <form
+                onSubmit={handleDesktopSearchSubmit}
+                className="relative flex w-full items-center"
+              >
+                <div className="relative flex w-full">
+                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                    <Search className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <Input
+                    type="text"
+                    placeholder="Search products, brands and categories"
+                    className="h-10 w-full rounded-md border border-gray-300 pl-10 pr-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={(e) => handleSearchKeyPress(e, searchQuery)}
                   />
                 </div>
-              </div>
-            </Link>
+                <Button
+                  className="ml-1 h-10 bg-blue-500 hover:bg-primary"
+                  type="submit"
+                >
+                  Search
+                </Button>
+              </form>
+            </div>
 
-            {/* Category Dropdown (Desktop) */}
-            {location.pathname !== "/" && (
-              <div className="hidden md:block ml-2">
-                {renderCategoryDropdown()}
-              </div>
-            )}
-          </div>
+            {/* Navigation */}
+            <div className="flex items-center space-x-2 md:space-x-6">
+              {/* Category Dropdown (Mobile) */}
+              {location.pathname !== "/" && (
+                <div className="md:hidden">{renderCategoryDropdown()}</div>
+              )}
 
-          {/* Search Bar */}
-          <div className="hidden md:flex w-full max-w-xl items-center px-4">
-            <form
-              onSubmit={handleDesktopSearchSubmit}
-              className="relative flex w-full items-center"
-            >
-              <div className="relative flex w-full">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Search className="h-5 w-5 text-gray-400" />
-                </div>
-                <Input
-                  type="text"
-                  placeholder="Search products, brands and categories"
-                  className="h-10 w-full rounded-md border border-gray-300 pl-10 pr-3 focus-visible:ring-0 focus-visible:ring-offset-0"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => handleSearchKeyPress(e, searchQuery)}
-                />
-              </div>
+              {/* Search Button (Mobile) */}
               <Button
-                className="ml-1 h-10 bg-blue-500 hover:bg-primary"
-                type="submit"
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                onClick={() => navigate("/catalog")}
               >
-                Search
+                <Search className="h-5 w-5" />
+                <span className="sr-only">Search</span>
               </Button>
-            </form>
-          </div>
 
-          {/* Navigation */}
-          <div className="flex items-center space-x-2 md:space-x-6">
-            {/* Category Dropdown (Mobile) */}
-            {location.pathname !== "/" && (
-              <div className="md:hidden">{renderCategoryDropdown()}</div>
-            )}
+              {/* Account */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="flex items-center space-x-1 p-1 text-gray-500"
+                  >
+                    <User className="h-5 w-5" />
+                    <span className="hidden sm:inline">
+                      {user
+                        ? user.isAdmin
+                          ? "Admin"
+                          : user.name?.split(" ")[0] || "Account"
+                        : "Account"}
+                    </span>
+                    <ChevronDown className="h-4 w-4 hidden sm:inline" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {user ? (
+                    <>
+                      {user.isAdmin && (
+                        <>
+                          <DropdownMenuItem>
+                            <Link to="/admin" className="w-full">
+                              Admin Dashboard
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Link to="/admin/products" className="w-full">
+                              Manage Products
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Link to="/admin/orders" className="w-full">
+                              Manage Orders
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Link to="/admin/users" className="w-full">
+                              Manage Users
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem className="border-t">
+                            <Link to="/account" className="w-full">
+                              My Account
+                            </Link>
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                      {!user.isAdmin && (
+                        <>
+                          <DropdownMenuItem>
+                            <Link to="/account" className="w-full">
+                              My Account
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Link to="/orders" className="w-full">
+                              My Orders
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Link to="/wishlist" className="w-full">
+                              Wishlist
+                            </Link>
+                          </DropdownMenuItem>
+                        </>
+                      )}
+                      <DropdownMenuItem
+                        className="border-t cursor-pointer text-red-600"
+                        onClick={() => {
+                          logout();
+                          // Redirect to home if on admin pages
+                          if (location.pathname.startsWith("/admin")) {
+                            window.location.href = "/";
+                          }
+                        }}
+                      >
+                        Logout
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <>
+                      <DropdownMenuItem>
+                        <Link to="/login" className="w-full">
+                          Login
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Link to="/register" className="w-full">
+                          Register
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            {/* Search Button (Mobile) */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => navigate("/catalog")}
-            >
-              <Search className="h-5 w-5" />
-              <span className="sr-only">Search</span>
-            </Button>
+              {/* Help */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="hidden sm:flex items-center space-x-1 p-1 text-gray-500"
+                  >
+                    <HelpCircle className="h-5 w-5" />
+                    <span>Help</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>
+                    <Link to="/help-center" className="w-full">
+                      Help Center
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/place-order" className="w-full">
+                      Place an Order
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/payment-options" className="w-full">
+                      Payment Options
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/track-order" className="w-full">
+                      Track an Order
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/cancel-order" className="w-full">
+                      Cancel an Order
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/returns-refunds" className="w-full">
+                      Returns & Refunds
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
 
-            {/* Account */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center space-x-1 p-1 text-gray-500"
-                >
-                  <User className="h-5 w-5" />
-                  <span className="hidden sm:inline">
-                    {user
-                      ? user.isAdmin
-                        ? "Admin"
-                        : user.name?.split(" ")[0] || "Account"
-                      : "Account"}
+              {/* Cart */}
+              <Link to="/cart" className="relative">
+                <Button variant="ghost" className="p-1 text-gray-500">
+                  <ShoppingCart className="h-5 w-5" />
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
+                    {getCartItemsCount()}
                   </span>
-                  <ChevronDown className="h-4 w-4 hidden sm:inline" />
+                  <span className="ml-1 hidden sm:inline">Cart</span>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {user ? (
-                  <>
-                    {user.isAdmin && (
-                      <>
-                        <DropdownMenuItem>
-                          <Link to="/admin" className="w-full">
-                            Admin Dashboard
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Link to="/admin/products" className="w-full">
-                            Manage Products
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Link to="/admin/orders" className="w-full">
-                            Manage Orders
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Link to="/admin/users" className="w-full">
-                            Manage Users
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="border-t">
-                          <Link to="/account" className="w-full">
-                            My Account
-                          </Link>
-                        </DropdownMenuItem>
-                      </>
-                    )}
-                    {!user.isAdmin && (
-                      <>
-                        <DropdownMenuItem>
-                          <Link to="/account" className="w-full">
-                            My Account
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Link to="/orders" className="w-full">
-                            My Orders
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Link to="/wishlist" className="w-full">
-                            Wishlist
-                          </Link>
-                        </DropdownMenuItem>
-                      </>
-                    )}
-                    <DropdownMenuItem
-                      className="border-t cursor-pointer text-red-600"
-                      onClick={() => {
-                        logout();
-                        // Redirect to home if on admin pages
-                        if (location.pathname.startsWith("/admin")) {
-                          window.location.href = "/";
-                        }
-                      }}
-                    >
-                      Logout
-                    </DropdownMenuItem>
-                  </>
-                ) : (
-                  <>
-                    <DropdownMenuItem>
-                      <Link to="/login" className="w-full">
-                        Login
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <Link to="/register" className="w-full">
-                        Register
-                      </Link>
-                    </DropdownMenuItem>
-                  </>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              </Link>
 
-            {/* Help */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="hidden sm:flex items-center space-x-1 p-1 text-gray-500"
-                >
-                  <HelpCircle className="h-5 w-5" />
-                  <span>Help</span>
-                  <ChevronDown className="h-4 w-4" />
+              {/* Wishlist */}
+              <Link to="/wishlist" className="relative">
+                <Button variant="ghost" className="p-1 text-gray-500">
+                  <Heart className="h-5 w-5" />
+                  {wishlistItems.length > 0 && (
+                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                      {wishlistItems.length}
+                    </span>
+                  )}
+                  <span className="ml-1 hidden sm:inline">Wishlist</span>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Link to="/help-center" className="w-full">
-                    Help Center
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/place-order" className="w-full">
-                    Place an Order
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/payment-options" className="w-full">
-                    Payment Options
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/track-order" className="w-full">
-                    Track an Order
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/cancel-order" className="w-full">
-                    Cancel an Order
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/returns-refunds" className="w-full">
-                    Returns & Refunds
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            {/* Cart */}
-            <Link to="/cart" className="relative">
-              <Button variant="ghost" className="p-1 text-gray-500">
-                <ShoppingCart className="h-5 w-5" />
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
-                  {getCartItemsCount()}
-                </span>
-                <span className="ml-1 hidden sm:inline">Cart</span>
-              </Button>
-            </Link>
-
-            {/* Wishlist */}
-            <Link to="/wishlist" className="relative">
-              <Button variant="ghost" className="p-1 text-gray-500">
-                <Heart className="h-5 w-5" />
-                {wishlistItems.length > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
-                    {wishlistItems.length}
-                  </span>
-                )}
-                <span className="ml-1 hidden sm:inline">Wishlist</span>
-              </Button>
-            </Link>
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
