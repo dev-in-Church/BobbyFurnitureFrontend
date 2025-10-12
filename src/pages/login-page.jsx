@@ -163,11 +163,25 @@ const LoginPage = () => {
 
             {/* Google Login Button */}
             <Button
-              onClick={handleGoogleLogin}
+              onClick={() => {
+                setLoading(true);
+                handleGoogleLogin();
+              }}
+              disabled={loading}
               className="w-full text-gray-500 bg-white hover:bg-slate-100 shadow-sm hover:shadow-md flex items-center justify-center space-x-2"
             >
-              <img src="/google-icon.svg" alt="Google" className="h-5 w-5" />
-              <span>Sign in with Google</span>
+              {loading ? (
+                "Redirecting..."
+              ) : (
+                <>
+                  <img
+                    src="/google-icon.svg"
+                    alt="Google"
+                    className="h-5 w-5"
+                  />
+                  <span>Sign in with Google</span>
+                </>
+              )}
             </Button>
           </CardContent>
         </Card>

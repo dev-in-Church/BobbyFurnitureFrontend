@@ -102,17 +102,26 @@ const AuthProvider = ({ children }) => {
   };
 
   // ✅ Refresh user data
+  // const refreshUser = async () => {
+  //   try {
+  //     const res = await fetch(`${API_BASE_URL}/api/auth/current`, {
+  //       credentials: "include",
+  //     });
+  //     if (res.ok) {
+  //       const data = await res.json();
+  //       setUser(data.user);
+  //     } else {
+  //       setUser(null);
+  //     }
+  //   } catch {
+  //     setUser(null);
+  //   }
+  // };
+
   const refreshUser = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/current`, {
-        credentials: "include",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data.user);
-      } else {
-        setUser(null);
-      }
+      const data = await apiCall("/auth/current");
+      setUser(data.user);
     } catch {
       setUser(null);
     }
