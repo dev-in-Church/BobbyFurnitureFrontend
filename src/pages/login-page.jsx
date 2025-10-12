@@ -52,7 +52,7 @@ const LoginPage = () => {
     try {
       const result = await login(formData.email, formData.password);
       if (result.success) {
-        // ✅ Cookies are handled automatically, no token storage needed
+        // ✅ Cookie already set by backend, no token storage needed
         if (result.user.isAdmin) navigate("/admin", { replace: true });
         else navigate(from, { replace: true });
       }
@@ -64,7 +64,7 @@ const LoginPage = () => {
   };
 
   const handleGoogleLogin = () => {
-    // ✅ Works as before — backend should set the cookie on successful OAuth
+    // ✅ Backend sets cookie on successful OAuth
     window.location.href =
       "https://bobbyfurnitureonline.onrender.com/api/auth/google";
   };
@@ -96,8 +96,8 @@ const LoginPage = () => {
           </CardHeader>
 
           <CardContent>
-            {/* Email/Password Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Email */}
               <div>
                 <Label htmlFor="email">Email address</Label>
                 <div className="mt-1 relative">
@@ -117,6 +117,7 @@ const LoginPage = () => {
                 )}
               </div>
 
+              {/* Password */}
               <div>
                 <Label htmlFor="password">Password</Label>
                 <div className="mt-1 relative">
@@ -154,14 +155,12 @@ const LoginPage = () => {
               </Button>
             </form>
 
-            {/* Divider */}
             <div className="my-4 flex items-center">
               <hr className="flex-1 border-gray-300" />
               <span className="mx-2 text-gray-500">OR</span>
               <hr className="flex-1 border-gray-300" />
             </div>
 
-            {/* Google Login Button */}
             <Button
               onClick={() => {
                 setLoading(true);

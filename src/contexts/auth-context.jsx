@@ -3,150 +3,118 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-const AuthContext = createContext(undefined);
+const AuthContext = createContext();
 
 const API_BASE_URL = "https://bobbyfurnitureonline.onrender.com/api";
 
-const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Helper for API calls (includes credentials for cookies)
   const apiCall = async (endpoint, options = {}) => {
     const config = {
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-      credentials: "include", // 👈 include cookies automatically
+      headers: { "Content-Type": "application/json", ...options.headers },
+      credentials: "include",
       ...options,
     };
-
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-
-    if (!response.ok) {
-      const error = await response
-        .json()
-        .catch(() => ({ message: "Network error" }));
-      throw new Error(error.message || "Request failed");
+    const res = await fetch(`${API_BASE_URL}${endpoint}`, config);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: "Network error" }));
+      throw new Error(err.message || "Request failed");
     }
-
-    return response.json();
+    return res.json();
   };
 
-  // ✅ On mount: check if a valid session cookie exists
+  // Load user on mount
   useEffect(() => {
-    const fetchCurrentUser = async () => {
+    const fetchUser = async () => {
       try {
-        const response = await apiCall("/auth/current");
-        setUser(response.user);
+        const res = await apiCall("/auth/current");
+        setUser(res.user);
       } catch {
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchCurrentUser();
+    fetchUser();
   }, []);
 
-  // ✅ Login (cookie set automatically by backend)
   const login = async (email, password) => {
     try {
       setLoading(true);
-      const response = await apiCall("/auth/login", {
+      const res = await apiCall("/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-
-      setUser(response.user);
+      setUser(res.user);
       toast.success("Login successful!");
-      return { success: true, user: response.user };
-    } catch (error) {
-      toast.error(error.message || "Login failed");
-      return { success: false, error: error.message };
+      return { success: true, user: res.user };
+    } catch (err) {
+      toast.error(err.message || "Login failed");
+      return { success: false, error: err.message };
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Register (cookie set automatically by backend)
   const register = async (userData) => {
     try {
       setLoading(true);
-      const response = await apiCall("/auth/register", {
+      const res = await apiCall("/auth/register", {
         method: "POST",
         body: JSON.stringify(userData),
       });
-
-      setUser(response.user);
+      setUser(res.user);
       toast.success("Registration successful!");
-      return { success: true, user: response.user };
-    } catch (error) {
-      toast.error(error.message || "Registration failed");
-      return { success: false, error: error.message };
+      return { success: true, user: res.user };
+    } catch (err) {
+      toast.error(err.message || "Registration failed");
+      return { success: false, error: err.message };
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Logout (backend clears cookie)
   const logout = async () => {
     try {
       await apiCall("/auth/logout", { method: "POST" });
       setUser(null);
-      toast.info("Logged out successfully");
+      toast.info("Logged out");
     } catch {
       toast.error("Logout failed");
     }
   };
 
-  // ✅ Refresh user data
   const refreshUser = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/auth/current`, {
-        credentials: "include",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setUser(data.user);
-      } else {
-        setUser(null);
-      }
+      const res = await apiCall("/auth/current");
+      setUser(res.user);
     } catch {
       setUser(null);
     }
   };
 
-  // const refreshUser = async () => {
-  //   try {
-  //     const data = await apiCall("/auth/current");
-  //     setUser(data.user);
-  //   } catch {
-  //     setUser(null);
-  //   }
-  // };
-
-  const value = {
-    user,
-    loading,
-    login,
-    register,
-    logout,
-    refreshUser,
-    isAuthenticated: !!user,
-    isAdmin: user?.isAdmin || false,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        refreshUser,
+        isAuthenticated: !!user,
+        isAdmin: user?.isAdmin,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+export const useAuth = () => {
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
 };
-
-export { AuthProvider, useAuth, AuthContext };
