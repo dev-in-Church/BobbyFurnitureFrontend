@@ -5,23 +5,20 @@ import { toast } from "react-toastify";
 
 const AuthContext = createContext(undefined);
 
-// API configuration
 const API_BASE_URL = "https://bobbyfurnitureonline.onrender.com/api";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Helper for API calls
+  // ✅ Helper for API calls (includes credentials for cookies)
   const apiCall = async (endpoint, options = {}) => {
-    const token = localStorage.getItem("token");
-
     const config = {
       headers: {
         "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
         ...options.headers,
       },
+      credentials: "include", // 👈 include cookies automatically
       ...options,
     };
 
@@ -37,31 +34,23 @@ const AuthProvider = ({ children }) => {
     return response.json();
   };
 
-  // Check if user is logged in on app load
+  // ✅ On mount: check if a valid session cookie exists
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem("token");
-      const userData = localStorage.getItem("user");
-
-      if (token && userData) {
-        try {
-          // Optionally verify token with backend
-          // const verified = await apiCall("/auth/verify");
-          setUser(JSON.parse(userData));
-        } catch (error) {
-          console.error("Token verification failed:", error);
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-        }
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await apiCall("/auth/current");
+        setUser(response.user);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
-    checkAuth();
+    fetchCurrentUser();
   }, []);
 
-  // Login with email/password
+  // ✅ Login (cookie set automatically by backend)
   const login = async (email, password) => {
     try {
       setLoading(true);
@@ -70,16 +59,10 @@ const AuthProvider = ({ children }) => {
         body: JSON.stringify({ email, password }),
       });
 
-      const { user: userData, token } = response;
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(userData));
-      setUser(userData);
-
+      setUser(response.user);
       toast.success("Login successful!");
-      return { success: true, user: userData };
+      return { success: true, user: response.user };
     } catch (error) {
-      console.error("Login error:", error);
       toast.error(error.message || "Login failed");
       return { success: false, error: error.message };
     } finally {
@@ -87,7 +70,7 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register new user
+  // ✅ Register (cookie set automatically by backend)
   const register = async (userData) => {
     try {
       setLoading(true);
@@ -96,16 +79,10 @@ const AuthProvider = ({ children }) => {
         body: JSON.stringify(userData),
       });
 
-      const { user: newUser, token } = response;
-
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(newUser));
-      setUser(newUser);
-
+      setUser(response.user);
       toast.success("Registration successful!");
-      return { success: true, user: newUser };
+      return { success: true, user: response.user };
     } catch (error) {
-      console.error("Registration error:", error);
       toast.error(error.message || "Registration failed");
       return { success: false, error: error.message };
     } finally {
@@ -113,63 +90,40 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // Update user profile
-  const updateUser = async (updatedData) => {
-    try {
-      const response = await apiCall("/auth/profile", {
-        method: "PUT",
-        body: JSON.stringify(updatedData),
-      });
-
-      const updatedUser = response.user;
-      setUser(updatedUser);
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-
-      toast.success("Profile updated successfully!");
-      return { success: true, user: updatedUser };
-    } catch (error) {
-      console.error("Update profile error:", error);
-      toast.error(error.message || "Failed to update profile");
-      return { success: false, error: error.message };
-    }
-  };
-
-  // Refresh user data from backend
-  const refreshUser = async () => {
-    try {
-      const userData = await apiCall("/auth/me");
-      setUser(userData.user);
-      localStorage.setItem("user", JSON.stringify(userData.user));
-      return userData.user;
-    } catch (error) {
-      console.error("Refresh user error:", error);
-      logout();
-      throw error;
-    }
-  };
-
-  // Logout
+  // ✅ Logout (backend clears cookie)
   const logout = async () => {
     try {
-      await apiCall("/auth/logout", { method: "POST" }).catch(() => {});
-    } catch (error) {
-      console.error("Logout error:", error);
-    } finally {
+      await apiCall("/auth/logout", { method: "POST" });
       setUser(null);
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
       toast.info("Logged out successfully");
+    } catch {
+      toast.error("Logout failed");
+    }
+  };
+
+  // ✅ Refresh user data
+  const refreshUser = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/current`, {
+        credentials: "include",
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setUser(data.user);
+      } else {
+        setUser(null);
+      }
+    } catch {
+      setUser(null);
     }
   };
 
   const value = {
     user,
-    setUser, // needed for Google OAuth redirect
     loading,
     login,
     register,
     logout,
-    updateUser,
     refreshUser,
     isAuthenticated: !!user,
     isAdmin: user?.isAdmin || false,

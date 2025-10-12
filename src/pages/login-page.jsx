@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Eye, EyeOff, Mail, Lock, LogIn } from "lucide-react"; // <- LogIn icon
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -52,6 +52,7 @@ const LoginPage = () => {
     try {
       const result = await login(formData.email, formData.password);
       if (result.success) {
+        // ✅ Cookies are handled automatically, no token storage needed
         if (result.user.isAdmin) navigate("/admin", { replace: true });
         else navigate(from, { replace: true });
       }
@@ -63,6 +64,7 @@ const LoginPage = () => {
   };
 
   const handleGoogleLogin = () => {
+    // ✅ Works as before — backend should set the cookie on successful OAuth
     window.location.href =
       "https://bobbyfurnitureonline.onrender.com/api/auth/google";
   };
