@@ -5,6 +5,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { CartProvider } from "./contexts/cart-context";
 import { WishlistProvider } from "./contexts/wishlist-context";
 import { AuthProvider, AuthContext } from "./contexts/auth-context";
+import ScrollToTop from "./components/scroll-to-top.jsx";
 // import { ToastContainer } from "react-toastify";
 import { ToastContainer } from "./components/ui/toast";
 import "react-toastify/dist/ReactToastify.css";
@@ -100,6 +101,7 @@ const App = () => {
   return (
     <ErrorBoundary>
       {/* <Router> */}
+      <ScrollToTop />
       <AuthProvider>
         <CartProvider>
           <WishlistProvider>

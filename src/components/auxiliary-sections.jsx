@@ -75,42 +75,6 @@ export function FurnitureGrid() {
       link: "/category/kids-room",
       bgColor: "bg-indigo-500",
     },
-    {
-      name: "Outdoor Furniture",
-      image: "/banners/outdoor.jpeg?height=150&width=150",
-      link: "/category/outdoor",
-      bgColor: "bg-teal-500",
-    },
-    {
-      name: "Storage Solutions",
-      image: "/banners/storage.jpeg?height=150&width=150",
-      link: "/category/storage",
-      bgColor: "bg-cyan-500",
-    },
-    {
-      name: "Office",
-      image: "/banners/office.jpeg?height=150&width=150",
-      link: "/category/office",
-      bgColor: "bg-pink-500",
-    },
-    {
-      name: "Mattresses",
-      image: "/banners/matress.jpeg?height=150&width=150",
-      link: "/category/mattresses",
-      bgColor: "bg-emerald-500",
-    },
-    {
-      name: "Home Decor",
-      image: "/banners/decor.jpg?height=150&width=150",
-      link: "/category/decor",
-      bgColor: "bg-yellow-500",
-    },
-    {
-      name: "Best Seller",
-      image: "/best-seller.jpg?height=150&width=150",
-      link: "/best-seller",
-      bgColor: "bg-rose-500",
-    },
   ];
 
   return (
@@ -176,34 +140,34 @@ export function FurnitureGrid() {
 export function CircularGrid() {
   const categories = [
     {
-      name: "Flash Sales",
-      image: "/sections/tv-stand.jpg",
-      link: "/flash-sales",
+      name: "Best seller",
+      image: "/best-seller.jpg",
+      link: "/best-seller",
       badge: "⚡",
     },
     {
-      name: "Phone Deals",
-      image: "/sections/dining.jpg",
-      link: "/category/phones",
+      name: "Decor",
+      image: "/banners/decor.jpg",
+      link: "/category/decor",
     },
     {
-      name: "Fridge Deals",
-      image: "/sections/sofa.jpg",
-      link: "/category/fridges",
+      name: "Matresses",
+      image: "/banners/matress.jpeg",
+      link: "/category/matresses",
     },
     {
-      name: "Fashion Deals",
+      name: "Office Deals",
       image: "/sections/office-chair.jpg",
       link: "/category/fashion",
     },
     {
-      name: "Electronic Deals",
-      image: "/sections/living.jpg",
+      name: "Storage Solutions",
+      image: "/banners/storage.jpeg",
       link: "/category/electronics",
     },
     {
-      name: "China Town",
-      image: "/placeholder.png",
+      name: "Outdoor",
+      image: "/banners/outdoor.jpeg",
       link: "/category/china-town",
       badge: "🔥",
     },
