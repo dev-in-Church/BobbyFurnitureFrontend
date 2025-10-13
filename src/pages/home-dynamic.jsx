@@ -25,7 +25,7 @@ export default function HomeDynamic() {
   }, []);
 
   return (
-    <div className="min-h-screen md:px-[2rem]">
+    <div className="min-h-screen md:px-[2rem] bg-orange-400">
       <main className="container max-w-[85rem] overflow-hidden min-h-screen px-1 lg:px-8 md:px-12 py-1 sm:py-2 md:py-4 ">
         <HeroSection />
         {/* Sponsored */}
@@ -113,10 +113,10 @@ export default function HomeDynamic() {
         <div className="mt-2">
           <ProductSectionDynamic
             title="Dine divine | Table Sets"
-            viewMoreLink="/category/dining-room-eight-seater-dining-sets"
+            viewMoreLink="/category/dining-room"
             color="blue-500"
             text="white"
-            category="dining-room-eight-seater-dining-sets" // Reverted to detailed slug
+            category="dining-room" // Reverted to detailed slug
             type="category"
             limit={9}
           />

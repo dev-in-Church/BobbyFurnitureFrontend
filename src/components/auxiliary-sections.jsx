@@ -41,7 +41,7 @@ export function FurnitureGrid() {
   const categories = [
     {
       name: "Flash Sales",
-      image: "/flash-sale.gif?height=150&width=150",
+      image: "/flash-sale.jpg?height=150&width=150",
       link: "/flash-sales",
       bgColor: "bg-red-500",
     },
@@ -65,7 +65,7 @@ export function FurnitureGrid() {
     },
     {
       name: "New Arrivals",
-      image: "/banners/new-arrivals.png?height=150&width=150",
+      image: "/new.jpg?height=150&width=150",
       link: "/new-arrivals",
       bgColor: "bg-orange-500",
     },
@@ -106,9 +106,9 @@ export function FurnitureGrid() {
       bgColor: "bg-yellow-500",
     },
     {
-      name: "Clearance Sale",
-      image: "/placeholder.png?height=150&width=150",
-      link: "/clearance",
+      name: "Best Seller",
+      image: "/best-seller.jpg?height=150&width=150",
+      link: "/best-seller",
       bgColor: "bg-rose-500",
     },
   ];
@@ -244,61 +244,63 @@ export function CircularGrid() {
       <div className="px-2 sm:px-4">
         <div
           className="
-            grid 
-            grid-cols-2
-            xs:grid-cols-3
-            sm:grid-cols-4
-            md:grid-cols-5
-            lg:grid-cols-6
-            gap-2 sm:gap-3 md:gap-4
-          "
+        flex overflow-x-auto gap-3 sm:gap-4
+        sm:grid sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6
+        snap-x snap-mandatory
+        scroll-smooth
+        scrollbar-hide
+        pb-2
+      "
         >
-          {categories.map((item, index) => {
-            return (
-              <Link
-                key={index}
-                to={item.link}
+          {categories.map((item, index) => (
+            <Link
+              key={index}
+              to={item.link}
+              className="
+            group 
+            flex-shrink-0
+            w-28 xs:w-32 sm:w-auto
+            flex flex-col items-center text-center
+            transition-transform duration-200
+            hover:scale-105
+            active:scale-95
+            snap-start
+          "
+            >
+              <div
                 className="
-                  group 
-                  flex flex-col items-center text-center 
-                  transition-transform duration-200
-                  hover:scale-105
-                  active:scale-95
-                "
+              relative 
+              w-full 
+              aspect-square
+              rounded-full
+              overflow-hidden
+              bg-gray-100
+              shadow-sm hover:shadow-md
+              transition-shadow duration-200
+              flex items-center justify-center
+            "
               >
-                <div
-                  className="
-                    relative 
-                    w-full 
-                    aspect-square
-                    rounded-full
-                    overflow-hidden
-                    bg-gray-100
-                    shadow-sm hover:shadow-md
-                    transition-shadow duration-200
-                    flex items-center justify-center
-                    "
-                >
-                  <img
-                    src={item.image || "/placeholder.png"}
-                    alt={item.name}
-                    loading="lazy"
-                    className="w-full h-full object-cover rounded-full"
-                  />
+                <img
+                  src={item.image || "/placeholder.png"}
+                  alt={item.name}
+                  loading="lazy"
+                  className="w-full h-full object-cover rounded-full"
+                />
 
-                  {/* {item.badge && (
-                    <div className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-xs sm:text-sm font-bold shadow-md">
-                      {item.badge}
-                    </div>
-                  )} */}
-                </div>
+                {/* Optional badge */}
+                {/* {item.badge && (
+              <div className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-xs sm:text-sm font-bold shadow-md">
+                {item.badge}
+              </div>
+            )} */}
+              </div>
 
-                {/* <h3 className="mt-2 text-xs sm:text-sm font-medium text-gray-800 line-clamp-2 px-1 leading-tight">
-                  {item.name}
-                </h3> */}
-              </Link>
-            );
-          })}
+              {/* Optional label */}
+              {/* <h3 className="mt-2 text-xs sm:text-sm font-medium text-gray-200 line-clamp-2 px-1 leading-tight">
+            {item.name}
+          </h3> */}
+            </Link>
+          ))}
         </div>
       </div>
     </section>
@@ -335,39 +337,39 @@ export function DealsCategoryGrid() {
     },
     {
       name: "Shoe Racks",
-      image: "/placeholder.png",
+      image: "/sections/shoe-rack.jpg",
       link: "/category/china-town",
       badge: "🔥",
     },
     {
       name: "kid Beds",
-      image: "/placeholder.png",
+      image: "/sections/kids-bed.jpg",
       link: "/category/kid-beds",
     },
     {
       name: "Office Desks",
-      image: "/placeholder.png",
+      image: "/sections/office-desk.jpg",
       link: "/category/office-desks",
     },
     {
       name: "Queen beds",
-      image: "/placeholder.png",
+      image: "/sections/queen-bed.jpg",
       link: "/category/queen-beds",
     },
     {
       name: "Double Beds",
-      image: "/placeholder.png",
-      link: "/category/double-beds",
+      image: "/sections/double-bed.jpg",
+      link: "/category/double-decker",
     },
     {
       name: "Recliners Deals",
-      image: "/placeholder.png",
+      image: "/sections/recliner.jpg",
       link: "/category/recliners",
     },
     {
       name: "Conference Tables",
-      image: "/placeholder.png",
-      link: "/category/appliances",
+      image: "/sections/conference-table.jpg",
+      link: "/category/conference-tables",
     },
   ];
 
@@ -376,61 +378,55 @@ export function DealsCategoryGrid() {
       <div className="px-2 sm:px-4">
         <div
           className="
-            grid 
-            grid-cols-2
-            xs:grid-cols-3
-            sm:grid-cols-4
-            md:grid-cols-5
-            lg:grid-cols-6
-            gap-2 sm:gap-3 md:gap-4
-          "
+        flex overflow-x-auto gap-3 sm:gap-4
+        sm:grid sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6
+        snap-x snap-mandatory
+        scrollbar-hide
+        scroll-smooth
+        pb-2
+      "
         >
-          {categories.map((item, index) => {
-            return (
-              <Link
-                key={index}
-                to={item.link}
+          {categories.map((item, index) => (
+            <Link
+              key={index}
+              to={item.link}
+              className="
+            group 
+            flex-shrink-0 
+            w-32 xs:w-36 sm:w-auto
+            flex flex-col items-center text-center 
+            transition-transform duration-200
+            hover:scale-105
+            active:scale-95
+            snap-start
+          "
+            >
+              <div
                 className="
-                  group 
-                  flex flex-col items-center text-center 
-                  transition-transform duration-200
-                  hover:scale-105
-                  active:scale-95
-                "
+              relative 
+              w-full 
+              aspect-square
+              rounded-lg
+              overflow-hidden
+              bg-gray-100
+              shadow-sm hover:shadow-md
+              transition-shadow duration-200
+              flex items-center justify-center
+            "
               >
-                <div
-                  className="
-                    relative 
-                    w-full 
-                    aspect-square
-                    rounded-lg
-                    overflow-hidden
-                    bg-gray-100
-                    shadow-sm hover:shadow-md
-                    transition-shadow duration-200
-                    flex items-center justify-center
-                  "
-                >
-                  <img
-                    src={item.image || "/placeholder.png"}
-                    alt={item.name}
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
+                <img
+                  src={item.image || "/placeholder.png"}
+                  alt={item.name}
+                  loading="lazy"
+                  className="w-full h-full object-cover"
+                />
+              </div>
 
-                  {/* {item.badge && (
-                    <div className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-xs sm:text-sm font-bold shadow-md">
-                      {item.badge}
-                    </div>
-                  )} */}
-                </div>
-
-                <h3 className="mt-2 text-xs sm:text-sm font-medium text-gray-200 line-clamp-2 px-1 leading-tight">
-                  {item.name}
-                </h3>
-              </Link>
-            );
-          })}
+              <h3 className="mt-2 text-xs sm:text-sm font-medium text-gray-200 line-clamp-2 px-1 leading-tight">
+                {item.name}
+              </h3>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

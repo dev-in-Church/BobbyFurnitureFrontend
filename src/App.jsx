@@ -76,7 +76,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 // Layout Component
 const Layout = ({ children }) => {
   return (
-    <div className="min-h-screen flex flex-col bg-orange-400">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-1">{children}</main>
       <EnhancedFooter />

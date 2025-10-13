@@ -46,7 +46,7 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 import { useAuth } from "../contexts/auth-context";
-import { useCart } from "../contexts/cart-context";
+import { useCart, CartProvider } from "../contexts/cart-context";
 import { useWishlist } from "../contexts/wishlist-context";
 import Banner from "./Banner";
 
@@ -522,7 +522,7 @@ export default function Navbar() {
   const [mobileSearchQuery, setMobileSearchQuery] = useState("");
 
   // Add cart and wishlist context
-  const { getCartItemsCount } = useCart();
+  const { getCartItemsCount, cartItems } = useCart();
   const { wishlistItems } = useWishlist();
 
   // Check if mobile on mount and window resize
@@ -1135,9 +1135,12 @@ export default function Navbar() {
               <Link to="/cart" className="relative">
                 <Button variant="ghost" className="p-1 text-gray-500">
                   <ShoppingCart className="h-5 w-5" />
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
-                    {getCartItemsCount()}
-                  </span>
+                  {cartItems.length > 0 && (
+                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
+                      {getCartItemsCount()}
+                    </span>
+                  )}
+
                   <span className="ml-1 hidden sm:inline">Cart</span>
                 </Button>
               </Link>

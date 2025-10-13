@@ -3,7 +3,7 @@ import React from "react";
 
 const Banner = () => {
   return (
-    <div className="w-full flex justify-center overflow-hidden">
+    <div className="w-full flex justify-center overflow-hidden bg-orange-400">
       <a href="/all-products" className="block">
         <img
           src="/banners/promo3.gif"
