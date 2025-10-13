@@ -12,7 +12,7 @@ const AuthSuccessPage = () => {
     const fetchUser = async () => {
       try {
         // Call backend to get the user stored in JWT cookie
-        const res = await fetch("http://localhost/5000/api/auth/current", {
+        const res = await fetch("http://localhost:5000/api/auth/current", {
           credentials: "include", // very important! send cookies
         });
 
