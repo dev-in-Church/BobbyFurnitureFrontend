@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 const AuthContext = createContext(undefined);
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "https://bobbyfurnitureonline.onrender.com/api";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

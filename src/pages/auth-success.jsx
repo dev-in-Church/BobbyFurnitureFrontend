@@ -12,9 +12,12 @@ const AuthSuccessPage = () => {
     const fetchUser = async () => {
       try {
         // Call backend to get the user stored in JWT cookie
-        const res = await fetch("http://localhost:5000/api/auth/current", {
-          credentials: "include", // very important! send cookies
-        });
+        const res = await fetch(
+          "https://bobbyfurnitureonline.onrender.com/api/auth/current",
+          {
+            credentials: "include", // very important! send cookies
+          }
+        );
 
         if (res.ok) {
           const data = await res.json();
