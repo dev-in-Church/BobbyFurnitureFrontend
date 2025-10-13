@@ -65,8 +65,7 @@ const LoginPage = () => {
 
   const handleGoogleLogin = () => {
     // ✅ Works as before — backend should set the cookie on successful OAuth
-    window.location.href =
-      "https://bobbyfurnitureonline.onrender.com/api/auth/google";
+    window.location.href = "http://localhost/5000/api/auth/google";
   };
 
   return (
