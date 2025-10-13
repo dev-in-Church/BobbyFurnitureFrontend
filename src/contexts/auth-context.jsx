@@ -7,6 +7,18 @@ const AuthContext = createContext(undefined);
 
 const API_BASE_URL = "https://bobbyfurnitureonline.onrender.com/api";
 
+// ✅ Normalize user data so keys are consistent (snake_case → camelCase)
+const normalizeUser = (u) => {
+  if (!u) return null;
+  return {
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    isAdmin: u.is_admin ?? u.isAdmin ?? false,
+    createdAt: u.created_at ?? u.createdAt,
+  };
+};
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -29,15 +41,6 @@ const AuthProvider = ({ children }) => {
       throw new Error(error.message || "Request failed");
     }
     return response.json();
-  };
-
-  // ✅ Normalize user data
-  const normalizeUser = (rawUser) => {
-    if (!rawUser) return null;
-    return {
-      ...rawUser,
-      isAdmin: rawUser.isAdmin ?? rawUser.is_admin ?? false,
-    };
   };
 
   useEffect(() => {
