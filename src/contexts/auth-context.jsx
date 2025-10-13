@@ -11,46 +11,49 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Helper for API calls (includes credentials for cookies)
   const apiCall = async (endpoint, options = {}) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
         ...options.headers,
       },
-      credentials: "include", // 👈 include cookies automatically
+      credentials: "include",
       ...options,
     };
 
     const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-
     if (!response.ok) {
       const error = await response
         .json()
         .catch(() => ({ message: "Network error" }));
       throw new Error(error.message || "Request failed");
     }
-
     return response.json();
   };
 
-  // ✅ On mount: check if a valid session cookie exists
+  // ✅ Normalize user data
+  const normalizeUser = (rawUser) => {
+    if (!rawUser) return null;
+    return {
+      ...rawUser,
+      isAdmin: rawUser.isAdmin ?? rawUser.is_admin ?? false,
+    };
+  };
+
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
         const response = await apiCall("/auth/current");
-        setUser(response.user);
+        setUser(normalizeUser(response.user));
       } catch {
         setUser(null);
       } finally {
         setLoading(false);
       }
     };
-
     fetchCurrentUser();
   }, []);
 
-  // ✅ Login (cookie set automatically by backend)
   const login = async (email, password) => {
     try {
       setLoading(true);
@@ -58,10 +61,9 @@ const AuthProvider = ({ children }) => {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-
-      setUser(response.user);
+      setUser(normalizeUser(response.user));
       toast.success("Login successful!");
-      return { success: true, user: response.user };
+      return { success: true, user: normalizeUser(response.user) };
     } catch (error) {
       toast.error(error.message || "Login failed");
       return { success: false, error: error.message };
@@ -70,7 +72,6 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ Register (cookie set automatically by backend)
   const register = async (userData) => {
     try {
       setLoading(true);
@@ -78,10 +79,9 @@ const AuthProvider = ({ children }) => {
         method: "POST",
         body: JSON.stringify(userData),
       });
-
-      setUser(response.user);
+      setUser(normalizeUser(response.user));
       toast.success("Registration successful!");
-      return { success: true, user: response.user };
+      return { success: true, user: normalizeUser(response.user) };
     } catch (error) {
       toast.error(error.message || "Registration failed");
       return { success: false, error: error.message };
@@ -90,7 +90,6 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ Logout (backend clears cookie)
   const logout = async () => {
     try {
       await apiCall("/auth/logout", { method: "POST" });
@@ -101,12 +100,12 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ Refresh user data
   const refreshUser = async () => {
     try {
       const response = await apiCall("/auth/current");
-      setUser(response.user);
-      return response.user;
+      const freshUser = normalizeUser(response.user);
+      setUser(freshUser);
+      return freshUser;
     } catch (error) {
       logout();
       throw error;

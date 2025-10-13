@@ -6,26 +6,32 @@ import { useAuth } from "../contexts/auth-context";
 
 const AuthSuccessPage = () => {
   const navigate = useNavigate();
-  const { refreshUser } = useAuth(); // ✅ we'll call backend to load user info from cookie
+  const { refreshUser } = useAuth();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // Call backend to get the user stored in JWT cookie
+        // Fetch user info from backend cookie session
         const res = await fetch(
           "https://bobbyfurnitureonline.onrender.com/api/auth/current",
           {
-            credentials: "include", // very important! send cookies
+            credentials: "include", // 👈 sends cookies
           }
         );
 
-        if (res.ok) {
-          const data = await res.json();
-          await refreshUser(); // or setUser(data.user) if you prefer direct update
-          navigate("/", { replace: true });
-        } else {
+        if (!res.ok) {
           console.error("Failed to fetch user from cookie session");
           navigate("/login", { replace: true });
+          return;
+        }
+
+        const data = await res.json();
+        const user = await refreshUser(); // ensures context is updated
+
+        if (user?.isAdmin) {
+          navigate("/admin", { replace: true });
+        } else {
+          navigate("/", { replace: true });
         }
       } catch (err) {
         console.error("Error fetching user from cookie:", err);
