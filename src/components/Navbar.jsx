@@ -926,7 +926,7 @@ export default function Navbar() {
               {/* Logo */}
               <Link to="/" className="flex items-center">
                 <div className="flex items-center">
-                  <span className="hidden md:block text-xl font-bold text-primary">
+                  <span className="hidden lg:block text-xl font-bold text-primary">
                     Bobby Furniture
                   </span>
                   <div className="ml-1">
@@ -941,7 +941,7 @@ export default function Navbar() {
             </div>
 
             {/* Search Bar */}
-            <div className="hidden md:flex w-full max-w-xl items-center px-4">
+            <div className="hidden md:flex w-full max-w-xl md:max-w-[30rem] items-center px-4">
               <form
                 onSubmit={handleDesktopSearchSubmit}
                 className="relative flex w-full items-center"
@@ -953,14 +953,14 @@ export default function Navbar() {
                   <Input
                     type="text"
                     placeholder="Search products, brands and categories"
-                    className="h-10 w-full rounded-md border border-gray-300 pl-10 pr-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="h-10 w-full rounded-md md:rounded-xl border border-gray-300 pl-10 pr-3 focus-visible:ring-0 focus-visible:ring-offset-0"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={(e) => handleSearchKeyPress(e, searchQuery)}
                   />
                 </div>
                 <Button
-                  className="ml-1 h-10 bg-blue-500 hover:bg-primary"
+                  className="hidden lg:block ml-1 h-10 bg-blue-500 hover:bg-primary"
                   type="submit"
                 >
                   Search
@@ -994,7 +994,7 @@ export default function Navbar() {
                     className="flex items-center space-x-1 p-1 text-gray-500"
                   >
                     <User className="h-5 w-5" />
-                    <span className="hidden sm:inline">
+                    <span className="hidden lg:inline">
                       {user
                         ? user.isAdmin
                           ? "Admin"
@@ -1090,7 +1090,7 @@ export default function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="hidden sm:flex items-center space-x-1 p-1 text-gray-500"
+                    className="hidden lg:flex items-center space-x-1 p-1 text-gray-500"
                   >
                     <HelpCircle className="h-5 w-5" />
                     <span>Help</span>
@@ -1141,7 +1141,7 @@ export default function Navbar() {
                     </span>
                   )}
 
-                  <span className="ml-1 hidden sm:inline">Cart</span>
+                  <span className="ml-1 hidden lg:inline">Cart</span>
                 </Button>
               </Link>
 
@@ -1154,7 +1154,7 @@ export default function Navbar() {
                       {wishlistItems.length}
                     </span>
                   )}
-                  <span className="ml-1 hidden sm:inline">Wishlist</span>
+                  <span className="ml-1 hidden lg:inline">Wishlist</span>
                 </Button>
               </Link>
             </div>
