@@ -15,7 +15,7 @@ import {
   StarHalf,
   Check,
   AlertCircle,
-  Loader2,
+  Loader,
   Home,
 } from "lucide-react";
 import { Button } from "../components/ui/button";
@@ -108,8 +108,8 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-blue-500 mx-auto mb-4" />
-          <p className="text-gray-600">Loading product details...</p>
+          <Loader className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-primary">Loading product details...</p>
         </div>
       </div>
     );
