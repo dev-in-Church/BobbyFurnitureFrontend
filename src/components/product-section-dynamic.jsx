@@ -84,8 +84,7 @@ export default function ProductSectionDynamic({
       checkScrollPosition();
       return () => slider.removeEventListener("scroll", checkScrollPosition);
     }
-  }, [products]);
-
+  }, []); // Only run once on mount
   const scrollLeft = () => {
     if (sliderRef.current) sliderRef.current.scrollLeft -= 200;
   };

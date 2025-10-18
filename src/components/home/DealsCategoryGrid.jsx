@@ -76,6 +76,7 @@ function DealsCategoryGrid() {
         scrollbar-hide
         scroll-smooth
         pb-2
+        will-change: transform;
       "
         >
           {categories.map((item, index) => (
@@ -109,7 +110,7 @@ function DealsCategoryGrid() {
                 <img
                   src={item.image || "/placeholder.png"}
                   alt={item.name}
-                  loading="lazy"
+                  loading="eager"
                   className="w-full h-full object-cover"
                 />
               </div>

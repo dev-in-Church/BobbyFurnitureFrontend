@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/react-query-client";
@@ -11,6 +12,7 @@ import ScrollToTop from "./components/scroll-to-top.jsx";
 // import { ToastContainer } from "react-toastify";
 import { ToastContainer } from "./components/ui/toast";
 import "react-toastify/dist/ReactToastify.css";
+import PageLoader from "./components/ui/PageLoader";
 
 // Layout Components
 import Navbar from "./components/Navbar"; //fix this disturbing fucking shit
@@ -78,6 +80,29 @@ const ProtectedRoute = ({ children, requireAdmin = false }) => {
 
 // Layout Component
 const Layout = ({ children }) => {
+  const [loading, setLoading] = useState(true);
+  const [fadeOut, setFadeOut] = useState(false);
+
+  useEffect(() => {
+    // Start fade-out sequence once page starts loading
+    const fadeTimer = setTimeout(() => setFadeOut(true), 1000);
+    const hideTimer = setTimeout(() => setLoading(false), 1700);
+
+    // Also stop loader if everything finishes before timer
+    window.addEventListener("load", () => {
+      setFadeOut(true);
+      setTimeout(() => setLoading(false), 700);
+    });
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(hideTimer);
+    };
+  }, []);
+
+  if (loading) {
+    return <PageLoader fadeOut={fadeOut} />;
+  }
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
