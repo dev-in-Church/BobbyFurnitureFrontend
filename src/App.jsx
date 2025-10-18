@@ -2,6 +2,8 @@
 
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./lib/react-query-client";
 import { CartProvider } from "./contexts/cart-context";
 import { WishlistProvider } from "./contexts/wishlist-context";
 import { AuthProvider, AuthContext } from "./contexts/auth-context";
@@ -101,129 +103,134 @@ const App = () => {
   return (
     <ErrorBoundary>
       {/* <Router> */}
-      <ScrollToTop />
-      <AuthProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <Layout>
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<HomeDynamic />} />
-                {/* <Route path="/category/:category" element={<CategoryPage />} /> */}
-                {/* Category page - dynamic route */}
-                <Route path="/products" element={<AllProductsPage />} />
-                <Route path="/all-products" element={<AllProductsPage />} />
-                <Route path="/category/:category" element={<CategoryPage />} />
-                {/* Search/Catalog page */}
-                <Route path="/catalog" element={<CatalogPage />} />
-                <Route path="/product/:id" element={<ProductDetailPage />} />
-                <Route path="/search" element={<SearchResultsPage />} />
-                <Route path="/cart" element={<CartPage />} />
-                <Route path="/wishlist" element={<WishlistPage />} />
-                <Route path="/contact" element={<ContactPage />} />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/help" element={<HelpCenterPage />} />
+      <QueryClientProvider client={queryClient}>
+        <ScrollToTop />
+        <AuthProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <Layout>
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/" element={<HomeDynamic />} />
+                  {/* <Route path="/category/:category" element={<CategoryPage />} /> */}
+                  {/* Category page - dynamic route */}
+                  <Route path="/products" element={<AllProductsPage />} />
+                  <Route path="/all-products" element={<AllProductsPage />} />
+                  <Route
+                    path="/category/:category"
+                    element={<CategoryPage />}
+                  />
+                  {/* Search/Catalog page */}
+                  <Route path="/catalog" element={<CatalogPage />} />
+                  <Route path="/product/:id" element={<ProductDetailPage />} />
+                  <Route path="/search" element={<SearchResultsPage />} />
+                  <Route path="/cart" element={<CartPage />} />
+                  <Route path="/wishlist" element={<WishlistPage />} />
+                  <Route path="/contact" element={<ContactPage />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/help" element={<HelpCenterPage />} />
 
-                {/* Auth Routes */}
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                <Route
-                  path="/forgot-password"
-                  element={<ForgotPasswordPage />}
-                />
-                <Route path="/auth/success" element={<AuthSuccess />} />
+                  {/* Auth Routes */}
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
+                  <Route
+                    path="/forgot-password"
+                    element={<ForgotPasswordPage />}
+                  />
+                  <Route path="/auth/success" element={<AuthSuccess />} />
 
-                {/* Protected User Routes */}
-                <Route
-                  path="/checkout"
-                  element={
-                    <ProtectedRoute>
-                      <CheckoutPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/order-confirmation/:orderId"
-                  element={
-                    <ProtectedRoute>
-                      <OrderConfirmationPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/account"
-                  element={
-                    <ProtectedRoute>
-                      <UserAccountPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/orders"
-                  element={
-                    <ProtectedRoute>
-                      <OrderHistoryPage />
-                    </ProtectedRoute>
-                  }
-                />
+                  {/* Protected User Routes */}
+                  <Route
+                    path="/checkout"
+                    element={
+                      <ProtectedRoute>
+                        <CheckoutPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/order-confirmation/:orderId"
+                    element={
+                      <ProtectedRoute>
+                        <OrderConfirmationPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/account"
+                    element={
+                      <ProtectedRoute>
+                        <UserAccountPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/orders"
+                    element={
+                      <ProtectedRoute>
+                        <OrderHistoryPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                {/* Admin Routes */}
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/manage-products"
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <EnhancedManageProducts />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/orders"
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <AdminOrderList />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/orders/:orderId"
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <AdminOrderDetail />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/upload-img"
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <UploadComponent />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/manage-users"
-                  element={
-                    <ProtectedRoute requireAdmin>
-                      <AdminUserManagement />
-                    </ProtectedRoute>
-                  }
-                />
+                  {/* Admin Routes */}
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute requireAdmin>
+                        <AdminDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/manage-products"
+                    element={
+                      <ProtectedRoute requireAdmin>
+                        <EnhancedManageProducts />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/orders"
+                    element={
+                      <ProtectedRoute requireAdmin>
+                        <AdminOrderList />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/orders/:orderId"
+                    element={
+                      <ProtectedRoute requireAdmin>
+                        <AdminOrderDetail />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/upload-img"
+                    element={
+                      <ProtectedRoute requireAdmin>
+                        <UploadComponent />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/manage-users"
+                    element={
+                      <ProtectedRoute requireAdmin>
+                        <AdminUserManagement />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                {/* Catch all route */}
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </Layout>
-          </WishlistProvider>
-        </CartProvider>
-      </AuthProvider>
+                  {/* Catch all route */}
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </Layout>
+            </WishlistProvider>
+          </CartProvider>
+        </AuthProvider>
+      </QueryClientProvider>
       {/* </Router> */}
     </ErrorBoundary>
   );

@@ -1,21 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import HeroSection from "../components/HeroSection";
 import ProductSectionDynamic from "../components/product-section-dynamic";
-import {
-  FurnitureBanner,
-  FurnitureGrid,
-  // TwoColumnBanners, // Uncomment if needed
-  FourColumnGrid, // Uncomment if needed
-  // FourColumnGrid, // Uncomment if needed
-  // MixedLayoutGrid, // Uncomment if needed
-  HorizontalScrollGrid, // Uncomment if needed
-  SingleRowGrid,
-  CircularGrid,
-  DealsCategoryGrid,
-  QuickLinks,
-} from "../components/auxiliary-sections";
+const FurnitureGrid = lazy(() => import("../components/home/FurnitureGrid"));
+const CircularGrid = lazy(() => import("../components/home/CircularGrid"));
+const QuickLinks = lazy(() => import("../components/home/QuickLinks"));
+const DealsCategoryGrid = lazy(() =>
+  import("../components/home/DealsCategoryGrid")
+);
 import InfoSection from "../components/info-section";
 
 export default function HomeDynamic() {
@@ -51,10 +44,6 @@ export default function HomeDynamic() {
           />
         </div>
         <DealsCategoryGrid />
-
-        {/* Furniture Banner */}
-        {/* <FurnitureBanner /> */}
-        {/* <FourColumnGrid /> */}
         {/* play & sleep */}
         <div className="mt-2 ">
           <ProductSectionDynamic
@@ -93,9 +82,7 @@ export default function HomeDynamic() {
             limit={9}
           />
         </div>
-        {/* some 12-item gride here */}
-        <FourColumnGrid />
-        {/* sit & style */}
+
         <div className="mt-2">
           <ProductSectionDynamic
             title="Sit & Style | Living Room Picks"
@@ -107,7 +94,6 @@ export default function HomeDynamic() {
             limit={9}
           />
         </div>
-        {/* Furniture Grid */}
         <FurnitureGrid />
         {/* dine & divine */}
         <div className="mt-2">
@@ -121,7 +107,7 @@ export default function HomeDynamic() {
             limit={9}
           />
         </div>
-        {/* <CircularGrid /> */}
+
         <QuickLinks />
       </main>
       {/* Info Section - Before Footer */}

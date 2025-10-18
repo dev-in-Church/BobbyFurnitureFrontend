@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import ProductGrid from "../components/category/ProductGrid";
 import FilterSidebar from "../components/category/FilterSidebar";
 import SortDropdown from "../components/category/SortDropdown";
@@ -13,19 +14,11 @@ import { fetchAllProducts, fetchCategories } from "../services/api";
 import { Search } from "lucide-react";
 
 const AllProductsPage = () => {
-  // Get query parameters for bookmarking filtered/sorted views
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [pagination, setPagination] = useState({
-    page: Number.parseInt(searchParams.get("page")) || 1,
-    limit: Number.parseInt(searchParams.get("limit")) || 20,
-    total: 0,
-    totalPages: 0,
-  });
+  // Local UI state
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [sort, setSort] = useState(searchParams.get("sort") || "newest");
   const [filters, setFilters] = useState({
     search: searchParams.get("search") || "",
     category: searchParams.get("category") || "",
@@ -34,125 +27,109 @@ const AllProductsPage = () => {
     featured: searchParams.get("featured") === "true" ? true : null,
     onSale: searchParams.get("onSale") === "true" ? true : null,
   });
-  const [sort, setSort] = useState(searchParams.get("sort") || "newest");
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [pagination, setPagination] = useState({
+    page: Number.parseInt(searchParams.get("page")) || 1,
+    limit: Number.parseInt(searchParams.get("limit")) || 20,
+  });
 
-  // Update URL search params when filters or sort change
+  // Update URL when filters/pagination change
   useEffect(() => {
     const newSearchParams = new URLSearchParams();
-
-    // Add pagination params
-    if (pagination.page > 1) {
-      newSearchParams.set("page", pagination.page.toString());
-    }
-
-    // Add sort param
-    if (sort !== "newest") {
-      newSearchParams.set("sort", sort);
-    }
-
-    // Add filter params
+    if (pagination.page > 1) newSearchParams.set("page", pagination.page);
+    if (sort !== "newest") newSearchParams.set("sort", sort);
     if (filters.search) newSearchParams.set("search", filters.search);
     if (filters.category) newSearchParams.set("category", filters.category);
     if (filters.minPrice) newSearchParams.set("minPrice", filters.minPrice);
     if (filters.maxPrice) newSearchParams.set("maxPrice", filters.maxPrice);
     if (filters.featured) newSearchParams.set("featured", "true");
     if (filters.onSale) newSearchParams.set("onSale", "true");
-
-    // Update URL without reloading the page
     setSearchParams(newSearchParams);
   }, [pagination.page, sort, filters, setSearchParams]);
 
-  // Fetch categories on component mount
-  useEffect(() => {
-    const getCategories = async () => {
-      try {
-        const categoriesData = await fetchCategories();
-        setCategories(categoriesData);
-      } catch (err) {
-        console.error("Error fetching categories:", err);
-      }
-    };
+  // 🚀 React Query for Categories
+  const {
+    data: categories = [],
+    isLoading: categoriesLoading,
+    isError: categoriesError,
+  } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+    staleTime: 1000 * 60 * 30, // 30 mins
+  });
 
-    getCategories();
-  }, []);
+  // Memoized query key so pagination/filter changes create distinct cache entries
+  const productsQueryKey = useMemo(
+    () => [
+      "products",
+      { page: pagination.page, limit: pagination.limit, sort, filters },
+    ],
+    [pagination.page, pagination.limit, sort, filters]
+  );
 
-  // Fetch products when filters, sort, or pagination changes
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const response = await fetchAllProducts(
-          pagination.page,
-          pagination.limit,
-          sort,
-          filters
-        );
+  // 🚀 React Query for Products
+  const {
+    data: productsData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: productsQueryKey,
+    queryFn: async () =>
+      await fetchAllProducts(pagination.page, pagination.limit, sort, filters),
+    keepPreviousData: true, // 🔥 Keeps old products visible during refetch
+    staleTime: 1000 * 60 * 5, // cache 5 min
+  });
 
-        setProducts(response.products);
-        setPagination(response.pagination);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-        setError("Failed to load products. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Extract values
+  const products = productsData?.products || [];
+  const paginationInfo = productsData?.pagination || {
+    total: 0,
+    totalPages: 1,
+  };
 
-    fetchProducts();
-  }, [pagination.page, pagination.limit, sort, filters]);
-
-  // Handle page change
+  // UI Handlers
   const handlePageChange = (newPage) => {
     window.scrollTo(0, 0);
     setPagination((prev) => ({ ...prev, page: newPage }));
   };
 
-  // Handle filter changes
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
-    setPagination((prev) => ({ ...prev, page: 1 })); // Reset to first page when filters change
+    setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
-  // Handle sort change
   const handleSortChange = (newSort) => {
     setSort(newSort);
-    setPagination((prev) => ({ ...prev, page: 1 })); // Reset to first page when sort changes
+    setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
-  // Handle search
   const handleSearch = (searchQuery) => {
     setFilters((prev) => ({ ...prev, search: searchQuery }));
     setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
-  // Handle category filter
   const handleCategoryFilter = (category) => {
     setFilters((prev) => ({ ...prev, category }));
     setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
-  // Clear all filters
   const clearAllFilters = () => {
-    const clearedFilters = {
+    setFilters({
       search: "",
       category: "",
       minPrice: "",
       maxPrice: "",
       featured: null,
       onSale: null,
-    };
-    setFilters(clearedFilters);
+    });
     setSort("newest");
     setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
-  // Toggle mobile filters
   const toggleMobileFilters = () => {
-    setShowMobileFilters(!showMobileFilters);
+    setShowMobileFilters((prev) => !prev);
   };
 
-  // Check if any filters are active
   const hasActiveFilters =
     filters.search ||
     filters.category ||
@@ -163,7 +140,7 @@ const AllProductsPage = () => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      {/* Page Header */}
+      {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -172,12 +149,14 @@ const AllProductsPage = () => {
                 All Furniture Products
               </h1>
               <p className="text-gray-600 mt-1">
-                {loading ? "Loading..." : `${pagination.total} products found`}
+                {isLoading
+                  ? "Loading..."
+                  : `${paginationInfo.total} products found`}
                 {hasActiveFilters && " (filtered)"}
               </p>
             </div>
 
-            {/* Search Bar - Desktop */}
+            {/* Desktop Search */}
             <div className="hidden lg:block">
               <SearchBar
                 onSearch={handleSearch}
@@ -186,12 +165,12 @@ const AllProductsPage = () => {
             </div>
           </div>
 
-          {/* Search Bar - Mobile */}
+          {/* Mobile Search */}
           <div className="lg:hidden mt-4">
             <SearchBar onSearch={handleSearch} initialValue={filters.search} />
           </div>
 
-          {/* Category Filter Tabs */}
+          {/* Categories */}
           <div className="mt-6">
             <CategoryFilter
               categories={categories}
@@ -209,7 +188,6 @@ const AllProductsPage = () => {
             onClick={toggleMobileFilters}
             isOpen={showMobileFilters}
           />
-
           {hasActiveFilters && (
             <button
               onClick={clearAllFilters}
@@ -223,7 +201,6 @@ const AllProductsPage = () => {
 
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Filter Sidebar */}
           <FilterSidebar
             filters={filters}
             onFilterChange={handleFilterChange}
@@ -233,16 +210,14 @@ const AllProductsPage = () => {
             onClearAll={clearAllFilters}
           />
 
-          {/* Main Content */}
           <div className="flex-1">
-            {/* Sort Controls and Results Info */}
+            {/* Top Bar */}
             <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="text-sm text-gray-600">
-                    Showing {products.length} of {pagination.total} products
+                    Showing {products.length} of {paginationInfo.total} products
                   </div>
-
                   {hasActiveFilters && (
                     <button
                       onClick={clearAllFilters}
@@ -257,109 +232,31 @@ const AllProductsPage = () => {
                   <SortDropdown value={sort} onChange={handleSortChange} />
                 </div>
               </div>
-
-              {/* Active Filters Display */}
-              {hasActiveFilters && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <div className="flex flex-wrap gap-2">
-                    {filters.search && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                        Search: "{filters.search}"
-                        <button
-                          onClick={() => handleSearch("")}
-                          className="ml-2 text-orange-600 hover:text-orange-800"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    )}
-
-                    {filters.category && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        Category: {filters.category.replace(/-/g, " ")}
-                        <button
-                          onClick={() => handleCategoryFilter("")}
-                          className="ml-2 text-blue-600 hover:text-blue-800"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    )}
-
-                    {(filters.minPrice || filters.maxPrice) && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Price: KSh {filters.minPrice || "0"} - KSh{" "}
-                        {filters.maxPrice || "∞"}
-                        <button
-                          onClick={() =>
-                            setFilters((prev) => ({
-                              ...prev,
-                              minPrice: "",
-                              maxPrice: "",
-                            }))
-                          }
-                          className="ml-2 text-green-600 hover:text-green-800"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    )}
-
-                    {filters.featured && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                        Featured only
-                        <button
-                          onClick={() =>
-                            setFilters((prev) => ({ ...prev, featured: null }))
-                          }
-                          className="ml-2 text-purple-600 hover:text-purple-800"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    )}
-
-                    {filters.onSale && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                        On sale only
-                        <button
-                          onClick={() =>
-                            setFilters((prev) => ({ ...prev, onSale: null }))
-                          }
-                          className="ml-2 text-red-600 hover:text-red-800"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
 
-            {/* Error Message */}
-            {error && (
+            {/* Error */}
+            {isError && (
               <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-lg mb-6">
-                {error}
+                {error?.message || "Failed to load products"}
               </div>
             )}
 
-            {/* Products Grid */}
-            <ProductGrid products={products} loading={loading} />
+            {/* Products */}
+            <ProductGrid products={products} loading={isLoading} />
 
             {/* Pagination */}
-            {!loading && pagination.totalPages > 1 && (
+            {!isLoading && paginationInfo.totalPages > 1 && (
               <div className="mt-8">
                 <Pagination
                   currentPage={pagination.page}
-                  totalPages={pagination.totalPages}
+                  totalPages={paginationInfo.totalPages}
                   onPageChange={handlePageChange}
                 />
               </div>
             )}
 
-            {/* No Results Message */}
-            {!loading && products.length === 0 && !error && (
+            {/* No Results */}
+            {!isLoading && products.length === 0 && !isError && (
               <div className="bg-white border border-gray-200 rounded-lg p-12 text-center">
                 <Search size={48} className="mx-auto text-gray-400 mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -367,8 +264,8 @@ const AllProductsPage = () => {
                 </h3>
                 <p className="text-gray-500 mb-4">
                   {hasActiveFilters
-                    ? "Try adjusting your filters or search terms to find what you're looking for."
-                    : "We couldn't find any products at the moment."}
+                    ? "Try adjusting your filters or search terms."
+                    : "We couldn’t find any products at the moment."}
                 </p>
                 {hasActiveFilters && (
                   <button

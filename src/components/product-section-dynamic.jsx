@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   ChevronLeft,
@@ -8,162 +8,143 @@ import {
   ShoppingCart,
   Heart,
   Check,
-} from "lucide-react"; // Removed Loader2, CloudOff
+} from "lucide-react";
 import {
   fetchProductsByCategory,
   fetchNewArrivals,
   fetchFeaturedProducts,
-} from "../lib/api-production"; // Assuming this path is correct
-import { useCart } from "../contexts/cart-context"; // Assuming this path is correct
-import { useWishlist } from "../contexts/wishlist-context"; // Assuming this path is correct
-
-const RETRY_INTERVAL_MS = 3000; // Retry every 3 seconds
-// const MAX_RETRIES_BEFORE_HINT = 3 // No longer needed as hint text is removed
+} from "../lib/api-production";
+import { useCart } from "../contexts/cart-context";
+import { useWishlist } from "../contexts/wishlist-context";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ProductSectionDynamic({
   title,
   viewMoreLink,
   color = "blue-500",
   text,
-  category = null, // This should be the category slug (e.g., "living-room")
-  type = "category", // category, new-arrivals, featured
+  category = null,
+  type = "category",
   limit = 9,
 }) {
   const sliderRef = useRef(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [isHovering, setIsHovering] = useState(null);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [retryCount, setRetryCount] = useState(0);
-  const retryTimeoutRef = useRef(null);
-  // const [connectionIssueHint, setConnectionIssueHint] = useState(false) // No longer needed
-
   const [addedToCart, setAddedToCart] = useState(null);
   const [addedToWishlist, setAddedToWishlist] = useState(null);
 
-  // Use cart and wishlist contexts
+  // Cart and wishlist contexts
   const { addToCart, isInCart, isLoading: cartLoading } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
 
-  // Declare scrollLeft and scrollRight functions
-  const scrollLeft = () => {
-    if (sliderRef.current) {
-      sliderRef.current.scrollLeft -= 200; // Adjust the scroll amount as needed
+  // -------------------------------
+  // ✅ React Query data fetching
+  // -------------------------------
+  const queryKey = ["products", type, category, limit];
+
+  const queryFn = async () => {
+    switch (type) {
+      case "new-arrivals":
+        return await fetchNewArrivals(limit);
+      case "featured":
+        return await fetchFeaturedProducts(limit);
+      default:
+        if (!category)
+          throw new Error('Category is required when type is "category"');
+        return await fetchProductsByCategory(category, { limit });
     }
   };
-  const scrollRight = () => {
-    if (sliderRef.current) {
-      sliderRef.current.scrollLeft += 200; // Adjust the scroll amount as needed
-    }
-  };
 
-  const loadProducts = useCallback(async () => {
-    setLoading(true);
-    // setConnectionIssueHint(false) // No longer needed
-    if (retryTimeoutRef.current) {
-      clearTimeout(retryTimeoutRef.current);
-    }
+  const { data, isLoading, isError, error, refetch } = useQuery({
+    queryKey,
+    queryFn,
+    staleTime: 1000 * 60 * 10, // ✅ Keep cached for 10 minutes
+    cacheTime: 1000 * 60 * 30, // ✅ Cache kept for 30 minutes
+    retry: 2,
+    refetchOnWindowFocus: false,
+  });
 
-    try {
-      let data;
-      switch (type) {
-        case "new-arrivals":
-          data = await fetchNewArrivals(limit);
-          break;
-        case "featured":
-          data = await fetchFeaturedProducts(limit);
-          break;
-        case "category":
-        default:
-          if (!category) {
-            throw new Error('Category is required when type is "category"');
-          }
-          data = await fetchProductsByCategory(category, { limit });
-          break;
-      }
+  const products = Array.isArray(data) ? data : data?.products || [];
 
-      const productsData = Array.isArray(data) ? data : data.products || [];
-      setProducts(productsData);
-      setLoading(false); // Only set loading to false on success
-      setRetryCount(0); // Reset retry count on success
-      console.log(`✅ Loaded ${productsData.length} products for ${title}`);
-    } catch (err) {
-      console.error(`Error fetching products for ${title}:`, err);
-      setRetryCount((prev) => prev + 1);
-
-      // if (retryCount >= MAX_RETRIES_BEFORE_HINT) { // No longer needed
-      //   setConnectionIssueHint(true)
-      // }
-
-      // Schedule retry
-      retryTimeoutRef.current = setTimeout(() => {
-        loadProducts(); // Re-call loadProducts to retry
-      }, RETRY_INTERVAL_MS);
-    }
-  }, [category, type, limit, title, retryCount]);
-
-  useEffect(() => {
-    loadProducts();
-    // Cleanup function to clear timeout if component unmounts
-    return () => {
-      if (retryTimeoutRef.current) {
-        clearTimeout(retryTimeoutRef.current);
-      }
-    };
-  }, [loadProducts]);
-
-  // Check if scrolling is possible and update arrow visibility
+  // -------------------------------
+  // Scroll arrows visibility
+  // -------------------------------
   const checkScrollPosition = () => {
     if (!sliderRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
     setShowLeftArrow(scrollLeft > 0);
-    setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10); // 10px buffer
+    setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
   };
 
-  // Add scroll event listener
   useEffect(() => {
     const slider = sliderRef.current;
     if (slider) {
       slider.addEventListener("scroll", checkScrollPosition);
-      // Initial check
       checkScrollPosition();
-      return () => {
-        slider.removeEventListener("scroll", checkScrollPosition);
-      };
+      return () => slider.removeEventListener("scroll", checkScrollPosition);
     }
   }, [products]);
 
-  // Handle add to cart
+  const scrollLeft = () => {
+    if (sliderRef.current) sliderRef.current.scrollLeft -= 200;
+  };
+  const scrollRight = () => {
+    if (sliderRef.current) sliderRef.current.scrollLeft += 200;
+  };
+
+  // -------------------------------
+  // Cart & wishlist handling
+  // -------------------------------
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart(product);
     setAddedToCart(product.id);
-    // Reset the feedback after 2 seconds
-    setTimeout(() => {
-      setAddedToCart(null);
-    }, 2000);
+    setTimeout(() => setAddedToCart(null), 2000);
   };
 
-  // Handle add to wishlist
   const handleToggleWishlist = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
     toggleWishlist(product);
     setAddedToWishlist(product.id);
-    // Reset the feedback after 2 seconds
-    setTimeout(() => {
-      setAddedToWishlist(null);
-    }, 2000);
+    setTimeout(() => setAddedToWishlist(null), 2000);
   };
 
-  // Dynamic color classes
-  const getColorClass = (baseColor) => {
-    return baseColor; // Assuming baseColor already includes the shade (e.g., "blue-500")
-  };
-  const bgColorClass = `bg-${getColorClass(color)}`;
-  const txtColor = `text-${getColorClass(text)}`;
+  // -------------------------------
+  // UI Helpers
+  // -------------------------------
+  const bgColorClass = `bg-${color}`;
+  const txtColor = `text-${text}`;
+
+  // -------------------------------
+  // Render
+  // -------------------------------
+  if (isError) {
+    return (
+      <div className="mb-4 bg-white rounded-sm shadow-md overflow-hidden">
+        <div
+          className={`flex justify-between px-4 py-1 items-center ${bgColorClass}`}
+        >
+          <h2
+            className={`text-sm sm:text-md ${txtColor} md:text-lg font-medium tracking-wide`}
+          >
+            {title}
+          </h2>
+        </div>
+        <div className="py-6 text-center text-red-500">
+          Error loading products: {error.message}
+          <button
+            onClick={() => refetch()}
+            className="ml-3 px-3 py-1 text-sm bg-blue-600 text-white rounded-md"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="mb-4 bg-white rounded-sm shadow-md overflow-hidden">
@@ -182,13 +163,13 @@ export default function ProductSectionDynamic({
           <span>See All</span> <ChevronRight className="h-4 ml-1" />
         </Link>
       </div>
+
       <div className="relative px-1 py-1 bg-gray-50">
-        {/* Slider navigation buttons */}
+        {/* Slider navigation */}
         {showLeftArrow && (
           <button
             onClick={scrollLeft}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full shadow-lg p-2 transition-all duration-200 border border-gray-200 hidden md:flex items-center justify-center"
-            aria-label="Scroll left"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full shadow-lg p-2 border border-gray-200 hidden md:flex"
           >
             <ChevronLeft className="h-5 w-5 text-gray-700" />
           </button>
@@ -196,55 +177,27 @@ export default function ProductSectionDynamic({
         {showRightArrow && (
           <button
             onClick={scrollRight}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full shadow-lg p-2 transition-all duration-200 border border-gray-200 hidden md:flex items-center justify-center"
-            aria-label="Scroll right"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full shadow-lg p-2 border border-gray-200 hidden md:flex"
           >
             <ChevronRight className="h-5 w-5 text-gray-700" />
           </button>
         )}
 
-        {/* Loading state with skeleton only */}
-        {loading && products.length === 0 && (
+        {/* Loading skeleton */}
+        {isLoading && (
           <div className="px-4 py-6">
             <div className="flex gap-2 overflow-hidden">
-              {Array(limit || 9)
+              {Array(limit)
                 .fill(0)
-                .map((_, index) => (
+                .map((_, i) => (
                   <div
-                    key={index}
-                    className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] bg-white rounded-lg overflow-hidden flex-shrink-0 border border-gray-100 animate-pulse"
+                    key={i}
+                    className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] bg-white border border-gray-100 animate-pulse rounded-lg"
                   >
-                    <div className="relative h-40 w-full bg-gray-200">
-                      <div className="absolute top-2 right-2 h-6 w-12 bg-gray-300 rounded-md"></div>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center">
-                          <svg
-                            className="w-6 h-6 text-gray-400"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-2 bg-white/80 backdrop-blur-sm">
-                        <div className="h-7 w-7 bg-gray-300 rounded-full"></div>
-                        <div className="h-7 w-7 bg-gray-300 rounded-full"></div>
-                      </div>
-                    </div>
+                    <div className="relative h-40 w-full bg-gray-200"></div>
                     <div className="px-3 py-3 space-y-2">
-                      <div className="space-y-1">
-                        <div className="h-3 bg-gray-200 rounded w-full"></div>
-                        <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-                      </div>
-                      <div className="flex items-baseline space-x-2">
-                        <div className="h-4 bg-gray-300 rounded w-16"></div>
-                        <div className="h-3 bg-gray-200 rounded w-12"></div>
-                      </div>
+                      <div className="h-3 bg-gray-200 rounded w-full"></div>
+                      <div className="h-3 bg-gray-200 rounded w-3/4"></div>
                     </div>
                   </div>
                 ))}
@@ -252,8 +205,8 @@ export default function ProductSectionDynamic({
           </div>
         )}
 
-        {/* Product slider */}
-        {!loading && products.length > 0 && (
+        {/* Products */}
+        {!isLoading && products.length > 0 && (
           <div
             ref={sliderRef}
             className="flex overflow-x-auto scrollbar-hide gap-2 px-1 py-1 pb-2"
@@ -264,48 +217,47 @@ export default function ProductSectionDynamic({
             }}
           >
             {products.map((product) => {
-              // Calculate discount percentage if original_price exists
-              const discountPercentage = product.original_price
-                ? Math.round(
-                    ((product.original_price - product.price) /
-                      product.original_price) *
-                      100
-                  )
-                : 0;
+              const discount =
+                product.original_price &&
+                Math.round(
+                  ((product.original_price - product.price) /
+                    product.original_price) *
+                    100
+                );
+
               const productInWishlist = isInWishlist(product.id);
               const productInCart = isInCart(product.id);
               const showCartSuccess = addedToCart === product.id;
               const showWishlistSuccess = addedToWishlist === product.id;
+
               return (
                 <div
                   key={product.id}
-                  className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] rounded-[2px] overflow-hidden flex-shrink-0 transition-all duration-300 hover:shadow-sm"
+                  className="w-[160px] min-w-[160px] sm:min-w-[190px] md:min-w-[190px] rounded-[2px] overflow-hidden flex-shrink-0 hover:shadow-sm transition-all"
                   onMouseEnter={() => setIsHovering(product.id)}
                   onMouseLeave={() => setIsHovering(null)}
                 >
                   <Link to={`/product/${product.id}`} className="block h-full">
                     <div className="relative h-40 w-full overflow-hidden">
-                      {/* Discount tag */}
-                      {discountPercentage > 0 && (
+                      {discount > 0 && (
                         <div className="absolute top-1 right-1 bg-blue-100 text-primary text-xs font-bold px-2 py-1 rounded-sm z-10">
-                          -{discountPercentage}%
+                          -{discount}%
                         </div>
                       )}
                       <img
                         src={
                           product.images?.[0] ||
-                          "/placeholder.svg?height=200&width=200" ||
-                          "/placeholder.svg"
+                          "/placeholder.svg?height=200&width=200"
                         }
                         alt={product.name}
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                        loading="lazy" // This helps defer image loading
+                        loading="lazy"
                         onError={(e) => {
                           e.target.src =
                             "/placeholder.svg?height=200&width=200";
                         }}
                       />
-                      {/* Quick action buttons that appear on hover */}
+                      {/* Hover actions */}
                       <div
                         className={`absolute bottom-0 left-0 right-0 flex justify-center gap-2 p-2 bg-white/80 backdrop-blur-sm transition-all duration-300 ${
                           isHovering === product.id
@@ -315,17 +267,11 @@ export default function ProductSectionDynamic({
                       >
                         <button
                           onClick={(e) => handleAddToCart(e, product)}
-                          className={`p-1.5 rounded-full transition-all duration-200 ${
-                            showCartSuccess
-                              ? "bg-green-500 text-white"
-                              : productInCart
+                          className={`p-1.5 rounded-full transition-all ${
+                            showCartSuccess || productInCart
                               ? "bg-green-500 text-white"
                               : "bg-primary text-white hover:scale-110"
                           }`}
-                          aria-label={
-                            productInCart ? "Added to cart" : "Add to cart"
-                          }
-                          disabled={cartLoading || showCartSuccess}
                         >
                           {showCartSuccess || productInCart ? (
                             <Check className="h-4 w-4" />
@@ -333,21 +279,14 @@ export default function ProductSectionDynamic({
                             <ShoppingCart className="h-4 w-4" />
                           )}
                         </button>
+
                         <button
                           onClick={(e) => handleToggleWishlist(e, product)}
-                          className={`p-1.5 rounded-full transition-all duration-200 ${
-                            showWishlistSuccess
-                              ? "bg-green-500 text-white"
-                              : productInWishlist
-                              ? "bg-red-500 text-white hover:scale-110"
+                          className={`p-1.5 rounded-full transition-all ${
+                            showWishlistSuccess || productInWishlist
+                              ? "bg-red-500 text-white"
                               : "bg-gray-200 text-gray-700 hover:scale-110"
                           }`}
-                          aria-label={
-                            productInWishlist
-                              ? "Remove from wishlist"
-                              : "Add to wishlist"
-                          }
-                          disabled={showWishlistSuccess}
                         >
                           {showWishlistSuccess ? (
                             <Check className="h-4 w-4" />
@@ -361,12 +300,13 @@ export default function ProductSectionDynamic({
                         </button>
                       </div>
                     </div>
+
                     <div className="p-3">
-                      <h3 className="truncate text-sm line-clamp-2 font-medium text-gray-800 mb-1">
+                      <h3 className="truncate text-sm font-medium text-gray-800 mb-1">
                         {product.name}
                       </h3>
                       <div className="flex flex-col items-start">
-                        <p className={`text-gray-600 font-bold`}>
+                        <p className="text-gray-600 font-bold">
                           KSh{" "}
                           {product.price.toLocaleString(undefined, {
                             minimumFractionDigits: 2,
@@ -391,8 +331,8 @@ export default function ProductSectionDynamic({
           </div>
         )}
 
-        {/* No products found state */}
-        {!loading && products.length === 0 && (
+        {/* Empty state */}
+        {!isLoading && products.length === 0 && (
           <div className="w-full py-8 text-center text-gray-500">
             <p>No products found in this category.</p>
           </div>

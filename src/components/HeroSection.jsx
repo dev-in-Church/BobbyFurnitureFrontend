@@ -73,7 +73,7 @@ const HeroSection = () => {
       <CategoryPanel />
 
       {/* Banner slider - flexible width */}
-      <div className="bg-[url('/banners/slider.jpg')] overflow-hidden h-full rounded-sm shadow-md">
+      <div className="relative bg-[url('/banners/slider.jpg')] overflow-hidden h-full rounded-sm shadow-md">
         <div
           className="flex transition-transform duration-500 ease-in-out h-full"
           style={{ transform: `translateX(-${currentBanner * 100}%)` }}
@@ -93,7 +93,7 @@ const HeroSection = () => {
         </div>
 
         {/* Dots indicator */}
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-50">
           {banners.map((_, index) => (
             <button
               key={index}
