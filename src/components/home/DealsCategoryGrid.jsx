@@ -15,7 +15,7 @@ const categories = [
   {
     name: "Sofa Deals",
     image: "/sections/sofa.jpg",
-    link: "/category/fridges",
+    link: "/category/sofa",
   },
   {
     name: "Office Chairs",
@@ -30,7 +30,7 @@ const categories = [
   {
     name: "Shoe Racks",
     image: "/sections/shoe-rack.jpg",
-    link: "/category/china-town",
+    link: "/category/shoe-racks",
   },
   {
     name: "kid Beds",

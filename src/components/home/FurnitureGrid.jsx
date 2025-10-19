@@ -29,7 +29,7 @@ const categories = [
   {
     name: "New Arrivals",
     image: "/new.jpg?height=150&width=150",
-    link: "/new-arrivals",
+    link: "/category/new-arrivals",
     bgColor: "bg-orange-500",
   },
   {
