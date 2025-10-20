@@ -13,6 +13,7 @@ import ScrollToTop from "./components/scroll-to-top.jsx";
 import { ToastContainer } from "./components/ui/toast";
 import "react-toastify/dist/ReactToastify.css";
 import PageLoader from "./components/ui/PageLoader";
+import CookieConsentPopup from "./components/CookieConsentPopup.jsx";
 
 // Layout Components
 import Navbar from "./components/Navbar"; //fix this disturbing fucking shit
@@ -255,6 +256,7 @@ const App = () => {
             </WishlistProvider>
           </CartProvider>
         </AuthProvider>
+        <CookieConsentPopup />
       </QueryClientProvider>
       {/* </Router> */}
     </ErrorBoundary>
