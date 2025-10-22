@@ -177,7 +177,7 @@ const CheckoutPage = () => {
 
   //monday promo
   const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-  const isMonday = today === 4;
+  const isMonday = today === 1;
 
   // Check if user is logged in
   useEffect(() => {
