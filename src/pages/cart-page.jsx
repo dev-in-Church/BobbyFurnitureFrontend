@@ -34,72 +34,6 @@ const CartPage = () => {
     useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [couponCode, setCouponCode] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
-
-  // Mock coupon data
-  const availableCoupons = {
-    // SAVE10: {
-    //   discount: 0.1,
-    //   type: "percentage",
-    //   description: "10% off your order",
-    // },
-    // WELCOME20: {
-    //   discount: 0.2,
-    //   type: "percentage",
-    //   description: "20% off for new customers",
-    // },
-    // FLAT500: {
-    //   discount: 500,
-    //   type: "fixed",
-    //   description: "KSh 500 off your order",
-    // },
-    FREESHIP: { discount: 0, type: "shipping", description: "Free shipping" },
-  };
-
-  const subtotal = getCartTotal();
-  const discount = appliedCoupon
-    ? appliedCoupon.type === "percentage"
-      ? subtotal * appliedCoupon.discount
-      : appliedCoupon.discount
-    : 0;
-  const shipping =
-    subtotal > 500000 || appliedCoupon?.type === "shipping"
-      ? 0
-      : 0.003 * subtotal;
-  // const tax = (subtotal - discount) * 0.16; // 16% VAT
-  const total = subtotal - discount + shipping;
-
-  const handleQuantityChange = (productId, newQuantity) => {
-    if (newQuantity < 1) return;
-    updateQuantity(productId, newQuantity);
-  };
-
-  const handleApplyCoupon = () => {
-    setIsApplyingCoupon(true);
-
-    setTimeout(() => {
-      const coupon = availableCoupons[couponCode.toUpperCase()];
-      if (coupon) {
-        setAppliedCoupon({ code: couponCode.toUpperCase(), ...coupon });
-        toast.success(`Coupon applied: ${coupon.description}`);
-        setCouponCode("");
-      } else {
-        toast.error("Invalid coupon code");
-      }
-      setIsApplyingCoupon(false);
-    }, 1000);
-  };
-
-  const handleRemoveCoupon = () => {
-    setAppliedCoupon(null);
-    toast.info("Coupon removed");
-  };
-
-  //monday promo
-  const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-  const isMonday = today === 1;
 
   const handleCheckout = () => {
     if (!user) {
@@ -109,6 +43,8 @@ const CartPage = () => {
     }
     navigate("/checkout");
   };
+
+  const subtotal = getCartTotal();
 
   if (cartItems.length === 0) {
     return (
@@ -244,60 +180,6 @@ const CartPage = () => {
 
         {/* Order Summary */}
         <div className="space-y-6">
-          {/* Coupon Section */}
-          {isMonday && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Tag className="mr-2 h-5 w-5" />
-                  Promo Code
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {!appliedCoupon ? (
-                  <div className="flex space-x-2">
-                    <Input
-                      placeholder="Enter coupon code"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                      className="flex-1"
-                    />
-                    <Button
-                      onClick={handleApplyCoupon}
-                      disabled={!couponCode.trim() || isApplyingCoupon}
-                      size="sm"
-                    >
-                      {isApplyingCoupon ? "Applying..." : "Apply"}
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                    <div>
-                      <p className="font-medium text-green-800">
-                        {appliedCoupon.code}
-                      </p>
-                      <p className="text-sm text-green-600">
-                        {appliedCoupon.description}
-                      </p>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleRemoveCoupon}
-                      className="text-green-700 hover:text-green-800"
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                )}
-
-                <div className="text-xs text-gray-500">
-                  <p>Available Promo: FREESHIP</p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Order Summary */}
           <Card>
             <CardHeader>
@@ -305,54 +187,13 @@ const CartPage = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>Subtotal</span>
-                  <span>KSh {subtotal.toLocaleString()}</span>
-                </div>
-
-                {appliedCoupon && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Discount ({appliedCoupon.code})</span>
-                    <span>-KSh {discount.toLocaleString()}</span>
-                  </div>
-                )}
-
-                <div className="flex justify-between">
-                  <span className="flex items-center">
-                    Shipping Cost
-                    {shipping === 0 && (
-                      <Badge variant="secondary" className="ml-2">
-                        Free
-                      </Badge>
-                    )}
-                  </span>
-                  <span>KSh {shipping.toLocaleString()}</span>
-                </div>
-
-                {/* <div className="flex justify-between">
-                  <span>Tax (16%)</span>
-                  <span>KSh {tax.toLocaleString()}</span>
-                </div> */}
-
                 <Separator />
 
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span>KSh {total.toLocaleString()}</span>
+                  <span>KSh {subtotal.toLocaleString()}</span>
                 </div>
               </div>
-
-              {subtotal < 5000 && !appliedCoupon?.type === "shipping" && (
-                <div className="p-3 bg-blue-50 rounded-lg">
-                  <div className="flex items-center text-blue-800">
-                    <Truck className="mr-2 h-4 w-4" />
-                    <span className="text-sm">
-                      Add KSh {(5000 - subtotal).toLocaleString()} more for free
-                      shipping
-                    </span>
-                  </div>
-                </div>
-              )}
 
               <Button
                 onClick={handleCheckout}

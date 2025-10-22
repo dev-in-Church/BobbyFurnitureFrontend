@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { CartContext } from "../contexts/cart-context";
 import { AuthContext } from "../contexts/auth-context";
 import { Button } from "../components/ui/button";
@@ -24,6 +24,7 @@ import {
   XCircle,
   Clock,
   Truck,
+  Tag,
 } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -31,6 +32,29 @@ const CheckoutPage = () => {
   const { cartItems, getCartTotal, clearCart } = useContext(CartContext);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+
+  // Mock coupon data
+  const availableCoupons = {
+    // SAVE10: {
+    //   discount: 0.1,
+    //   type: "percentage",
+    //   description: "10% off your order",
+    // },
+    // WELCOME20: {
+    //   discount: 0.2,
+    //   type: "percentage",
+    //   description: "20% off for new customers",
+    // },
+    // FLAT500: {
+    //   discount: 500,
+    //   type: "fixed",
+    //   description: "KSh 500 off your order",
+    // },
+    FREESHIP: { discount: 0, type: "shipping", description: "Free shipping" },
+  };
 
   const [formData, setFormData] = useState({
     // Shipping Information
@@ -63,6 +87,98 @@ const CheckoutPage = () => {
     codSpecialInstructions: "",
   });
 
+  //delivery
+  const deliveryZones = [
+    { fare: 1000, areas: ["Kahawa Sukari", "Kahawa Wendani"] },
+    { fare: 1500, areas: ["Githurai 45", "Baracks"] },
+    {
+      fare: 2000,
+      areas: [
+        "Bypass - Kamakis - corner - OJ",
+        "Kwa Kairu - Kimbo",
+        "Membley - Tatu City - Ruiru town",
+        "Carwash - Roysambu - Mwikki",
+        "Roasters - Zimmerman - Githurai 44 - Kahawa West",
+        "Mwihoko",
+      ],
+    },
+    {
+      fare: 2500,
+      areas: [
+        "Witeithie - Juja - Kroad - Toll",
+        "Pangani - Muthaiga - allsops",
+        "Babadogo - Lucky summer - Njiru",
+      ],
+    },
+    {
+      fare: 3000,
+      areas: [
+        "Thika - Kiambu - Ruaka",
+        "Muchatha - Parkland - Nairobi CBD",
+        "Kariobangi - Umoja - Donholm - Buruburu",
+        "Embakasi - Utawala - Ruai - Chokaa",
+      ],
+    },
+    {
+      fare: 3500,
+      areas: [
+        "Makongeni - Landless",
+        "Westland - Kangemi - Uthiru - Kinoo - Muthiga",
+        "Kileleshwa - Lavington - Kawangware - Ngong to Racecourse",
+        "Kitsuru - Gachie - Wagige - Lower Kabete - Banana",
+        "Langata - South B & C - Imara Daima",
+      ],
+    },
+    {
+      fare: 4000,
+      areas: [
+        "Kikuyu - Karen - Kenol",
+        "Syokimau - Mlolongo - Athi River - Kamulu - Joska",
+      ],
+    },
+    {
+      fare: 4500,
+      areas: ["Ngong Town", "Rongai Town", "Kitengela Town", "Malaa"],
+    },
+  ];
+
+  const allAreas = deliveryZones.flatMap((zone) => zone.areas);
+
+  // Example: selectedAddress comes from form or dropdown
+  const selectedAddress = formData.address; // e.g., "Kahawa Sukari"
+
+  const shipping =
+    appliedCoupon?.type === "shipping"
+      ? 0
+      : deliveryZones.find((zone) =>
+          zone.areas.some((area) => area === selectedAddress)
+        )?.fare || 0;
+
+  const handleApplyCoupon = () => {
+    setIsApplyingCoupon(true);
+
+    setTimeout(() => {
+      const coupon = availableCoupons[couponCode.toUpperCase()];
+      if (coupon) {
+        setAppliedCoupon({ code: couponCode.toUpperCase(), ...coupon });
+        toast.success(`Coupon applied: ${coupon.description}`);
+        setCouponCode("");
+      } else {
+        toast.error("Invalid coupon code");
+      }
+      setIsApplyingCoupon(false);
+    }, 1000);
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    toast.info("Coupon removed");
+  };
+
+  //monday promo
+  const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  const isMonday = today === 4;
+
   // Check if user is logged in
   useEffect(() => {
     if (!user) {
@@ -77,20 +193,50 @@ const CheckoutPage = () => {
   const [transactionId, setTransactionId] = useState(null);
   const [orderId, setOrderId] = useState(null);
 
+  ///updated
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // If address (area) changes, auto-detect city & county
+    if (name === "address") {
+      let detectedCity = "Nairobi"; // default
+      let detectedCounty = "Nairobi";
+
+      // Simple logic: decide based on known area groups
+      const kiambuAreas = [
+        "Thika - Kiambu - Ruaka",
+        "Witeithie - Juja - Kroad - Toll",
+        "Kwa Kairu - Kimbo",
+        "Membley - Tatu City - Ruiru town",
+        "Kikuyu - Karen - Kenol",
+      ];
+
+      if (
+        kiambuAreas.some(
+          (area) =>
+            value.includes(area) ||
+            value.includes("Ruiru") ||
+            value.includes("Kiambu")
+        )
+      ) {
+        detectedCity = "Kiambu";
+        detectedCounty = "Kiambu";
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        address: value,
+        city: detectedCity,
+        state: detectedCounty,
+      }));
+
+      return; // prevent default below
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: "",
-      }));
-    }
   };
 
   const handlePaymentMethodChange = (value) => {
@@ -354,72 +500,6 @@ const CheckoutPage = () => {
     return { success: true };
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!validateForm()) return;
-
-  //   // Check if user is logged in
-  //   if (!user || !user.id) {
-  //     toast.error("Please log in to place an order");
-  //     return;
-  //   }
-
-  //   setLoading(true);
-  //   try {
-  //     const subtotal = getCartTotal();
-  //     const shipping = subtotal > 50000 ? 0 : 500;
-  //     const tax = subtotal * 0.16;
-  //     const total = subtotal + shipping + tax;
-
-  //     // Process payment
-  //     const paymentResult = await processPayment({
-  //       method: formData.paymentMethod,
-  //       amount: total,
-  //       mpesaPhone: formData.mpesaPhone,
-  //       ...formData,
-  //     });
-
-  //     if (paymentResult.success) {
-  //       // For M-Pesa, wait for payment confirmation
-  //       if (formData.paymentMethod === "mpesa") {
-  //         // Payment confirmation will be handled by polling
-  //         return;
-  //       }
-
-  //       // For other payment methods (including COD), create order immediately
-  //       try {
-  //         const orderId = await createOrder({ total });
-  //         clearCart();
-  //         navigate(`/order-confirmation/${orderId}`, {
-  //           state: {
-  //             transactionId: paymentResult.transactionId,
-  //             paymentMethod: formData.paymentMethod,
-  //             total: total,
-  //           },
-  //         });
-  //       } catch (orderError) {
-  //         console.error("Order creation failed:", orderError);
-  //         if (formData.paymentMethod === "cod") {
-  //           toast.error("Failed to place order. Please try again.");
-  //         } else {
-  //           toast.error(
-  //             "Payment successful but order creation failed. Please contact support."
-  //           );
-  //         }
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Payment error:", error);
-  //     toast.error(error.message || "Payment failed. Please try again.");
-  //     setMpesaStatus("failed");
-  //   } finally {
-  //     if (formData.paymentMethod !== "mpesa") {
-  //       setLoading(false);
-  //     }
-  //   }
-  // };
-
   //new update 5
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -434,11 +514,6 @@ const CheckoutPage = () => {
     setLoading(true);
 
     try {
-      const subtotal = getCartTotal();
-      const shipping = subtotal > 50000 ? 0 : 500;
-      const tax = subtotal * 0.16;
-      const total = subtotal + shipping + tax;
-
       const paymentResult = await processPayment({
         method: formData.paymentMethod,
         amount: total,
@@ -483,9 +558,8 @@ const CheckoutPage = () => {
   const handleMpesaSuccess = async (orderIdFromMpesa) => {
     try {
       const subtotal = getCartTotal();
-      const shipping = subtotal > 50000 ? 0 : 500;
-      const tax = subtotal * 0.16;
-      const total = subtotal + shipping + tax;
+      // const shipping = subtotal > 50000 ? 0 : 500;
+      const total = subtotal + shipping;
 
       // ✅ Use existing order ID if provided from M-Pesa backend
       const orderId = orderIdFromMpesa || (await createOrder({ total }));
@@ -518,10 +592,21 @@ const CheckoutPage = () => {
     setLoading(false);
   };
 
+  // const subtotal = getCartTotal();
+  // const total = subtotal + shipping;
+
   const subtotal = getCartTotal();
-  const shipping = subtotal > 50000 ? 0 : 500;
-  const tax = subtotal * 0.16;
-  const total = subtotal + shipping + tax;
+  const discount = appliedCoupon
+    ? appliedCoupon.type === "percentage"
+      ? subtotal * appliedCoupon.discount
+      : appliedCoupon.discount
+    : 0;
+  // const shipping =
+  //   subtotal > 500000 || appliedCoupon?.type === "shipping"
+  //     ? 0
+  //     : 0.003 * subtotal;
+  // const tax = (subtotal - discount) * 0.16; // 16% VAT
+  const total = subtotal - discount + shipping;
 
   if (cartItems.length === 0) {
     return (
@@ -847,7 +932,9 @@ const CheckoutPage = () => {
                   Shipping Information
                 </CardTitle>
               </CardHeader>
+
               <CardContent className="space-y-4">
+                {/* Name Fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="firstName">First Name</Label>
@@ -865,6 +952,7 @@ const CheckoutPage = () => {
                       </p>
                     )}
                   </div>
+
                   <div>
                     <Label htmlFor="lastName">Last Name</Label>
                     <Input
@@ -883,6 +971,7 @@ const CheckoutPage = () => {
                   </div>
                 </div>
 
+                {/* Email & Phone */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="email">Email</Label>
@@ -901,6 +990,7 @@ const CheckoutPage = () => {
                       </p>
                     )}
                   </div>
+
                   <div>
                     <Label htmlFor="phone">Phone</Label>
                     <Input
@@ -919,16 +1009,28 @@ const CheckoutPage = () => {
                   </div>
                 </div>
 
+                {/* Address Dropdown */}
+                {/* Address Dropdown */}
                 <div>
-                  <Label htmlFor="address">Address</Label>
-                  <Input
+                  <Label htmlFor="address">Address (Select Area)</Label>
+                  <select
                     id="address"
                     name="address"
                     value={formData.address}
                     onChange={handleChange}
-                    className={errors.address ? "border-red-500" : ""}
                     disabled={mpesaStatus === "pending"}
-                  />
+                    className={`w-full p-2 border rounded-md ${
+                      errors.address ? "border-red-500" : ""
+                    }`}
+                  >
+                    <option value="">-- Select Delivery Area --</option>
+                    {allAreas.map((area) => (
+                      <option key={area} value={area}>
+                        {area}
+                      </option>
+                    ))}
+                  </select>
+
                   {errors.address && (
                     <p className="text-sm text-red-600 mt-1">
                       {errors.address}
@@ -936,31 +1038,32 @@ const CheckoutPage = () => {
                   )}
                 </div>
 
+                {/* City, County, Postal Code */}
                 <div className="grid grid-cols-3 gap-4">
+                  {/* City */}
                   <div>
                     <Label htmlFor="city">City</Label>
                     <Input
                       id="city"
                       name="city"
                       value={formData.city}
-                      onChange={handleChange}
-                      className={errors.city ? "border-red-500" : ""}
-                      disabled={mpesaStatus === "pending"}
+                      readOnly
+                      className="bg-gray-100 text-gray-600"
                     />
                     {errors.city && (
                       <p className="text-sm text-red-600 mt-1">{errors.city}</p>
                     )}
                   </div>
+
+                  {/* County */}
                   <div>
                     <Label htmlFor="state">County</Label>
                     <Input
                       id="state"
                       name="state"
-                      placeholder="e.g., Nairobi"
-                      value={formData.state}
-                      onChange={handleChange}
-                      className={errors.state ? "border-red-500" : ""}
-                      disabled={mpesaStatus === "pending"}
+                      value={formData.state || "Nairobi"}
+                      readOnly
+                      className="bg-gray-100 text-gray-600"
                     />
                     {errors.state && (
                       <p className="text-sm text-red-600 mt-1">
@@ -968,6 +1071,8 @@ const CheckoutPage = () => {
                       </p>
                     )}
                   </div>
+
+                  {/* Postal Code */}
                   <div>
                     <Label htmlFor="zipCode">Postal Code</Label>
                     <Input
@@ -1112,7 +1217,61 @@ const CheckoutPage = () => {
         </div>
 
         {/* Order Summary */}
-        <div>
+        <div className="space-y-6">
+          {/* Coupon Section */}
+          {isMonday && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Tag className="mr-2 h-5 w-5" />
+                  Promo Code
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {!appliedCoupon ? (
+                  <div className="flex space-x-2">
+                    <Input
+                      placeholder="Enter coupon code"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={handleApplyCoupon}
+                      disabled={!couponCode.trim() || isApplyingCoupon}
+                      size="sm"
+                    >
+                      {isApplyingCoupon ? "Applying..." : "Apply"}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-green-800">
+                        {appliedCoupon.code}
+                      </p>
+                      <p className="text-sm text-green-600">
+                        {appliedCoupon.description}
+                      </p>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRemoveCoupon}
+                      className="text-green-700 hover:text-green-800"
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                )}
+
+                <div className="text-xs text-gray-500">
+                  <p>Available Promo: FREESHIP</p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <Card>
             <CardHeader>
               <CardTitle>Order Summary</CardTitle>
@@ -1143,17 +1302,14 @@ const CheckoutPage = () => {
                   <span>KSh {subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Shipping</span>
+                  <span>Shipping Cost</span>
                   <span>
                     {shipping === 0
                       ? "Free"
                       : `KSh ${shipping.toLocaleString()}`}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span>VAT (16%)</span>
-                  <span>KSh {tax.toLocaleString()}</span>
-                </div>
+
                 {formData.paymentMethod === "cod" && (
                   <div className="flex justify-between text-orange-600">
                     <span>COD Fee</span>
@@ -1241,22 +1397,6 @@ const CheckoutPage = () => {
                     </span>
                   )}
               </div>
-
-              {/* Payment method info */}
-              {/* <div className="text-xs text-gray-500 text-center">
-                {formData.paymentMethod === "mpesa" &&
-                  mpesaStatus !== "pending" &&
-                  "You will receive an STK push on your phone"}
-                {formData.paymentMethod === "mpesa" &&
-                  mpesaStatus === "pending" &&
-                  "Check your phone for the payment request"}
-                {formData.paymentMethod === "paypal" &&
-                  "You will be redirected to PayPal"}
-                {formData.paymentMethod === "card" &&
-                  "Your card will be charged securely"}
-                {formData.paymentMethod === "cod" &&
-                  "You will pay when your order is delivered"}
-              </div> */}
             </CardContent>
           </Card>
         </div>
