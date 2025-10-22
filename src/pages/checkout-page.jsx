@@ -75,6 +75,7 @@ const CheckoutPage = () => {
   const [errors, setErrors] = useState({});
   const [mpesaStatus, setMpesaStatus] = useState(null); // null, 'pending', 'success', 'failed', 'timeout'
   const [transactionId, setTransactionId] = useState(null);
+  const [orderId, setOrderId] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -164,81 +165,122 @@ const CheckoutPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  ///new update 1
   const initiateMpesaPayment = async (paymentData) => {
     try {
       setMpesaStatus("pending");
-      toast.info("Initiating M-Pesa payment...");
+      toast.info("📲 Initiating M-Pesa payment...");
 
+      // 🔹 Send payment initiation request to your backend
       const response = await fetch(
-        "https://bobbyfurnitureonline.onrender.com/api/mpesa/stkpush",
+        "https://bobbyfurnitureonline.onrender.com/api/mpesa",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            phoneNumber: paymentData.mpesaPhone.replace(/\s/g, ""),
+            phoneNumber: paymentData.mpesaPhone.replace(/\s/g, ""), // Ensure format: 2547XXXXXXXX
             amount: Math.round(paymentData.amount),
-            accountReference: `ORD-${Date.now()}`,
-            transactionDesc: `Payment for Bobby Furniture Order`,
-            callbackUrl: `${window.location.origin}/api/mpesa/callback`,
+            user_id: paymentData.user_id,
+            customer_name: paymentData.customer_name || "Guest",
+            address: paymentData.address || "N/A",
           }),
         }
       );
 
       const result = await response.json();
 
-      if (result.success) {
-        setTransactionId(result.checkoutRequestId);
+      if (result.success && result.data?.CheckoutRequestID) {
+        const orderId = result.order_id;
+
         toast.success(
-          "Payment request sent to your phone. Please check your M-Pesa menu."
+          "✅ STK push sent! Please complete the payment on your phone."
         );
 
-        // Start polling for payment status
-        pollMpesaStatus(result.checkoutRequestId);
+        // Save transaction details
+        setTransactionId(result.data.CheckoutRequestID);
+        setOrderId(orderId);
 
-        return { success: true, checkoutRequestId: result.checkoutRequestId };
+        // 🔁 Start polling for payment status (checks /api/mpesa/status/:orderId)
+        pollMpesaStatus(orderId);
+
+        return { success: true, order_id: orderId };
       } else {
-        throw new Error(result.message || "Failed to initiate M-Pesa payment");
+        throw new Error(result.message || "Failed to initiate M-Pesa payment.");
       }
     } catch (error) {
+      console.error("❌ M-Pesa Payment Error:", error);
       setMpesaStatus("failed");
-      throw error;
+      toast.error("❌ M-Pesa payment initiation failed. Please try again.");
+      return { success: false, error: error.message };
     }
   };
 
-  const pollMpesaStatus = async (checkoutRequestId) => {
-    const maxAttempts = 30; // Poll for 5 minutes (30 * 10 seconds)
+  //new update 2
+  const pollMpesaStatus = async (orderId) => {
+    const maxAttempts = 30; // ~5 minutes (poll every 10s)
     let attempts = 0;
+    let stopPolling = false;
 
     const poll = async () => {
+      if (stopPolling) return;
+
       try {
         const response = await fetch(
-          `https://bobbyfurnitureonline.onrender.com/api/mpesa/status/${checkoutRequestId}`
+          `https://bobbyfurnitureonline.onrender.com/api/mpesa/status/${orderId}`
         );
         const result = await response.json();
 
-        if (result.status === "success") {
+        const paymentStatus = result?.status || "Pending";
+
+        if (paymentStatus === "Completed") {
+          stopPolling = true;
           setMpesaStatus("success");
-          toast.success("Payment successful!");
-          return { success: true, transactionId: result.mpesaReceiptNumber };
-        } else if (result.status === "failed") {
+          toast.success("✅ Payment successful!");
+
+          // 🧩 Trigger order confirmation flow
+          handleMpesaSuccess(orderId);
+          return;
+        }
+
+        if (paymentStatus === "Failed") {
+          stopPolling = true;
           setMpesaStatus("failed");
-          toast.error("Payment failed. Please try again.");
-          throw new Error("Payment failed");
-        } else if (result.status === "pending") {
+          toast.error("❌ Payment failed. Please try again.");
+          return;
+        }
+
+        if (paymentStatus === "Pending") {
           attempts++;
           if (attempts >= maxAttempts) {
+            stopPolling = true;
             setMpesaStatus("timeout");
-            toast.error("Payment timeout. Please try again.");
-            throw new Error("Payment timeout");
+            toast.error("⌛ Payment timeout. Please try again.");
+            return;
           }
-          // Continue polling
-          setTimeout(poll, 10000); // Poll every 10 seconds
+
+          // ⏱ Continue polling after 10s
+          setTimeout(poll, 10000);
+          return;
         }
-      } catch (error) {
+
+        if (paymentStatus === "Completed") {
+          setMpesaStatus("success");
+          toast.success("✅ Payment successful!");
+          handleMpesaSuccess(); // <-- redirect user automatically
+          return { success: true };
+        }
+
+        // ⚠️ Unknown or unexpected response
+        stopPolling = true;
         setMpesaStatus("failed");
-        throw error;
+        toast.error("⚠️ Unexpected payment response.");
+      } catch (error) {
+        console.error("M-Pesa polling error:", error);
+        stopPolling = true;
+        setMpesaStatus("failed");
+        toast.error("❌ Error checking payment status.");
       }
     };
 
@@ -289,109 +331,169 @@ const CheckoutPage = () => {
     }
   };
 
+  //new update 4
   const processPayment = async (paymentData) => {
-    switch (formData.paymentMethod) {
-      case "card":
-        // Mock credit card processing
-        toast.info("Processing credit card payment...");
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        return { success: true, transactionId: `CC_${Date.now()}` };
+    if (paymentData.method === "mpesa") {
+      try {
+        const result = await initiateMpesaPayment(paymentData);
 
-      case "mpesa":
-        return await initiateMpesaPayment(paymentData);
+        if (result.success) {
+          toast.info("📲 Waiting for M-Pesa confirmation...");
+          // Poll until the payment completes
+          pollMpesaStatus(result.order_id);
+        }
 
-      case "paypal":
-        // Mock PayPal redirect
-        toast.info("Redirecting to PayPal...");
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        return { success: true, transactionId: `PP_${Date.now()}` };
-
-      case "cod":
-        // Cash on delivery - no payment processing needed
-        toast.success("Order placed successfully! You'll pay upon delivery.");
-        return { success: true, transactionId: `COD_${Date.now()}` };
-
-      default:
-        throw new Error("Invalid payment method");
+        return result;
+      } catch (error) {
+        console.error("M-Pesa processing error:", error);
+        return { success: false, error: error.message };
+      }
     }
+
+    // ✅ Other payment methods handled here (PayPal, card, COD)
+    return { success: true };
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!validateForm()) return;
+
+  //   // Check if user is logged in
+  //   if (!user || !user.id) {
+  //     toast.error("Please log in to place an order");
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   try {
+  //     const subtotal = getCartTotal();
+  //     const shipping = subtotal > 50000 ? 0 : 500;
+  //     const tax = subtotal * 0.16;
+  //     const total = subtotal + shipping + tax;
+
+  //     // Process payment
+  //     const paymentResult = await processPayment({
+  //       method: formData.paymentMethod,
+  //       amount: total,
+  //       mpesaPhone: formData.mpesaPhone,
+  //       ...formData,
+  //     });
+
+  //     if (paymentResult.success) {
+  //       // For M-Pesa, wait for payment confirmation
+  //       if (formData.paymentMethod === "mpesa") {
+  //         // Payment confirmation will be handled by polling
+  //         return;
+  //       }
+
+  //       // For other payment methods (including COD), create order immediately
+  //       try {
+  //         const orderId = await createOrder({ total });
+  //         clearCart();
+  //         navigate(`/order-confirmation/${orderId}`, {
+  //           state: {
+  //             transactionId: paymentResult.transactionId,
+  //             paymentMethod: formData.paymentMethod,
+  //             total: total,
+  //           },
+  //         });
+  //       } catch (orderError) {
+  //         console.error("Order creation failed:", orderError);
+  //         if (formData.paymentMethod === "cod") {
+  //           toast.error("Failed to place order. Please try again.");
+  //         } else {
+  //           toast.error(
+  //             "Payment successful but order creation failed. Please contact support."
+  //           );
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Payment error:", error);
+  //     toast.error(error.message || "Payment failed. Please try again.");
+  //     setMpesaStatus("failed");
+  //   } finally {
+  //     if (formData.paymentMethod !== "mpesa") {
+  //       setLoading(false);
+  //     }
+  //   }
+  // };
+
+  //new update 5
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
-    // Check if user is logged in
     if (!user || !user.id) {
       toast.error("Please log in to place an order");
       return;
     }
 
     setLoading(true);
+
     try {
       const subtotal = getCartTotal();
       const shipping = subtotal > 50000 ? 0 : 500;
       const tax = subtotal * 0.16;
       const total = subtotal + shipping + tax;
 
-      // Process payment
       const paymentResult = await processPayment({
         method: formData.paymentMethod,
         amount: total,
         mpesaPhone: formData.mpesaPhone,
-        ...formData,
+        user_id: user.id,
+        customer_name: `${user.first_name || ""} ${
+          user.last_name || ""
+        }`.trim(),
+        address: formData.address,
       });
 
-      if (paymentResult.success) {
-        // For M-Pesa, wait for payment confirmation
-        if (formData.paymentMethod === "mpesa") {
-          // Payment confirmation will be handled by polling
-          return;
-        }
+      // 🟩 M-Pesa handled via pollMpesaStatus — do not proceed here
+      if (formData.paymentMethod === "mpesa") return;
 
-        // For other payment methods (including COD), create order immediately
-        try {
-          const orderId = await createOrder({ total });
-          clearCart();
-          navigate(`/order-confirmation/${orderId}`, {
-            state: {
-              transactionId: paymentResult.transactionId,
-              paymentMethod: formData.paymentMethod,
-              total: total,
-            },
-          });
-        } catch (orderError) {
-          console.error("Order creation failed:", orderError);
-          if (formData.paymentMethod === "cod") {
-            toast.error("Failed to place order. Please try again.");
-          } else {
-            toast.error(
-              "Payment successful but order creation failed. Please contact support."
-            );
-          }
-        }
+      // 🟩 Other payment methods (e.g., COD)
+      if (paymentResult.success) {
+        const orderId = await createOrder({ total });
+        clearCart();
+        navigate(`/order-confirmation/${orderId}`, {
+          state: {
+            transactionId: paymentResult.transactionId || null,
+            paymentMethod: formData.paymentMethod,
+            total,
+          },
+        });
+      } else {
+        toast.error("Payment failed. Please try again.");
       }
     } catch (error) {
-      console.error("Payment error:", error);
-      toast.error(error.message || "Payment failed. Please try again.");
+      console.error("Checkout error:", error);
+      toast.error(error.message || "Something went wrong. Please try again.");
       setMpesaStatus("failed");
     } finally {
+      // ⛔ Don’t stop loading for M-Pesa while polling
       if (formData.paymentMethod !== "mpesa") {
         setLoading(false);
       }
     }
   };
 
-  const handleMpesaSuccess = async () => {
+  //new update 3
+  const handleMpesaSuccess = async (orderIdFromMpesa) => {
     try {
       const subtotal = getCartTotal();
       const shipping = subtotal > 50000 ? 0 : 500;
       const tax = subtotal * 0.16;
       const total = subtotal + shipping + tax;
 
-      const orderId = await createOrder({ total });
+      // ✅ Use existing order ID if provided from M-Pesa backend
+      const orderId = orderIdFromMpesa || (await createOrder({ total }));
+
       clearCart();
       setLoading(false);
+
+      // ✅ Navigate to order confirmation with correct transaction + order IDs
       navigate(`/order-confirmation/${orderId}`, {
         state: {
           transactionId: transactionId,
@@ -402,16 +504,17 @@ const CheckoutPage = () => {
     } catch (error) {
       console.error("Order creation failed:", error);
       toast.error(
-        "Payment successful but order creation failed. Please contact support."
+        "✅ Payment was successful but order creation failed. Please contact support."
       );
       setLoading(false);
     }
   };
 
-  // Handle M-Pesa payment retry
+  // 🔁 Handle M-Pesa payment retry
   const handleMpesaRetry = () => {
     setMpesaStatus(null);
     setTransactionId(null);
+    setOrderId(null); // ✅ reset backend order reference too
     setLoading(false);
   };
 
@@ -1069,31 +1172,78 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
+              {/* new update 6 */}
               <Button
-                onClick={handleSubmit}
+                onClick={
+                  mpesaStatus === "failed" || mpesaStatus === "timeout"
+                    ? handleMpesaRetry
+                    : handleSubmit
+                }
                 className="w-full"
                 disabled={loading || mpesaStatus === "pending"}
               >
-                {loading || mpesaStatus === "pending" ? (
+                {mpesaStatus === "pending" ? (
                   <div className="flex items-center">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    {mpesaStatus === "pending"
-                      ? "Waiting for Payment..."
-                      : "Processing..."}
+                    Waiting for Payment...
+                  </div>
+                ) : mpesaStatus === "success" ? (
+                  "Payment Successful"
+                ) : mpesaStatus === "failed" ? (
+                  "Retry Payment"
+                ) : mpesaStatus === "timeout" ? (
+                  "Try Again"
+                ) : loading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Processing...
                   </div>
                 ) : (
                   `${
-                    formData.paymentMethod === "cod"
-                      ? "Place Order"
-                      : "Place Order"
+                    formData.paymentMethod === "cod" ? "Place Order" : "Pay Now"
                   } - KSh ${(
                     total + (formData.paymentMethod === "cod" ? 100 : 0)
                   ).toLocaleString()}`
                 )}
               </Button>
 
+              {/* Payment Status Info */}
+              <div className="text-xs text-gray-500 text-center mt-2">
+                {formData.paymentMethod === "mpesa" && mpesaStatus === null && (
+                  <span>
+                    You will receive an STK push on your phone after placing
+                    order.
+                  </span>
+                )}
+                {formData.paymentMethod === "mpesa" &&
+                  mpesaStatus === "pending" && (
+                    <span>
+                      📱 Check your phone and complete the M-Pesa payment
+                      request.
+                    </span>
+                  )}
+                {formData.paymentMethod === "mpesa" &&
+                  mpesaStatus === "success" && (
+                    <span className="text-green-600">
+                      Payment confirmed successfully!
+                    </span>
+                  )}
+                {formData.paymentMethod === "mpesa" &&
+                  mpesaStatus === "failed" && (
+                    <span className="text-red-500">
+                      Payment failed. Please try again.
+                    </span>
+                  )}
+                {formData.paymentMethod === "mpesa" &&
+                  mpesaStatus === "timeout" && (
+                    <span className="text-yellow-600">
+                      Payment request timed out. Try again.
+                    </span>
+                  )}
+              </div>
+
               {/* Payment method info */}
-              <div className="text-xs text-gray-500 text-center">
+              {/* <div className="text-xs text-gray-500 text-center">
                 {formData.paymentMethod === "mpesa" &&
                   mpesaStatus !== "pending" &&
                   "You will receive an STK push on your phone"}
@@ -1106,7 +1256,7 @@ const CheckoutPage = () => {
                   "Your card will be charged securely"}
                 {formData.paymentMethod === "cod" &&
                   "You will pay when your order is delivered"}
-              </div>
+              </div> */}
             </CardContent>
           </Card>
         </div>
