@@ -396,14 +396,27 @@ const EnhancedManageProducts = () => {
     setCurrentPage(1);
   }, [products, searchTerm, selectedCategory, sortBy, sortOrder]);
 
+  // const handleChange = (e) => {
+  //   const { name, value, type, checked } = e.target;
+  //   if (name === "images") {
+  //     const imageUrls = value
+  //       .split(",")
+  //       .map((url) => url.trim())
+  //       .filter((url) => url);
+  //     setFormData({ ...formData, images: imageUrls });
+  //   } else if (type === "checkbox") {
+  //     setFormData({ ...formData, [name]: checked });
+  //   } else {
+  //     setFormData({ ...formData, [name]: value });
+  //   }
+  // };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
     if (name === "images") {
-      const imageUrls = value
-        .split(",")
-        .map((url) => url.trim())
-        .filter((url) => url);
-      setFormData({ ...formData, images: imageUrls });
+      // ✅ keep the raw text so commas aren’t stripped while typing
+      setFormData({ ...formData, images: value });
     } else if (type === "checkbox") {
       setFormData({ ...formData, [name]: checked });
     } else {
