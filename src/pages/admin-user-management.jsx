@@ -279,10 +279,9 @@ const AdminUserManagement = () => {
 
       await apiCall(`/users/${userId}/role`, {
         method: "PATCH",
-        body: JSON.stringify({ role: newRole }),
+        body: { role: newRole }, // ✅ fixed
       });
 
-      // Update the user in the local state
       setUsers(
         users.map((user) =>
           user.id === userId
