@@ -94,17 +94,27 @@ const AdminUserManagement = () => {
     }
   };
 
+  // Helper to get a cookie by name
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return null;
+  }
+
   // Check if user has admin role using backend verification
   const checkAdminRole = async () => {
-    const token = localStorage.getItem("token");
+    // Get token from cookies instead of localStorage
+    const token = getCookie("token");
     if (!token) return false;
 
     try {
-      // First, try to verify token with backend
+      // Verify token with backend
       const response = await fetch(`${API_BASE_URL}/users/verify-token`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include", // important when using cookies + same-origin or CORS
       });
 
       if (response.ok) {
@@ -117,11 +127,11 @@ const AdminUserManagement = () => {
 
         return hasAdminRole;
       } else {
-        // Fallback to local token parsing
+        // Fallback to decoding JWT locally
         const decoded = parseJwt(token);
         setTokenInfo(decoded);
 
-        const hasAdminRole = decoded && decoded.isAdmin === true;
+        const hasAdminRole = decoded?.isAdmin === true;
         setIsAdmin(hasAdminRole);
 
         console.log("🔑 Local token claims:", {
@@ -146,19 +156,21 @@ const AdminUserManagement = () => {
       return false;
     }
   };
-
-  // Get token from localStorage
+  // Get token from cookies instead of localStorage
+  // ✅ Updated token getter (cookie-based)
   const getToken = () => {
-    const token = localStorage.getItem("token");
+    const token = getCookie("token");
+
     console.log("🔑 Token check:", {
       hasToken: !!token,
-      tokenLength: token?.length,
-      tokenStart: token?.substring(0, 20) + "...",
+      tokenLength: token?.length || 0,
+      tokenStart: token ? token.substring(0, 20) + "..." : "No token",
     });
+
     return token;
   };
 
-  // API helper function with enhanced error handling
+  // ✅ Updated API helper (cookie-compatible)
   const apiCall = async (endpoint, options = {}) => {
     const token = getToken();
 
@@ -175,13 +187,16 @@ const AdminUserManagement = () => {
       throw new Error(error);
     }
 
+    // ✅ Main config
     const config = {
+      method: options.method || "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`, // still needed if backend expects header
         ...options.headers,
       },
-      ...options,
+      credentials: "include", // ✅ ensures cookies are sent with the request
+      body: options.body ? JSON.stringify(options.body) : undefined,
     };
 
     try {
@@ -196,7 +211,7 @@ const AdminUserManagement = () => {
         url: response.url,
       });
 
-      // Handle different response statuses
+      // Handle 401 (Unauthorized)
       if (response.status === 401) {
         const errorText = await response.text();
         console.error("🚫 401 Unauthorized:", errorText);
@@ -204,7 +219,7 @@ const AdminUserManagement = () => {
         let parsedError;
         try {
           parsedError = JSON.parse(errorText);
-        } catch (e) {
+        } catch {
           parsedError = { message: errorText };
         }
 
@@ -218,13 +233,13 @@ const AdminUserManagement = () => {
           endpoint,
           tokenPresent: !!token,
           tokenLength: token?.length,
-          suggestion:
-            "Your token may be expired or invalid. Try logging in again.",
+          suggestion: "Your session may have expired. Please log in again.",
         });
 
         throw new Error(error);
       }
 
+      // Handle 403 (Forbidden)
       if (response.status === 403) {
         const errorText = await response.text();
         console.error("🚫 403 Forbidden:", errorText);
@@ -232,7 +247,7 @@ const AdminUserManagement = () => {
         let parsedError;
         try {
           parsedError = JSON.parse(errorText);
-        } catch (e) {
+        } catch {
           parsedError = { message: errorText };
         }
 
@@ -244,13 +259,14 @@ const AdminUserManagement = () => {
           status: 403,
           response: parsedError,
           endpoint,
-          tokenInfo: tokenInfo,
+          tokenInfo,
           suggestion: "You need admin privileges for this action.",
         });
 
         throw new Error(error);
       }
 
+      // Generic error
       if (!response.ok) {
         const errorData = await response
           .json()
@@ -261,6 +277,7 @@ const AdminUserManagement = () => {
         );
       }
 
+      // Success
       const data = await response.json();
       console.log("✅ API Success:", data);
       return data;
@@ -464,17 +481,28 @@ const AdminUserManagement = () => {
     fetchUsers();
   };
 
+  // Helper to delete a cookie by name
+  function deleteCookie(name) {
+    document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict`;
+  }
+
   const handleClearToken = () => {
-    localStorage.removeItem("token");
+    // Delete token cookie
+    deleteCookie("token");
+
     setError(null);
     setDebugInfo(null);
     setTokenInfo(null);
-    toast.info("Token cleared. Please log in again.");
+
+    toast.info("Session cleared. Please log in again.");
+
     // Redirect to login page
     window.location.href = "/login";
   };
 
   const copyDebugInfo = () => {
+    const token = getCookie("token");
+
     const info = {
       error,
       debugInfo,
@@ -484,12 +512,13 @@ const AdminUserManagement = () => {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       url: window.location.href,
-      tokenPresent: !!localStorage.getItem("token"),
+      tokenPresent: !!token, // ✅ replaced localStorage check
+      tokenLength: token?.length || 0,
     };
+
     navigator.clipboard.writeText(JSON.stringify(info, null, 2));
     toast.success("Debug info copied to clipboard");
   };
-
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8">
