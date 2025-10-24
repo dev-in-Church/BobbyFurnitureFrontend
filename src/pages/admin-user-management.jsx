@@ -105,64 +105,31 @@ const AdminUserManagement = () => {
   // Check if user has admin role using backend verification
   // ✅ Improved version with better error handling and cleanup
   const checkAdminRole = async () => {
-    const token = getCookie("token");
-    if (!token) {
-      console.warn("🚫 No token found in cookies");
-      setIsAdmin(false);
-      setTokenInfo(null);
-      return false;
-    }
-
     try {
-      // Call backend /verify-token
       const response = await fetch(`${API_BASE_URL}/users/verify-token`, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: "include", // allow cookies
+        credentials: "include", // ✅ backend will read the cookie
       });
 
       const data = await response.json();
 
       if (response.ok && data.user) {
         console.log("✅ Token verified via backend:", data);
-
-        setTokenInfo({
-          ...data.user,
-          ...data.tokenDetails,
-        });
-
+        setTokenInfo(data.user);
         const hasAdminRole = !!data.user.isAdmin;
         setIsAdmin(hasAdminRole);
         return hasAdminRole;
-      }
-
-      // If backend says token invalid, cleanup and fallback
-      console.warn("⚠️ Backend verification failed:", data.message);
-      deleteCookie("token"); // optional: remove expired cookie
-      setIsAdmin(false);
-      setTokenInfo(null);
-
-      return false;
-    } catch (error) {
-      console.error("🔥 Error checking admin role:", error);
-
-      // Fallback to decoding JWT locally (if possible)
-      try {
-        const decoded = parseJwt(token);
-        console.log("🧩 Local token decoded:", decoded);
-
-        const hasAdminRole = decoded?.isAdmin === true;
-        setIsAdmin(hasAdminRole);
-        setTokenInfo(decoded);
-        return hasAdminRole;
-      } catch (decodeError) {
-        console.error("❌ Failed to decode local token:", decodeError);
+      } else {
+        console.warn("⚠️ Backend verification failed:", data.message);
         setIsAdmin(false);
         setTokenInfo(null);
         return false;
       }
+    } catch (error) {
+      console.error("🔥 Error verifying admin role:", error);
+      setIsAdmin(false);
+      setTokenInfo(null);
+      return false;
     }
   };
 
@@ -182,124 +149,32 @@ const AdminUserManagement = () => {
 
   // ✅ Updated API helper (cookie-compatible)
   const apiCall = async (endpoint, options = {}) => {
-    const token = getToken();
-
     console.log("🚀 API Call:", {
       endpoint,
       method: options.method || "GET",
-      hasToken: !!token,
       timestamp: new Date().toISOString(),
     });
 
-    if (!token) {
-      const error = "No authentication token found. Please log in.";
-      setError(error);
-      throw new Error(error);
-    }
-
-    // ✅ Main config
     const config = {
       method: options.method || "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // still needed if backend expects header
         ...options.headers,
       },
-      credentials: "include", // ✅ ensures cookies are sent with the request
+      credentials: "include", // ✅ send cookies automatically
       body: options.body ? JSON.stringify(options.body) : undefined,
     };
 
     try {
-      console.log("📡 Making request to:", `${API_BASE_URL}${endpoint}`);
-
       const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
-      console.log("📨 Response:", {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok,
-        url: response.url,
-      });
+      if (response.status === 401) throw new Error("Unauthorized");
+      if (response.status === 403) throw new Error("Forbidden");
 
-      // Handle 401 (Unauthorized)
-      if (response.status === 401) {
-        const errorText = await response.text();
-        console.error("🚫 401 Unauthorized:", errorText);
-
-        let parsedError;
-        try {
-          parsedError = JSON.parse(errorText);
-        } catch {
-          parsedError = { message: errorText };
-        }
-
-        const error = `Authentication failed: ${
-          parsedError.message || "Unauthorized"
-        }`;
-        setError(error);
-        setDebugInfo({
-          status: 401,
-          response: parsedError,
-          endpoint,
-          tokenPresent: !!token,
-          tokenLength: token?.length,
-          suggestion: "Your session may have expired. Please log in again.",
-        });
-
-        throw new Error(error);
-      }
-
-      // Handle 403 (Forbidden)
-      if (response.status === 403) {
-        const errorText = await response.text();
-        console.error("🚫 403 Forbidden:", errorText);
-
-        let parsedError;
-        try {
-          parsedError = JSON.parse(errorText);
-        } catch {
-          parsedError = { message: errorText };
-        }
-
-        const error = `Access denied: ${
-          parsedError.message || "Insufficient privileges"
-        }`;
-        setError(error);
-        setDebugInfo({
-          status: 403,
-          response: parsedError,
-          endpoint,
-          tokenInfo,
-          suggestion: "You need admin privileges for this action.",
-        });
-
-        throw new Error(error);
-      }
-
-      // Generic error
-      if (!response.ok) {
-        const errorData = await response
-          .json()
-          .catch(() => ({ message: "Unknown error" }));
-        console.error("❌ API Error:", errorData);
-        throw new Error(
-          errorData.message || `Request failed with status ${response.status}`
-        );
-      }
-
-      // Success
       const data = await response.json();
-      console.log("✅ API Success:", data);
       return data;
     } catch (error) {
-      console.error("🔥 API Call Error:", error);
-
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        const networkError = "Network error: Unable to connect to server";
-        setError(networkError);
-        throw new Error(networkError);
-      }
-
+      console.error("🔥 API Error:", error);
       throw error;
     }
   };
