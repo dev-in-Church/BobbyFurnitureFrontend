@@ -103,59 +103,69 @@ const AdminUserManagement = () => {
   }
 
   // Check if user has admin role using backend verification
+  // ✅ Improved version with better error handling and cleanup
   const checkAdminRole = async () => {
-    // Get token from cookies instead of localStorage
     const token = getCookie("token");
-    if (!token) return false;
+    if (!token) {
+      console.warn("🚫 No token found in cookies");
+      setIsAdmin(false);
+      setTokenInfo(null);
+      return false;
+    }
 
     try {
-      // Verify token with backend
+      // Call backend /verify-token
       const response = await fetch(`${API_BASE_URL}/users/verify-token`, {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        credentials: "include", // important when using cookies + same-origin or CORS
+        credentials: "include", // allow cookies
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("🔑 Backend token verification:", data);
+      const data = await response.json();
 
-        setTokenInfo(data.user);
-        const hasAdminRole = data.user.isAdmin;
+      if (response.ok && data.user) {
+        console.log("✅ Token verified via backend:", data);
+
+        setTokenInfo({
+          ...data.user,
+          ...data.tokenDetails,
+        });
+
+        const hasAdminRole = !!data.user.isAdmin;
         setIsAdmin(hasAdminRole);
-
         return hasAdminRole;
-      } else {
-        // Fallback to decoding JWT locally
+      }
+
+      // If backend says token invalid, cleanup and fallback
+      console.warn("⚠️ Backend verification failed:", data.message);
+      deleteCookie("token"); // optional: remove expired cookie
+      setIsAdmin(false);
+      setTokenInfo(null);
+
+      return false;
+    } catch (error) {
+      console.error("🔥 Error checking admin role:", error);
+
+      // Fallback to decoding JWT locally (if possible)
+      try {
         const decoded = parseJwt(token);
-        setTokenInfo(decoded);
+        console.log("🧩 Local token decoded:", decoded);
 
         const hasAdminRole = decoded?.isAdmin === true;
         setIsAdmin(hasAdminRole);
-
-        console.log("🔑 Local token claims:", {
-          userId: decoded?.userId || decoded?.id,
-          email: decoded?.email,
-          isAdmin: decoded?.isAdmin,
-          hasAdminRole,
-        });
-
-        return hasAdminRole;
-      }
-    } catch (error) {
-      console.error("Failed to check admin role:", error);
-      // Fallback to local parsing
-      const decoded = parseJwt(token);
-      if (decoded) {
         setTokenInfo(decoded);
-        const hasAdminRole = decoded.isAdmin === true;
-        setIsAdmin(hasAdminRole);
         return hasAdminRole;
+      } catch (decodeError) {
+        console.error("❌ Failed to decode local token:", decodeError);
+        setIsAdmin(false);
+        setTokenInfo(null);
+        return false;
       }
-      return false;
     }
   };
+
   // Get token from cookies instead of localStorage
   // ✅ Updated token getter (cookie-based)
   const getToken = () => {
