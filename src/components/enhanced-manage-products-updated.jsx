@@ -1090,8 +1090,8 @@ const EnhancedManageProducts = () => {
                       </label>
                     </div>
                   </TabsContent>
-
                   <TabsContent value="media" className="space-y-4">
+                    {/* Image URLs Input */}
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
                         Image URLs{" "}
@@ -1104,11 +1104,7 @@ const EnhancedManageProducts = () => {
                         <Input
                           name="images"
                           placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
-                          value={
-                            Array.isArray(formData.images)
-                              ? formData.images.join(", ")
-                              : formData.images
-                          }
+                          value={formData.images || ""}
                           onChange={handleChange}
                           className="pl-10"
                           required
@@ -1117,13 +1113,19 @@ const EnhancedManageProducts = () => {
                     </div>
 
                     {/* Image Preview */}
-                    {formData.images.length > 0 && (
+                    {formData.images && formData.images.length > 0 && (
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">
                           Image Preview
                         </label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                          {formData.images.map((img, index) => (
+                          {(Array.isArray(formData.images)
+                            ? formData.images
+                            : formData.images
+                                .split(",")
+                                .map((url) => url.trim())
+                                .filter(Boolean)
+                          ).map((img, index) => (
                             <div key={index} className="relative group">
                               <img
                                 src={img || "/placeholder.svg"}
@@ -1145,6 +1147,7 @@ const EnhancedManageProducts = () => {
                       </div>
                     )}
 
+                    {/* Tags Input */}
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
                         Tags{" "}
