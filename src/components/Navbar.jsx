@@ -791,13 +791,19 @@ export default function Navbar() {
                           <Link to="/admin" className="py-2 text-sm">
                             Admin Dashboard
                           </Link>
-                          <Link to="/admin/products" className="py-2 text-sm">
+                          <Link
+                            to="/admin/manage-products"
+                            className="py-2 text-sm"
+                          >
                             Manage Products
                           </Link>
                           <Link to="/admin/orders" className="py-2 text-sm">
                             Manage Orders
                           </Link>
-                          <Link to="/admin/users" className="py-2 text-sm">
+                          <Link
+                            to="/admin/manage-users"
+                            className="py-2 text-sm"
+                          >
                             Manage Users
                           </Link>
                           <div className="border-t my-2"></div>
@@ -1015,7 +1021,10 @@ export default function Navbar() {
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <Link to="/admin/products" className="w-full">
+                            <Link
+                              to="/admin/manage-products"
+                              className="w-full"
+                            >
                               Manage Products
                             </Link>
                           </DropdownMenuItem>
@@ -1025,7 +1034,7 @@ export default function Navbar() {
                             </Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <Link to="/admin/users" className="w-full">
+                            <Link to="/admin/manage-users" className="w-full">
                               Manage Users
                             </Link>
                           </DropdownMenuItem>

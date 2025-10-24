@@ -38,9 +38,6 @@ export default function ProductSectionDynamic({
   const { addToCart, isInCart, isLoading: cartLoading } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
 
-  // -------------------------------
-  // ✅ React Query data fetching
-  // -------------------------------
   const queryKey = ["products", type, category, limit];
 
   const queryFn = async () => {
@@ -59,17 +56,15 @@ export default function ProductSectionDynamic({
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey,
     queryFn,
-    staleTime: 1000 * 60 * 10, // ✅ Keep cached for 10 minutes
-    cacheTime: 1000 * 60 * 30, // ✅ Cache kept for 30 minutes
-    retry: 2,
+    staleTime: 1000 * 60 * 10,
+    cacheTime: 1000 * 60 * 30,
+    retry: 10,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     refetchOnWindowFocus: false,
   });
 
   const products = Array.isArray(data) ? data : data?.products || [];
 
-  // -------------------------------
-  // Scroll arrows visibility
-  // -------------------------------
   const checkScrollPosition = () => {
     if (!sliderRef.current) return;
     const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
@@ -84,17 +79,16 @@ export default function ProductSectionDynamic({
       checkScrollPosition();
       return () => slider.removeEventListener("scroll", checkScrollPosition);
     }
-  }, []); // Only run once on mount
+  }, []);
+
   const scrollLeft = () => {
     if (sliderRef.current) sliderRef.current.scrollLeft -= 200;
   };
+
   const scrollRight = () => {
     if (sliderRef.current) sliderRef.current.scrollLeft += 200;
   };
 
-  // -------------------------------
-  // Cart & wishlist handling
-  // -------------------------------
   const handleAddToCart = (e, product) => {
     e.preventDefault();
     e.stopPropagation();
@@ -111,16 +105,11 @@ export default function ProductSectionDynamic({
     setTimeout(() => setAddedToWishlist(null), 2000);
   };
 
-  // -------------------------------
-  // UI Helpers
-  // -------------------------------
   const bgColorClass = `bg-${color}`;
   const txtColor = `text-${text}`;
 
-  // -------------------------------
-  // Render
-  // -------------------------------
-  if (isError) {
+  // Error will only be shown after all retries are exhausted
+  if (isError && !isLoading) {
     return (
       <div className="mb-4 bg-white rounded-sm shadow-md overflow-hidden">
         <div
@@ -132,13 +121,13 @@ export default function ProductSectionDynamic({
             {title}
           </h2>
         </div>
-        <div className="py-6 text-center text-red-500">
-          Error loading products: {error.message}
+        <div className="py-6 text-center text-gray-500">
+          <p>Unable to load products. Please try again later.</p>
           <button
             onClick={() => refetch()}
-            className="ml-3 px-3 py-1 text-sm bg-blue-600 text-white rounded-md"
+            className="mt-3 px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
-            Retry
+            Retry Now
           </button>
         </div>
       </div>
@@ -182,7 +171,7 @@ export default function ProductSectionDynamic({
           </button>
         )}
 
-        {/* Loading skeleton */}
+        {/* Loading skeleton - shown during initial load and retries */}
         {isLoading && (
           <div className="px-4 py-6">
             <div className="flex gap-2 overflow-hidden">
@@ -246,7 +235,8 @@ export default function ProductSectionDynamic({
                       <img
                         src={
                           product.images?.[0] ||
-                          "/placeholder.svg?height=200&width=200"
+                          "/placeholder.svg?height=200&width=200" ||
+                          "/placeholder.svg"
                         }
                         alt={product.name}
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"

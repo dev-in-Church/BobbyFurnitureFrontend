@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { ImageWithSkeleton } from "../ui/image-with-skeleton";
 
 const categories = [
   {
@@ -76,7 +77,7 @@ function DealsCategoryGrid() {
         scrollbar-hide
         scroll-smooth
         pb-2
-        will-change: transform;
+        will-change-transform
       "
         >
           {categories.map((item, index) => (
@@ -107,15 +108,15 @@ function DealsCategoryGrid() {
               flex items-center justify-center
             "
               >
-                <img
+                <ImageWithSkeleton
                   src={item.image || "/placeholder.png"}
                   alt={item.name}
-                  loading="eager"
                   className="w-full h-full object-cover"
+                  containerClassName="w-full h-full"
                 />
               </div>
 
-              <h3 className="mt-2 text-xs sm:text-sm font-medium text-gray-200 line-clamp-2 px-1 leading-tight">
+              <h3 className="mt-2 text-xs sm:text-sm font-medium text-gray-600 line-clamp-2 px-1 leading-tight">
                 {item.name}
               </h3>
             </Link>

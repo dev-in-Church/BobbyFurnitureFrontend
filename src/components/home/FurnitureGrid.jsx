@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { ImageWithSkeleton } from "../ui/image-with-skeleton";
 
 const categories = [
   {
@@ -81,11 +82,13 @@ function FurnitureGrid() {
                     flex items-center justify-center
                   "
                 >
-                  <img
+                  <ImageWithSkeleton
                     src={item.image || "/placeholder.png"}
                     alt={item.name}
                     className="w-full h-full object-cover"
-                    loading="lazy"
+                    containerClassName="w-full h-full"
+                    width={150}
+                    height={150}
                   />
                 </div>
 

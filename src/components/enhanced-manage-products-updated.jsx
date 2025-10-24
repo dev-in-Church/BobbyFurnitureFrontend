@@ -230,6 +230,43 @@ const furnitureCategories = [
   },
 ];
 
+const getPaginationNumbers = (currentPage, totalPages, isMobile, isTablet) => {
+  const pages = [];
+  let range = 1; // Default for mobile
+
+  if (isTablet) range = 2;
+  if (!isMobile && !isTablet) range = 3; // Desktop
+
+  // Always show first page
+  if (currentPage > range + 1) {
+    pages.push(1);
+    if (currentPage > range + 2) {
+      pages.push("...");
+    }
+  }
+
+  // Show pages around current page
+  for (
+    let i = Math.max(1, currentPage - range);
+    i <= Math.min(totalPages, currentPage + range);
+    i++
+  ) {
+    if (!pages.includes(i)) {
+      pages.push(i);
+    }
+  }
+
+  // Always show last page
+  if (currentPage < totalPages - range) {
+    if (currentPage < totalPages - range - 1) {
+      pages.push("...");
+    }
+    pages.push(totalPages);
+  }
+
+  return pages;
+};
+
 const EnhancedManageProducts = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -243,6 +280,8 @@ const EnhancedManageProducts = () => {
   const [viewMode, setViewMode] = useState("grid");
   const [apiStatus, setApiStatus] = useState("checking");
   const [lastSync, setLastSync] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -280,6 +319,17 @@ const EnhancedManageProducts = () => {
   useEffect(() => {
     checkHealth();
     fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   useEffect(() => {
@@ -396,26 +446,11 @@ const EnhancedManageProducts = () => {
     setCurrentPage(1);
   }, [products, searchTerm, selectedCategory, sortBy, sortOrder]);
 
-  // const handleChange = (e) => {
-  //   const { name, value, type, checked } = e.target;
-  //   if (name === "images") {
-  //     const imageUrls = value
-  //       .split(",")
-  //       .map((url) => url.trim())
-  //       .filter((url) => url);
-  //     setFormData({ ...formData, images: imageUrls });
-  //   } else if (type === "checkbox") {
-  //     setFormData({ ...formData, [name]: checked });
-  //   } else {
-  //     setFormData({ ...formData, [name]: value });
-  //   }
-  // };
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
     if (name === "images") {
-      // ✅ keep the raw text so commas aren’t stripped while typing
+      // ✅ keep the raw text so commas aren't stripped while typing
       setFormData({ ...formData, images: value });
     } else if (type === "checkbox") {
       setFormData({ ...formData, [name]: checked });
@@ -666,6 +701,12 @@ const EnhancedManageProducts = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentProducts = filteredProducts.slice(startIndex, endIndex);
+  const paginationNumbers = getPaginationNumbers(
+    currentPage,
+    totalPages,
+    isMobile,
+    isTablet
+  );
 
   return (
     <div className="bg-gray-50 min-h-screen pt-20 pb-10 px-4 sm:px-6">
@@ -711,7 +752,7 @@ const EnhancedManageProducts = () => {
 
         {/* Header with Stats */}
         <div className="mb-8">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-800">
                 Product Management
@@ -725,7 +766,7 @@ const EnhancedManageProducts = () => {
                 </p>
               )}
             </div>
-            <div className="flex gap-3 mt-4 lg:mt-0">
+            <div className="flex gap-3 flex-wrap">
               <Button
                 onClick={toggleForm}
                 className={`${
@@ -812,7 +853,6 @@ const EnhancedManageProducts = () => {
           </div>
         </div>
 
-        {/* Product Form - keeping the existing form structure */}
         <div
           className={`transition-all duration-300 overflow-hidden ${
             isFormVisible
@@ -1165,7 +1205,7 @@ const EnhancedManageProducts = () => {
                   </TabsContent>
                 </Tabs>
 
-                <div className="flex gap-3 pt-4 border-t">
+                <div className="flex gap-3 pt-4 border-t flex-col sm:flex-row">
                   <Button
                     type="submit"
                     disabled={loading || !formData.category}
@@ -1192,7 +1232,7 @@ const EnhancedManageProducts = () => {
                   <Button
                     type="button"
                     variant="outline"
-                    className="flex-1"
+                    className="flex-1 bg-transparent"
                     onClick={() => {
                       resetForm();
                       if (!editProduct) setIsFormVisible(false);
@@ -1410,6 +1450,7 @@ const EnhancedManageProducts = () => {
                                       src={
                                         product.images?.[0] ||
                                         "/placeholder.svg" ||
+                                        "/placeholder.svg" ||
                                         "/placeholder.svg"
                                       }
                                       alt={product.name}
@@ -1511,18 +1552,26 @@ const EnhancedManageProducts = () => {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center items-center gap-2 mt-6">
+                  <div className="flex flex-col sm:flex-row justify-center items-center gap-2 mt-6 flex-wrap">
                     <Button
                       variant="outline"
                       disabled={currentPage === 1}
                       onClick={() => setCurrentPage(currentPage - 1)}
+                      className="w-full sm:w-auto"
                     >
                       Previous
                     </Button>
 
-                    <div className="flex gap-1">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                        (page) => (
+                    <div className="flex gap-1 flex-wrap justify-center">
+                      {paginationNumbers.map((page, index) =>
+                        page === "..." ? (
+                          <span
+                            key={`ellipsis-${index}`}
+                            className="px-2 py-1 text-gray-500"
+                          >
+                            ...
+                          </span>
+                        ) : (
                           <Button
                             key={page}
                             variant={
@@ -1530,6 +1579,7 @@ const EnhancedManageProducts = () => {
                             }
                             size="sm"
                             onClick={() => setCurrentPage(page)}
+                            className="min-w-10"
                           >
                             {page}
                           </Button>
@@ -1541,6 +1591,7 @@ const EnhancedManageProducts = () => {
                       variant="outline"
                       disabled={currentPage === totalPages}
                       onClick={() => setCurrentPage(currentPage + 1)}
+                      className="w-full sm:w-auto"
                     >
                       Next
                     </Button>

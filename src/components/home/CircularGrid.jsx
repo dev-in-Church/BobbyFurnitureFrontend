@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { ImageWithSkeleton } from "../ui/image-with-skeleton";
 
 const categories = [
   {
@@ -46,7 +47,7 @@ function CircularGrid() {
         scroll-smooth
         scrollbar-hide
         p-2
-        will-change: transform;
+        will-change-transform
       "
         >
           {categories.map((item, index) => (
@@ -77,11 +78,11 @@ function CircularGrid() {
               flex items-center justify-center
             "
               >
-                <img
+                <ImageWithSkeleton
                   src={item.image || "/placeholder.png"}
                   alt={item.name}
-                  loading="eager"
                   className="w-full h-full object-cover rounded-full"
+                  containerClassName="w-full h-full"
                 />
               </div>
             </Link>
