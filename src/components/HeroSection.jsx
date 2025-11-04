@@ -23,19 +23,25 @@ const HeroSection = () => {
   const banners = [
     {
       id: 1,
-      image: "/banners/n1.jpg?height=400&width=800&text=Banner+1",
+      image: "/banners/bf1.jpg?height=400&width=800&text=Banner+1",
       alt: "Banner 1",
       link: "/all-products",
     },
     {
       id: 2,
-      image: "/banners/n2.gif?height=400&width=800&text=Banner+2",
+      image: "/banners/bf2.gif?height=400&width=800&text=Banner+2",
       alt: "Banner 2",
       link: "/all-products",
     },
     {
       id: 3,
-      image: "/banners/n3.jpg?height=400&width=800&text=Banner+3",
+      image: "/banners/b3.jpg?height=400&width=800&text=Banner+3",
+      alt: "Banner 3",
+      link: "/all-products",
+    },
+    {
+      id: 4,
+      image: "/banners/b4.gif?height=400&width=800&text=Banner+3",
       alt: "Banner 3",
       link: "/all-products",
     },
@@ -68,7 +74,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 w-full h-auto lg:grid-cols-[1fr_3fr_0.95fr] gap-4">
+    <div className="grid grid-cols-1 w-full h-auto lg:max-h-[384px] lg:grid-cols-[1fr_3fr_0.95fr] gap-4">
       {/* Categories sidebar - fixed width */}
       <CategoryPanel />
 
@@ -82,7 +88,7 @@ const HeroSection = () => {
             <div key={banner.id} className="h-full w-full flex-shrink-0">
               <Link to={banner.link}>
                 <img
-                  src={banner.image}
+                  src={banner.image || "/banners/slider.jpg"}
                   alt={banner.alt}
                   className="h-full w-full"
                   loading="lazy"
@@ -109,9 +115,9 @@ const HeroSection = () => {
       </div>
 
       {/* Right sidebar - fixed width with two sections */}
-      <div className="hidden lg:grid grid-rows-[1fr_1fr] gap-5 h-full overflow-hidden">
+      <div className="hidden lg:grid grid-rows-[1fr_1fr] gap-5 max-h-[384px]">
         {/* Top section - white box with info items */}
-        <div className="flex flex-col justify-between bg-white p-3 py-5 rounded-sm shadow-md gap-4">
+        <div className="flex flex-col justify-between bg-white p-3 rounded-sm shadow-md gap-4">
           {/* Help Center */}
           <Link to="/help" className="flex items-center">
             <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
@@ -147,12 +153,12 @@ const HeroSection = () => {
         </div>
 
         {/* Bottom section - Call/WhatsApp gif */}
-        <div className="flex justify-center items-center bg-white rounded-sm shadow-md">
+        <div className="flex justify-center items-center bg-white rounded-md shadow-md max-h-[184px]">
           {/* <div className="bg-gray-300"> */}
           <img
-            src="/banners/side3.gif"
+            src="/banners/side.gif"
             alt=""
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover rounded-sm"
           />
           {/* </div> */}
         </div>

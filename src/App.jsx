@@ -105,9 +105,9 @@ const Layout = ({ children }) => {
     return <PageLoader fadeOut={fadeOut} />;
   }
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col min-h-screen bg-[#f1f1f2] text-[#313133] text-[0.875rem] font-['Roboto','-apple-system','BlinkMacSystemFont','Segoe UI','Helvetica Neue','Arial','sans-serif'] antialiased">
       <Navbar />
-      <main className="flex-1">{children}</main>
+      <main className="min-h-screen">{children}</main>
       <EnhancedFooter />
       <ToastContainer
         position="top-right"

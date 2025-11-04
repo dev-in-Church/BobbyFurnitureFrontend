@@ -32,18 +32,18 @@ export default function InfoSection() {
   ];
 
   return (
-    <section className="container mx-auto max-w-[85rem]  overflow-hidden min-h-screen px-1 md:px-7 lg:px-8 py-4  ">
-      <div className="container mx-auto px-4 bg-white">
-        <div className="p-2 md:p-4">
+    <section className="overflow-hidden min-h-screen mt-4 rounded-sm">
+      <div className="px-2 bg-white">
+        <div className="p-2">
           {/* Company Introduction */}
-          <div className="mb-10">
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-2">
               Bobby Furniture - Kenya's Leading Furniture E-Commerce
             </h2>
             <p className="text-gray-600 mb-4">
               Welcome to the ultimate online furniture shopping destination!
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm">
               Our{" "}
               <span className="font-semibold">premium furniture platform</span>{" "}
               is here to revolutionize your shopping journey. Whether you're on
@@ -56,11 +56,11 @@ export default function InfoSection() {
           </div>
 
           {/* Best Prices Section */}
-          <div className="mb-10">
-            <h3 className="text-xl font-bold text-gray-800 mb-3">
+          <div className="mb-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-3">
               Best Prices, Premium Brands, and Diverse Categories
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm">
               Our commitment to excellence is evident in our extensive
               collection of{" "}
               <span className="font-semibold">high-quality furniture</span>,
@@ -109,11 +109,11 @@ export default function InfoSection() {
           </div>
 
           {/* Offers Section */}
-          <div className="mb-10">
-            <h3 className="text-xl font-bold text-gray-800 mb-3">
+          <div className="mb-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-3">
               Tempting Offers, Exclusive Promotions, and Enormous Savings
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm">
               Get ready to be enchanted by our incredible{" "}
               <Link to="/offers" className="text-blue-600 hover:underline">
                 offers
@@ -141,11 +141,11 @@ export default function InfoSection() {
           </div>
 
           {/* Services Section */}
-          <div className="mb-10">
-            <h3 className="text-xl font-bold text-gray-800 mb-3">
+          <div className="mb-6">
+            <h3 className="text-lg font-bold text-gray-800 mb-3">
               Exceptional Services
             </h3>
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-sm">
               At Bobby Furniture, we pride ourselves on offering exceptional
               services that set us apart from other furniture online retailers.
               What's more, we offer a wide range of products with{" "}
@@ -171,8 +171,8 @@ export default function InfoSection() {
           </div>
 
           {/* Events Section */}
-          <div className="mb-10">
-            <p className="text-gray-600">
+          <div className="mb-6">
+            <p className="text-gray-600 text-sm">
               Mark your calendar for our spectacular campaign events.{" "}
               <Link to="/flash-sales" className="text-blue-600 hover:underline">
                 Flash Sales
@@ -206,8 +206,8 @@ export default function InfoSection() {
           </div>
 
           {/* Mobile App Section */}
-          <div className="mb-10">
-            <p className="text-gray-600">
+          <div className="mb-6">
+            <p className="text-gray-600 text-sm">
               At Bobby Furniture, we've brought the entire shopping universe
               right to your fingertips. We're available on all platforms,
               ensuring that you get a full dose of discovering the best{" "}
@@ -218,17 +218,17 @@ export default function InfoSection() {
 
           {/* FAQs Section */}
           <div className="mb-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-5">FAQs</h3>
+            <h3 className="text-lg font-bold text-gray-800 mb-5">FAQs</h3>
             <div className="space-y-6">
               {faqs.map((faq, index) => (
                 <div
                   key={index}
-                  className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50 p-6"
+                  className="border border-gray-200 rounded-lg overflow-hidden bg-gray-50 p-2"
                 >
                   <h4 className="font-medium text-gray-800 mb-2">
                     {index + 1}. {faq.question}
                   </h4>
-                  <p className="text-gray-600">{faq.answer}</p>
+                  <p className="text-gray-600 text-sm">{faq.answer}</p>
                 </div>
               ))}
             </div>
