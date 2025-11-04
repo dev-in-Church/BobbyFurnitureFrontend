@@ -41,7 +41,7 @@ const SubcategoriesPanel = ({ category, setActiveCategory }) => {
 
   return (
     <div
-      className="absolute bg-white overflow-y-auto grid grid-cols-3 gap-6 top-0 left-[190px] border border-gray-200 z-50 w-[720px] h-full p-4 rounded-r-sm shadow-md"
+      className="absolute bg-white overflow-y-auto grid grid-cols-3 gap-6 top-0 left-[218px] border border-gray-200 z-50 w-[720px] h-full p-4 rounded-r-sm shadow-md"
       onMouseEnter={() => setActiveCategory(category.id)}
       onMouseLeave={() => setActiveCategory(null)}
     >
