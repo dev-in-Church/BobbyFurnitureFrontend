@@ -104,7 +104,7 @@ const EnhancedFooter = () => {
   ];
 
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-gray-950 text-white pt-16 pb-8 relative">
+    <footer className="bg-black text-white pt-16 pb-8 relative">
       <div className="container mx-auto px-4 md:px-6">
         {/* Trust Badges */}
         <div className="mb-12 grid grid-cols-2 md:grid-cols-4 gap-6 border-b border-gray-800 pb-12">
