@@ -186,7 +186,7 @@ export const searchProducts = async (
 
 // src/services/api.js
 
-const API_BASE = "http://localhost:5000/products";
+const API_BASE = "https://bobbyfurnitureonline.onrender.com/products";
 
 // ✅ Fetch Featured Products
 export const fetchFeaturedProducts = async (
