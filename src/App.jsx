@@ -23,7 +23,7 @@ import EnhancedFooter from "./components/enhanced-footer";
 import HomeDynamic from "./pages/home-dynamic";
 import AllProductsPage from "./pages/AllProductsPage";
 import CatalogPage from "./pages/CatalogPage";
-import CategoryPage from "./pages/category/[category]";
+// import CategoryPage from "./pages/category/[category]";
 import ProductDetailPage from "./pages/product-detail";
 import SearchResultsPage from "./pages/search-results-dynamic";
 import CartPage from "./pages/cart-page";
@@ -55,6 +55,7 @@ import ErrorBoundary from "./components/error-boundary";
 
 ///others
 import UploadComponent from "./components/UploadComponent";
+import GenericProductPage from "./pages/GenericProductPage";
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
@@ -138,13 +139,29 @@ const App = () => {
                 <Routes>
                   {/* Public Routes */}
                   <Route path="/" element={<HomeDynamic />} />
-                  {/* <Route path="/category/:category" element={<CategoryPage />} /> */}
                   {/* Category page - dynamic route */}
                   <Route path="/products" element={<AllProductsPage />} />
                   <Route path="/all-products" element={<AllProductsPage />} />
-                  <Route
+                  {/* <Route
                     path="/category/:category"
                     element={<CategoryPage />}
+                  /> */}
+
+                  {/* 🪑 Category pages */}
+                  <Route
+                    path="/category/:category"
+                    element={<GenericProductPage type="category" />}
+                  />
+                  {/* 🌟 Featured page */}
+                  <Route
+                    path="/featured"
+                    element={<GenericProductPage type="featured" />}
+                  />
+
+                  {/* 🆕 New arrivals page */}
+                  <Route
+                    path="/new-arrivals"
+                    element={<GenericProductPage type="new-arrivals" />}
                   />
                   {/* Search/Catalog page */}
                   <Route path="/catalog" element={<CatalogPage />} />

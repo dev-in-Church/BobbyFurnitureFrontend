@@ -29,7 +29,7 @@ export default function HomeDynamic() {
         <div className="mt-2">
           <ProductSectionDynamic
             title="New Arrivals"
-            viewMoreLink="/category/new-arrivals"
+            viewMoreLink="/new-arrivals"
             color="primary"
             text="white"
             type="new-arrivals"

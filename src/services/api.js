@@ -183,3 +183,60 @@ export const searchProducts = async (
     throw error;
   }
 };
+
+// src/services/api.js
+
+const API_BASE = "http://localhost:5000/products";
+
+// ✅ Fetch Featured Products
+export const fetchFeaturedProducts = async (
+  page = 1,
+  limit = 8,
+  sort = "newest"
+) => {
+  const url = `${API_BASE}/featured?page=${page}&limit=${limit}&sort=${sort}`;
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch featured products: ${res.status}`);
+  }
+
+  const data = await res.json();
+
+  // Return data in a standardized format your components can reuse
+  return {
+    products: data.products || [],
+    pagination: {
+      page: data.page,
+      limit: data.limit,
+      total: data.total,
+      totalPages: data.totalPages,
+    },
+  };
+};
+
+// ✅ Fetch New Arrivals
+export const fetchNewArrivals = async (
+  page = 1,
+  limit = 8,
+  sort = "newest"
+) => {
+  const url = `${API_BASE}/new-arrivals?page=${page}&limit=${limit}&sort=${sort}`;
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch new arrivals: ${res.status}`);
+  }
+
+  const data = await res.json();
+
+  return {
+    products: data.products || [],
+    pagination: {
+      page: data.page,
+      limit: data.limit,
+      total: data.total,
+      totalPages: data.totalPages,
+    },
+  };
+};
