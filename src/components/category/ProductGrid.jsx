@@ -204,6 +204,12 @@ const ProductGrid = ({ products, loading }) => {
                   </div>
                 )}
 
+                {/* bottom badge */}
+                <img
+                  src="/banners/corner.png"
+                  className="absolute bottom-0 left-0 h-12 z-10"
+                />
+
                 {/* In Cart Indicator */}
                 {inCart && (
                   <div className="absolute bottom-2 left-2 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded flex items-center gap-1">

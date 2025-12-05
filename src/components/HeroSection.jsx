@@ -27,24 +27,24 @@ const HeroSection = () => {
       alt: "Banner 1",
       link: "/all-products",
     },
-    {
-      id: 2,
-      image: "/banners/bf2.gif?height=400&width=800&text=Banner+2",
-      alt: "Banner 2",
-      link: "/all-products",
-    },
-    {
-      id: 3,
-      image: "/banners/b3.jpg?height=400&width=800&text=Banner+3",
-      alt: "Banner 3",
-      link: "/all-products",
-    },
-    {
-      id: 4,
-      image: "/banners/b4.gif?height=400&width=800&text=Banner+3",
-      alt: "Banner 3",
-      link: "/all-products",
-    },
+    //   {
+    //     id: 2,
+    //     image: "/banners/bf2.gif?height=400&width=800&text=Banner+2",
+    //     alt: "Banner 2",
+    //     link: "/all-products",
+    //   },
+    //   {
+    //     id: 3,
+    //     image: "/banners/b3.jpg?height=400&width=800&text=Banner+3",
+    //     alt: "Banner 3",
+    //     link: "/all-products",
+    //   },
+    //   {
+    //     id: 4,
+    //     image: "/banners/b4.gif?height=400&width=800&text=Banner+3",
+    //     alt: "Banner 3",
+    //     link: "/all-products",
+    //   },
   ];
 
   const [currentBanner, setCurrentBanner] = useState(0);
@@ -156,7 +156,7 @@ const HeroSection = () => {
         <div className="flex justify-center items-center bg-white rounded-md shadow-md max-h-[184px]">
           {/* <div className="bg-gray-300"> */}
           <img
-            src="/banners/side.gif"
+            src="/banners/side.jpg"
             alt=""
             className="h-full w-full object-cover rounded-sm"
           />

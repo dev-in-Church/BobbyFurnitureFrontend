@@ -232,6 +232,12 @@ export default function ProductSectionDynamic({
                           -{discount}%
                         </div>
                       )}
+
+                      <img
+                        src="/banners/corner.png"
+                        className="absolute bottom-0 left-0 h-12 z-10"
+                      />
+
                       <img
                         src={
                           product.images?.[0] ||
