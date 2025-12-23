@@ -311,6 +311,18 @@ const CheckoutPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  const normalizePhone = (phone) => {
+    if (!phone) return "";
+
+    let p = phone.replace(/\s/g, "");
+
+    if (p.startsWith("0")) return `254${p.slice(1)}`;
+    if (p.startsWith("+")) return p.slice(1);
+    if (p.startsWith("254")) return p;
+
+    return p;
+  };
+
   ///new update 1
   const initiateMpesaPayment = async (paymentData) => {
     try {
@@ -326,7 +338,8 @@ const CheckoutPage = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            phoneNumber: paymentData.mpesaPhone.replace(/\s/g, ""), // Ensure format: 2547XXXXXXXX
+            // phoneNumber: paymentData.mpesaPhone.replace(/\s/g, ""), // Ensure format: 2547XXXXXXXX
+            phoneNumber: normalizePhone(paymentData.mpesaPhone),
             amount: Math.round(paymentData.amount),
             user_id: paymentData.user_id,
             customer_name: paymentData.customer_name || "Guest",
@@ -439,6 +452,7 @@ const CheckoutPage = () => {
       const apiOrderData = {
         user_id: user?.id,
         customerName: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email, // ✅ SEND EMAIL
         address: `${formData.address}, ${formData.city}, ${formData.state}, ${formData.zipCode}`,
         phone: formData.phone,
         items: cartItems.map((item) => ({
@@ -486,7 +500,7 @@ const CheckoutPage = () => {
         if (result.success) {
           toast.info("📲 Waiting for M-Pesa confirmation...");
           // Poll until the payment completes
-          pollMpesaStatus(result.order_id);
+          // pollMpesaStatus(result.order_id);
         }
 
         return result;
@@ -562,7 +576,12 @@ const CheckoutPage = () => {
       const total = subtotal + shipping;
 
       // ✅ Use existing order ID if provided from M-Pesa backend
-      const orderId = orderIdFromMpesa || (await createOrder({ total }));
+      // const orderId = orderIdFromMpesa || (await createOrder({ total }));
+      if (!orderIdFromMpesa) {
+        throw new Error("Missing order reference from MPesa");
+      }
+
+      const orderId = orderIdFromMpesa;
 
       clearCart();
       setLoading(false);
