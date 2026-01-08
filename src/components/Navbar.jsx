@@ -852,7 +852,7 @@ export default function Navbar() {
               <AccordionTrigger className="py-2">Help</AccordionTrigger>
               <AccordionContent>
                 <div className="flex flex-col space-y-2 pl-4">
-                  <Link to="/help-center" className="py-2 text-sm">
+                  <Link to="/help" className="py-2 text-sm">
                     Help Center
                   </Link>
                   <Link to="/place-order" className="py-2 text-sm">
@@ -917,7 +917,7 @@ export default function Navbar() {
       <header className="sticky top-0 z-[999] w-full border-b transition-all duration-300">
         {/* Main Navigation Bar */}
         <div className="w-full bg-white">
-          <div className="container mx-auto flex h-[3rem] sm:h-16 items-end sm:items-center justify-between px-4">
+          <div className="container mx-auto flex h-[3rem] sm:h-14 items-end sm:items-center justify-between px-6">
             <div className="flex items-center gap-2">
               {/* Mobile Menu */}
               {renderMobileMenu()}
@@ -959,14 +959,14 @@ export default function Navbar() {
                   <Input
                     type="text"
                     placeholder="Search products, brands and categories"
-                    className="h-10 w-full rounded-md md:rounded-xl border border-gray-300 pl-10 pr-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    className="h-8 w-full rounded-md md:rounded-md border border-gray-300 pl-10 pr-3 focus-visible:ring-0 focus-visible:ring-offset-0"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={(e) => handleSearchKeyPress(e, searchQuery)}
                   />
                 </div>
                 <Button
-                  className="hidden lg:block ml-1 h-10 bg-blue-500 hover:bg-primary"
+                  className="hidden lg:flex justify-center items-center rounded-md md:rounded-md ml-1 h-8 w-16 bg-blue-500 hover:bg-primary"
                   type="submit"
                 >
                   Search
@@ -1108,7 +1108,7 @@ export default function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem>
-                    <Link to="/help-center" className="w-full">
+                    <Link to="/help" className="w-full">
                       Help Center
                     </Link>
                   </DropdownMenuItem>

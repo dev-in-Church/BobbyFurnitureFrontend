@@ -89,6 +89,7 @@ const CheckoutPage = () => {
 
   //delivery
   const deliveryZones = [
+    { fare: 0, areas: ["Test area", "Test area 2"] },
     { fare: 1000, areas: ["Kahawa Sukari", "Kahawa Wendani"] },
     { fare: 1500, areas: ["Githurai 45", "Baracks"] },
     {
@@ -275,15 +276,16 @@ const CheckoutPage = () => {
     if (!formData.zipCode.trim()) newErrors.zipCode = "Postal code is required";
 
     // Payment validation based on selected method
-    if (formData.paymentMethod === "card") {
-      if (!formData.cardNumber.trim())
-        newErrors.cardNumber = "Card number is required";
-      if (!formData.expiryDate.trim())
-        newErrors.expiryDate = "Expiry date is required";
-      if (!formData.cvv.trim()) newErrors.cvv = "CVV is required";
-      if (!formData.cardName.trim())
-        newErrors.cardName = "Cardholder name is required";
-    } else if (formData.paymentMethod === "mpesa") {
+    // if (formData.paymentMethod === "card") {
+    //   if (!formData.cardNumber.trim())
+    //     newErrors.cardNumber = "Card number is required";
+    //   if (!formData.expiryDate.trim())
+    //     newErrors.expiryDate = "Expiry date is required";
+    //   if (!formData.cvv.trim()) newErrors.cvv = "CVV is required";
+    //   if (!formData.cardName.trim())
+    //     newErrors.cardName = "Cardholder name is required";
+    // }
+    if (formData.paymentMethod === "mpesa") {
       if (!formData.mpesaPhone.trim()) {
         newErrors.mpesaPhone = "M-Pesa phone number is required";
       } else {
@@ -294,12 +296,12 @@ const CheckoutPage = () => {
             "Please enter a valid Kenyan phone number (254712345678)";
         }
       }
-    } else if (formData.paymentMethod === "paypal") {
-      if (!formData.paypalEmail.trim())
-        newErrors.paypalEmail = "PayPal email is required";
-      else if (!/\S+@\S+\.\S+/.test(formData.paypalEmail)) {
-        newErrors.paypalEmail = "Please enter a valid email address";
-      }
+      // } else if (formData.paymentMethod === "paypal") {
+      //   if (!formData.paypalEmail.trim())
+      //     newErrors.paypalEmail = "PayPal email is required";
+      //   else if (!/\S+@\S+\.\S+/.test(formData.paypalEmail)) {
+      //     newErrors.paypalEmail = "Please enter a valid email address";
+      //   }
     } else if (formData.paymentMethod === "cod") {
       // Cash on delivery validation (optional fields, but we can add basic validation)
       if (formData.codPreferredTime && !formData.codPreferredTime.trim()) {
@@ -722,74 +724,6 @@ const CheckoutPage = () => {
 
   const renderPaymentForm = () => {
     switch (formData.paymentMethod) {
-      case "card":
-        return (
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="cardName">Cardholder Name</Label>
-              <Input
-                id="cardName"
-                name="cardName"
-                value={formData.cardName}
-                onChange={handleChange}
-                className={errors.cardName ? "border-red-500" : ""}
-                placeholder="John Doe"
-              />
-              {errors.cardName && (
-                <p className="text-sm text-red-600 mt-1">{errors.cardName}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="cardNumber">Card Number</Label>
-              <Input
-                id="cardNumber"
-                name="cardNumber"
-                placeholder="1234 5678 9012 3456"
-                value={formData.cardNumber}
-                onChange={handleChange}
-                className={errors.cardNumber ? "border-red-500" : ""}
-              />
-              {errors.cardNumber && (
-                <p className="text-sm text-red-600 mt-1">{errors.cardNumber}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="expiryDate">Expiry Date</Label>
-                <Input
-                  id="expiryDate"
-                  name="expiryDate"
-                  placeholder="MM/YY"
-                  value={formData.expiryDate}
-                  onChange={handleChange}
-                  className={errors.expiryDate ? "border-red-500" : ""}
-                />
-                {errors.expiryDate && (
-                  <p className="text-sm text-red-600 mt-1">
-                    {errors.expiryDate}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Label htmlFor="cvv">CVV</Label>
-                <Input
-                  id="cvv"
-                  name="cvv"
-                  placeholder="123"
-                  value={formData.cvv}
-                  onChange={handleChange}
-                  className={errors.cvv ? "border-red-500" : ""}
-                />
-                {errors.cvv && (
-                  <p className="text-sm text-red-600 mt-1">{errors.cvv}</p>
-                )}
-              </div>
-            </div>
-          </div>
-        );
-
       case "mpesa":
         return (
           <div className="space-y-4">
@@ -824,40 +758,6 @@ const CheckoutPage = () => {
             </div>
 
             {renderMpesaStatus()}
-          </div>
-        );
-
-      case "paypal":
-        return (
-          <div className="space-y-4">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-center mb-2">
-                <Wallet className="h-5 w-5 text-blue-600 mr-2" />
-                <h4 className="font-medium text-blue-800">PayPal Payment</h4>
-              </div>
-              <p className="text-sm text-blue-700">
-                You will be redirected to PayPal to complete your payment
-                securely.
-              </p>
-            </div>
-
-            <div>
-              <Label htmlFor="paypalEmail">PayPal Email</Label>
-              <Input
-                id="paypalEmail"
-                name="paypalEmail"
-                type="email"
-                placeholder="your-email@example.com"
-                value={formData.paypalEmail}
-                onChange={handleChange}
-                className={errors.paypalEmail ? "border-red-500" : ""}
-              />
-              {errors.paypalEmail && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.paypalEmail}
-                </p>
-              )}
-            </div>
           </div>
         );
 
@@ -1127,26 +1027,6 @@ const CheckoutPage = () => {
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-gray-50">
                       <RadioGroupItem
-                        value="card"
-                        id="card"
-                        disabled={mpesaStatus === "pending"}
-                      />
-                      <Label
-                        htmlFor="card"
-                        className="flex items-center cursor-pointer flex-1"
-                      >
-                        <CreditCard className="h-5 w-5 mr-2" />
-                        <div>
-                          <div className="font-medium">Credit/Debit Card</div>
-                          <div className="text-sm text-gray-500">
-                            Visa, Mastercard, American Express
-                          </div>
-                        </div>
-                      </Label>
-                    </div>
-
-                    <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-gray-50">
-                      <RadioGroupItem
                         value="mpesa"
                         id="mpesa"
                         disabled={mpesaStatus === "pending"}
@@ -1160,26 +1040,6 @@ const CheckoutPage = () => {
                           <div className="font-medium">M-Pesa</div>
                           <div className="text-sm text-gray-500">
                             Pay with your M-Pesa mobile money
-                          </div>
-                        </div>
-                      </Label>
-                    </div>
-
-                    <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-gray-50">
-                      <RadioGroupItem
-                        value="paypal"
-                        id="paypal"
-                        disabled={mpesaStatus === "pending"}
-                      />
-                      <Label
-                        htmlFor="paypal"
-                        className="flex items-center cursor-pointer flex-1"
-                      >
-                        <Wallet className="h-5 w-5 mr-2 text-blue-600" />
-                        <div>
-                          <div className="font-medium">PayPal</div>
-                          <div className="text-sm text-gray-500">
-                            Pay securely with your PayPal account
                           </div>
                         </div>
                       </Label>
@@ -1213,15 +1073,10 @@ const CheckoutPage = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  {formData.paymentMethod === "card" && (
-                    <CreditCard className="h-5 w-5 mr-2" />
-                  )}
                   {formData.paymentMethod === "mpesa" && (
                     <Smartphone className="h-5 w-5 mr-2 text-green-600" />
                   )}
-                  {formData.paymentMethod === "paypal" && (
-                    <Wallet className="h-5 w-5 mr-2 text-blue-600" />
-                  )}
+
                   {formData.paymentMethod === "cod" && (
                     <Truck className="h-5 w-5 mr-2 text-orange-600" />
                   )}

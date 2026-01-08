@@ -8,7 +8,8 @@ import InfoSection from "../components/info-section";
 
 export default function HomeDynamic() {
   return (
-    <div className="bg-[#0B3D2E] bg-[url('/banners/bg_img.jpg')] bg-no-repeat bg-top">
+    // bg-[url('/banners/bg_img.jpg')] bg-no-repeat bg-top
+    <div className="bg-[#e9e9e9]">
       <main className="min-h-screen mx-auto max-w-[1170px] py-1 sm:py-2 md:py-4">
         {/* 🪄 Hero Section */}
         <HeroSection />
@@ -18,7 +19,7 @@ export default function HomeDynamic() {
           <ProductSectionDynamic
             title="Sponsored"
             viewMoreLink="/featured"
-            color="red-500"
+            color="blue-500"
             text="white"
             type="featured"
             limit={9}
@@ -30,7 +31,7 @@ export default function HomeDynamic() {
           <ProductSectionDynamic
             title="New Arrivals"
             viewMoreLink="/new-arrivals"
-            color="green-500"
+            color="blue-500"
             text="white"
             type="new-arrivals"
             limit={9}
