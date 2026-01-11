@@ -35,6 +35,11 @@ const CartPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  const handleQuantityChange = (itemId, newQuantity) => {
+    if (newQuantity < 1) return; // extra safety
+    updateQuantity(itemId, newQuantity);
+  };
+
   const handleCheckout = () => {
     if (!user) {
       toast.info("Please login to proceed to checkout");

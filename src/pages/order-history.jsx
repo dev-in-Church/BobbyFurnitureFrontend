@@ -235,7 +235,7 @@ const OrderHistoryPage = () => {
 
                   <div className="flex items-center justify-between mt-6 pt-4 border-t">
                     <div className="flex space-x-2">
-                      <Link to={`/order/${order.public_id || order.id}`}>
+                      <Link to={`/orders/${order.id || order.id}`}>
                         <Button variant="outline" size="sm">
                           <Eye className="h-4 w-4 mr-2" />
                           View Details
