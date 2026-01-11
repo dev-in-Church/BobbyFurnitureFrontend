@@ -325,56 +325,41 @@ const CheckoutPage = () => {
     return p;
   };
 
-  ///new update 1
-  const initiateMpesaPayment = async (paymentData) => {
+  ///new update 1 (fixed)
+  const initiateMpesaPayment = async ({ orderId, mpesaPhone, amount }) => {
     try {
       setMpesaStatus("pending");
       toast.info("📲 Initiating M-Pesa payment...");
 
-      // 🔹 Send payment initiation request to your backend
       const response = await fetch(
-        "https://bobbyfurnitureonline.onrender.com/api/mpesa",
+        "https://bobbyfurnitureonline.onrender.com/api/mpesa/initiate",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            // phoneNumber: paymentData.mpesaPhone.replace(/\s/g, ""), // Ensure format: 2547XXXXXXXX
-            phoneNumber: normalizePhone(paymentData.mpesaPhone),
-            amount: Math.round(paymentData.amount),
-            user_id: paymentData.user_id,
-            customer_name: paymentData.customer_name || "Guest",
-            address: paymentData.address || "N/A",
+            order_id: orderId,
+            phoneNumber: normalizePhone(mpesaPhone),
+            amount: Math.round(amount),
           }),
         }
       );
 
       const result = await response.json();
 
-      if (result.success && result.data?.CheckoutRequestID) {
-        const orderId = result.order_id;
-
-        toast.success(
-          "✅ STK push sent! Please complete the payment on your phone."
-        );
-
-        // Save transaction details
-        setTransactionId(result.data.CheckoutRequestID);
-        setOrderId(orderId);
-
-        // 🔁 Start polling for payment status (checks /api/mpesa/status/:orderId)
-        pollMpesaStatus(orderId);
-
-        return { success: true, order_id: orderId };
-      } else {
-        throw new Error(result.message || "Failed to initiate M-Pesa payment.");
+      if (!result.success) {
+        throw new Error(result.message || "Failed to initiate payment");
       }
+
+      toast.success("✅ STK push sent. Complete payment on your phone.");
+
+      pollMpesaStatus(orderId);
+
+      return { success: true };
     } catch (error) {
       console.error("❌ M-Pesa Payment Error:", error);
       setMpesaStatus("failed");
-      toast.error("❌ M-Pesa payment initiation failed. Please try again.");
-      return { success: false, error: error.message };
+      toast.error("❌ Failed to initiate M-Pesa payment");
+      return { success: false };
     }
   };
 
@@ -516,13 +501,12 @@ const CheckoutPage = () => {
     return { success: true };
   };
 
-  //new update 5
+  //new update 5 (fixed)
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
-    if (!user || !user.id) {
+    if (!user?.id) {
       toast.error("Please log in to place an order");
       return;
     }
@@ -530,86 +514,53 @@ const CheckoutPage = () => {
     setLoading(true);
 
     try {
-      const paymentResult = await processPayment({
-        method: formData.paymentMethod,
-        amount: total,
-        mpesaPhone: formData.mpesaPhone,
-        user_id: user.id,
-        customer_name: `${user.first_name || ""} ${
-          user.last_name || ""
-        }`.trim(),
-        address: formData.address,
-      });
+      // 1️⃣ ALWAYS create order first
+      const orderId = await createOrder({ total });
 
-      // 🟩 M-Pesa handled via pollMpesaStatus — do not proceed here
-      if (formData.paymentMethod === "mpesa") return;
-
-      // 🟩 Other payment methods (e.g., COD)
-      if (paymentResult.success) {
-        const orderId = await createOrder({ total });
-        clearCart();
-        navigate(`/order-confirmation/${orderId}`, {
-          state: {
-            transactionId: paymentResult.transactionId || null,
-            paymentMethod: formData.paymentMethod,
-            total,
-          },
+      // 2️⃣ MPesa flow
+      if (formData.paymentMethod === "mpesa") {
+        await initiateMpesaPayment({
+          orderId,
+          mpesaPhone: formData.mpesaPhone,
+          amount: total,
         });
-      } else {
-        toast.error("Payment failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Checkout error:", error);
-      toast.error(error.message || "Something went wrong. Please try again.");
-      setMpesaStatus("failed");
-    } finally {
-      // ⛔ Don’t stop loading for M-Pesa while polling
-      if (formData.paymentMethod !== "mpesa") {
-        setLoading(false);
-      }
-    }
-  };
-
-  //new update 3
-  const handleMpesaSuccess = async (orderIdFromMpesa) => {
-    try {
-      const subtotal = getCartTotal();
-      // const shipping = subtotal > 50000 ? 0 : 500;
-      const total = subtotal + shipping;
-
-      // ✅ Use existing order ID if provided from M-Pesa backend
-      // const orderId = orderIdFromMpesa || (await createOrder({ total }));
-      if (!orderIdFromMpesa) {
-        throw new Error("Missing order reference from MPesa");
+        return; // polling will handle success
       }
 
-      const orderId = orderIdFromMpesa;
-
+      // 3️⃣ COD flow
       clearCart();
-      setLoading(false);
-
-      // ✅ Navigate to order confirmation with correct transaction + order IDs
       navigate(`/order-confirmation/${orderId}`, {
         state: {
-          transactionId: transactionId,
-          paymentMethod: "mpesa",
-          total: total,
+          paymentMethod: "cod",
+          total,
         },
       });
     } catch (error) {
-      console.error("Order creation failed:", error);
-      toast.error(
-        "✅ Payment was successful but order creation failed. Please contact support."
-      );
+      console.error("Checkout error:", error);
+      toast.error("Something went wrong");
       setLoading(false);
     }
   };
 
-  // 🔁 Handle M-Pesa payment retry
+  //new update 3(fixed)
+  const handleMpesaSuccess = async (orderId) => {
+    clearCart();
+    setLoading(false);
+
+    navigate(`/order-confirmation/${orderId}`, {
+      state: {
+        transactionId,
+        paymentMethod: "mpesa",
+        total,
+      },
+    });
+  };
+
+  // 🔁 Handle M-Pesa payment retry(fixed)
   const handleMpesaRetry = () => {
     setMpesaStatus(null);
     setTransactionId(null);
-    setOrderId(null); // ✅ reset backend order reference too
+    setOrderId(null);
     setLoading(false);
   };
 
