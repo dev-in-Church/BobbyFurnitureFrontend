@@ -133,127 +133,112 @@ export default function HomeDynamic() {
   };
 
   // Update meta tags using useEffect (works without HelmetProvider)
-useEffect(() => {
-  const siteName = "Bobby Furniture";
-  const city = "Nairobi";
-  const siteUrl = "https://bobbyfurniturekenya.com";
-
-  const setMetaTag = (name, content, property = false) => {
-    const attr = property ? "property" : "name";
-    let meta = document.querySelector(`meta[${attr}="${name}"]`);
-    if (!meta) {
-      meta = document.createElement("meta");
-      meta.setAttribute(attr, name);
-      document.head.appendChild(meta);
-    }
-    meta.setAttribute("content", content);
-  };
-
-  // Default homepage meta
-  document.title = `${siteName} | Quality Furniture in ${city}`;
-  setMetaTag("description", `Shop quality furniture in ${city} and across Kenya. Sofas, beds, dining tables, office and kids furniture at affordable prices.`);
-  setMetaTag("keywords", `furniture ${city}, furniture Kenya, buy sofas ${city}, beds ${city}, dining tables ${city}, office furniture ${city}, kids furniture ${city}`);
-
-  // Open Graph / Twitter
-  setMetaTag("og:type", "website", true);
-  setMetaTag("og:url", siteUrl, true);
-  setMetaTag("og:title", `${siteName} | Quality Furniture in ${city}`, true);
-  setMetaTag("og:description", `Shop quality furniture in ${city} and across Kenya. Sofas, beds, dining tables, office and kids furniture.`, true);
-  setMetaTag("og:image", `${siteUrl}/og-image.jpg`, true);
-
-  setMetaTag("twitter:card", "summary_large_image", true);
-  setMetaTag("twitter:url", siteUrl, true);
-  setMetaTag("twitter:title", `${siteName} | Quality Furniture in ${city}`, true);
-  setMetaTag("twitter:description", `Shop quality furniture in ${city} and across Kenya.`, true);
-  setMetaTag("twitter:image", `${siteUrl}/og-image.jpg`, true);
-
-  // Canonical
-  let canonical = document.querySelector('link[rel="canonical"]');
-  if (!canonical) {
-    canonical = document.createElement("link");
-    canonical.setAttribute("rel", "canonical");
-    document.head.appendChild(canonical);
-  }
-  canonical.setAttribute("href", siteUrl);
-
-  // Local Business Schema
-  const localBusinessSchema = {
-    "@context": "https://schema.org",
-    "@type": "FurnitureStore",
-    name: siteName,
-    image: `${siteUrl}/logo5.png`,
-    url: siteUrl,
-    telephone: "+254-708-156310",
-    priceRange: "KES",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Kahawa Sukari, Nairobi",
-      addressLocality: city,
-      addressRegion: "Nairobi County",
-      postalCode: "00100",
-      addressCountry: "KE",
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: "-1.286389",
-      longitude: "36.817223",
-    },
-    openingHoursSpecification: [
-      { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday"], opens: "08:00", closes: "18:00" },
-      { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "09:00", closes: "17:00" }
-    ],
-    sameAs: [
-      "https://www.facebook.com/bobbyfurnitureKenya",
-      "https://www.instagram.com/bobbyfurniturekenya"
-    ]
-  };
-
-  let scriptLB = document.getElementById('schema-local-business');
-  if (!scriptLB) {
-    scriptLB = document.createElement('script');
-    scriptLB.type = 'application/ld+json';
-    scriptLB.id = 'schema-local-business';
-    document.head.appendChild(scriptLB);
-  }
-  scriptLB.textContent = JSON.stringify(localBusinessSchema);
-
-  //  Generate Product Schema for each category dynamically
-  categories.forEach((category, index) => {
-    let script = document.getElementById(`schema-category-${index}`);
-    if (!script) {
-      script = document.createElement("script");
-      script.type = "application/ld+json";
-      script.id = `schema-category-${index}`;
-      document.head.appendChild(script);
-    }
-
-    // Build description dynamically from subcategories
-    const subcatDescriptions = category.subcategories.map(sub => sub.title).join(", ");
-    const itemsList = category.subcategories.flatMap(sub => sub.items).join(", ");
-
-    const categorySchema = {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      name: `${category.name} Furniture in ${city}`,
-      description: `Shop ${category.name} furniture in ${city}: ${subcatDescriptions}. Items include: ${itemsList}. Available online at ${siteName}.`,
-      brand: siteName,
-      offers: {
-        "@type": "Offer",
-        priceCurrency: "KES",
-        price: "Varies",
-        availability: "https://schema.org/InStock",
-        url: `${siteUrl}/category/${category.name.toLowerCase().replace(/\s+/g,"-")}`
+  useEffect(() => {
+    // Helper to set meta tags
+    const setMetaTag = (name, content, property = false) => {
+      const attr = property ? "property" : "name";
+      let meta = document.querySelector(`meta[${attr}="${name}"]`);
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.setAttribute(attr, name);
+        document.head.appendChild(meta);
       }
+      meta.setAttribute("content", content);
     };
 
-    script.textContent = JSON.stringify(categorySchema);
+    // ================== PAGE-WIDE META ==================
+    // Set page title and description
+    document.title = "Bobby Furniture | Quality Furniture for Sale in Kenya";
+    setMetaTag(
+      "description",
+      "Buy quality furniture in Kenya with free delivery to Nairobi & nationwide. Shop sofas, beds, dining tables, office & kids furniture at affordable prices. Order today!"
+    );
+    setMetaTag(
+      "keywords",
+      "furniture Kenya, furniture Nairobi, buy furniture online Kenya, sofa sets Kenya, beds Kenya, dining tables Kenya, office furniture Kenya, kids furniture Kenya"
+    );
 
-    // Optional: Add meta description/keywords per category
-    setMetaTag(`description-${category.id}`, categorySchema.description);
-    setMetaTag(`keywords-${category.id}`, `${category.name} furniture ${city}, ${itemsList.split(", ").slice(0, 10).join(", ")}...`);
-  });
+    
+    // Open Graph tags
+    setMetaTag("og:type", "website", true);
+    setMetaTag("og:url", "https://bobbyfurniturekenya.com/", true);
+    setMetaTag(
+      "og:title",
+      "Furniture Shop in Kenya | Affordable Home & Office Furniture",
+      true
+    );
+    setMetaTag(
+      "og:description",
+      "Buy quality furniture in Kenya with free delivery to Nairobi & nationwide. Shop sofas, beds, dining tables, office & kids furniture.",
+      true
+    );
+    setMetaTag("og:image", "https://bobbyfurniturekenya.com/og-image.jpg", true);
 
-}, []);
+    // Twitter card
+    setMetaTag("twitter:card", "summary_large_image", true);
+    setMetaTag("twitter:url", "https://bobbyfurniturekenya.com/", true);
+    setMetaTag(
+      "twitter:title",
+      "Bobby Furniture | Quality Furniture for Sale in Kenya",
+      true
+    );
+    setMetaTag(
+      "twitter:description",
+      "Buy quality furniture in Nairobi. Shop sofas, beds, dining tables, office & kids furniture.",
+      true
+    );
+    setMetaTag("twitter:image", "https://bobbyfurniturekenya.com/og-image.jpg", true);
+
+    // Canonical
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.setAttribute("rel", "canonical");
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute("href", "https://bobbyfurniturekenya.com/");
+
+    // ================== CATEGORY PRODUCT SCHEMAS ==================
+    const addSchema = (schema, id) => {
+      let script = document.getElementById(id);
+      if (!script) {
+        script = document.createElement("script");
+        script.type = "application/ld+json";
+        script.id = id;
+        document.head.appendChild(script);
+      }
+      script.textContent = JSON.stringify(schema);
+    };
+
+    categories.forEach((category, index) => {
+      // Generate a description from subcategories
+      const categoryDescription = `Shop ${category.name} in Nairobi: ${category.subcategories
+        .map((sub) => sub.title)
+        .join(", ")}. Available online at Bobby Furniture.`;
+
+      const productSchema = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": category.h1 || `${category.name} in Nairobi`,
+        "description": category.seoDescription || categoryDescription,
+        "image": [
+          `https://bobbyfurniturekenya.com/images/${category.slug}.jpg` // make sure the image exists
+        ],
+        "brand": {
+          "@type": "Brand",
+          "name": "Bobby Furniture"
+        },
+        "offers": {
+          "@type": "Offer",
+          "url": `https://bobbyfurniturekenya.com/category/${category.slug}`,
+          "priceCurrency": "KES",
+          "availability": "http://schema.org/InStock"
+        }
+      };
+
+      addSchema(productSchema, `schema-product-${index}`);
+    });
+  }, []);
 
 
 
