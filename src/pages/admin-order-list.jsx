@@ -225,8 +225,8 @@ const AdminOrderList = () => {
             </div>
             <div>
               <p className="text-2xl font-bold text-green-600 flex items-center">
-                <DollarSign className="h-5 w-5" />
-                {Number(totalSales).toLocaleString()}
+                {/* <DollarSign className="h-5 w-5" /> */}
+                Ksh {Number(totalSales).toLocaleString()}
               </p>
               <p className="text-sm text-gray-600">Total Sales</p>
             </div>

@@ -68,7 +68,7 @@ const CheckoutPage = () => {
     zipCode: "",
 
     // Payment Information
-    paymentMethod: "card", // card, mpesa, paypal, cod (cash on delivery)
+    paymentMethod: "mpesa", // card, mpesa, paypal, cod (cash on delivery)
 
     // Credit Card fields
     cardNumber: "",
@@ -89,6 +89,7 @@ const CheckoutPage = () => {
 
   //delivery
   const deliveryZones = [
+    { fare: 0, areas: ["Test area", "Test area 2"] },
     { fare: 1000, areas: ["Kahawa Sukari", "Kahawa Wendani"] },
     { fare: 1500, areas: ["Githurai 45", "Baracks"] },
     {
@@ -275,15 +276,16 @@ const CheckoutPage = () => {
     if (!formData.zipCode.trim()) newErrors.zipCode = "Postal code is required";
 
     // Payment validation based on selected method
-    if (formData.paymentMethod === "card") {
-      if (!formData.cardNumber.trim())
-        newErrors.cardNumber = "Card number is required";
-      if (!formData.expiryDate.trim())
-        newErrors.expiryDate = "Expiry date is required";
-      if (!formData.cvv.trim()) newErrors.cvv = "CVV is required";
-      if (!formData.cardName.trim())
-        newErrors.cardName = "Cardholder name is required";
-    } else if (formData.paymentMethod === "mpesa") {
+    // if (formData.paymentMethod === "card") {
+    //   if (!formData.cardNumber.trim())
+    //     newErrors.cardNumber = "Card number is required";
+    //   if (!formData.expiryDate.trim())
+    //     newErrors.expiryDate = "Expiry date is required";
+    //   if (!formData.cvv.trim()) newErrors.cvv = "CVV is required";
+    //   if (!formData.cardName.trim())
+    //     newErrors.cardName = "Cardholder name is required";
+    // }
+    if (formData.paymentMethod === "mpesa") {
       if (!formData.mpesaPhone.trim()) {
         newErrors.mpesaPhone = "M-Pesa phone number is required";
       } else {
@@ -294,12 +296,12 @@ const CheckoutPage = () => {
             "Please enter a valid Kenyan phone number (254712345678)";
         }
       }
-    } else if (formData.paymentMethod === "paypal") {
-      if (!formData.paypalEmail.trim())
-        newErrors.paypalEmail = "PayPal email is required";
-      else if (!/\S+@\S+\.\S+/.test(formData.paypalEmail)) {
-        newErrors.paypalEmail = "Please enter a valid email address";
-      }
+      // } else if (formData.paymentMethod === "paypal") {
+      //   if (!formData.paypalEmail.trim())
+      //     newErrors.paypalEmail = "PayPal email is required";
+      //   else if (!/\S+@\S+\.\S+/.test(formData.paypalEmail)) {
+      //     newErrors.paypalEmail = "Please enter a valid email address";
+      //   }
     } else if (formData.paymentMethod === "cod") {
       // Cash on delivery validation (optional fields, but we can add basic validation)
       if (formData.codPreferredTime && !formData.codPreferredTime.trim()) {
@@ -311,59 +313,197 @@ const CheckoutPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  ///new update 1
-  const initiateMpesaPayment = async (paymentData) => {
-    try {
-      setMpesaStatus("pending");
-      toast.info("📲 Initiating M-Pesa payment...");
+  const normalizePhone = (phone) => {
+    if (!phone) return "";
 
-      // 🔹 Send payment initiation request to your backend
+    let p = phone.replace(/\s/g, "");
+
+    if (p.startsWith("0")) return `254${p.slice(1)}`;
+    if (p.startsWith("+")) return p.slice(1);
+    if (p.startsWith("254")) return p;
+
+    return p;
+  };
+
+  //refixed handleSubmit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    if (!user?.id) {
+      toast.error("Please log in to place an order");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // 1️⃣ Create order first
+      const orderId = await createOrder({ total });
+
+      // 2️⃣ Payment flow
+      if (formData.paymentMethod === "mpesa") {
+        // Pass the created orderId along with payment data
+        await initiateMpesaPayment({
+          orderId,
+          mpesaPhone: formData.mpesaPhone,
+          amount: total,
+          user_id: user.id,
+          customer_name: `${formData.firstName} ${formData.lastName}`,
+          address: formData.address,
+        });
+
+        // Polling will handle success/failure
+        return;
+      }
+
+      // 3️⃣ Cash on Delivery flow
+      clearCart();
+      navigate(`/order-confirmation/${orderId}`, {
+        state: {
+          paymentMethod: "cod",
+          total,
+        },
+      });
+    } catch (error) {
+      console.error("Checkout error:", error);
+      toast.error("Something went wrong");
+      setLoading(false);
+    }
+  };
+
+  // console.log("Current user:", user);
+
+  ///one
+  const createOrder = async (orderData) => {
+    try {
+      const apiOrderData = {
+        user_id: user?.id,
+        customerName: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        address: `${formData.address}, ${formData.city}, ${formData.state}, ${formData.zipCode}`,
+        phone: formData.phone,
+        items: cartItems.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+        })),
+        totalAmount: orderData.total,
+        paymentMethod: formData.paymentMethod,
+        paymentStatus: formData.paymentMethod === "cod" ? "Pending" : "Paid",
+        deliveryInstructions: formData.codSpecialInstructions || null,
+        preferredDeliveryTime: formData.codPreferredTime || null,
+      };
+
       const response = await fetch(
-        "https://bobbyfurnitureonline.onrender.com/api/mpesa",
+        "https://bobbyfurnitureonline.onrender.com/api/orders",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(apiOrderData),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create order");
+      }
+
+      const result = await response.json();
+
+      // 🔹 Handle different backend formats
+      const order_id = result.order_id || result.order?.id;
+      if (!order_id) {
+        throw new Error("Failed to get order ID from backend");
+      }
+
+      return order_id;
+    } catch (error) {
+      console.error("Error creating order:", error);
+      throw error;
+    }
+  };
+
+  //two
+  const initiateMpesaPayment = async ({
+    orderId,
+    mpesaPhone,
+    amount,
+    user_id,
+    customer_name,
+    address,
+  }) => {
+    try {
+      if (!orderId || !mpesaPhone || !amount || !user_id) {
+        console.error("Missing required fields for M-Pesa:", {
+          orderId,
+          mpesaPhone,
+          amount,
+          user_id,
+          customer_name,
+          address,
+        });
+        toast.error(
+          "❌ Missing order ID, phone, amount, or user info for payment."
+        );
+        return { success: false, error: "Missing required fields." };
+      }
+
+      const phoneNumber = normalizePhone(mpesaPhone); // clean phone number
+      const roundedAmount = Math.round(amount);
+
+      console.log("Initiating M-Pesa payment with:", {
+        orderId,
+        phoneNumber,
+        amount: roundedAmount,
+        user_id,
+        customer_name,
+        address,
+      });
+
+      const response = await fetch(
+        "https://bobbyfurnitureonline.onrender.com/api/mpesa/initiate",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            phoneNumber: paymentData.mpesaPhone.replace(/\s/g, ""), // Ensure format: 2547XXXXXXXX
-            amount: Math.round(paymentData.amount),
-            user_id: paymentData.user_id,
-            customer_name: paymentData.customer_name || "Guest",
-            address: paymentData.address || "N/A",
+            order_id: orderId, // backend expects snake_case
+            phoneNumber,
+            amount: roundedAmount,
+            user_id,
+            customer_name,
+            address,
           }),
         }
       );
 
       const result = await response.json();
+      console.log("Backend response for M-Pesa initiation:", result);
 
-      if (result.success && result.data?.CheckoutRequestID) {
-        const orderId = result.order_id;
-
+      if (
+        result.success &&
+        result.checkout_id &&
+        result.data?.CheckoutRequestID
+      ) {
+        setTransactionId(result.data.CheckoutRequestID);
+        setOrderId(orderId);
+        setMpesaStatus("pending");
         toast.success(
           "✅ STK push sent! Please complete the payment on your phone."
         );
-
-        // Save transaction details
-        setTransactionId(result.data.CheckoutRequestID);
-        setOrderId(orderId);
-
-        // 🔁 Start polling for payment status (checks /api/mpesa/status/:orderId)
-        pollMpesaStatus(orderId);
-
-        return { success: true, order_id: orderId };
+        pollMpesaStatus(orderId); // start polling
+        return { success: true, orderId };
       } else {
-        throw new Error(result.message || "Failed to initiate M-Pesa payment.");
+        throw new Error(result.message || "Failed to initiate M-Pesa payment");
       }
     } catch (error) {
       console.error("❌ M-Pesa Payment Error:", error);
       setMpesaStatus("failed");
-      toast.error("❌ M-Pesa payment initiation failed. Please try again.");
+      toast.error(error.message);
       return { success: false, error: error.message };
     }
   };
 
-  //new update 2
+  //three
   const pollMpesaStatus = async (orderId) => {
     const maxAttempts = 30; // ~5 minutes (poll every 10s)
     let attempts = 0;
@@ -385,7 +525,7 @@ const CheckoutPage = () => {
           setMpesaStatus("success");
           toast.success("✅ Payment successful!");
 
-          // 🧩 Trigger order confirmation flow
+          // ✅ Redirect to order confirmation automatically
           handleMpesaSuccess(orderId);
           return;
         }
@@ -411,14 +551,7 @@ const CheckoutPage = () => {
           return;
         }
 
-        if (paymentStatus === "Completed") {
-          setMpesaStatus("success");
-          toast.success("✅ Payment successful!");
-          handleMpesaSuccess(); // <-- redirect user automatically
-          return { success: true };
-        }
-
-        // ⚠️ Unknown or unexpected response
+        // ⚠️ Unexpected response
         stopPolling = true;
         setMpesaStatus("failed");
         toast.error("⚠️ Unexpected payment response.");
@@ -433,51 +566,29 @@ const CheckoutPage = () => {
     poll();
   };
 
-  const createOrder = async (orderData) => {
-    try {
-      // Prepare order data for API
-      const apiOrderData = {
-        user_id: user?.id,
-        customerName: `${formData.firstName} ${formData.lastName}`,
-        address: `${formData.address}, ${formData.city}, ${formData.state}, ${formData.zipCode}`,
-        phone: formData.phone,
-        items: cartItems.map((item) => ({
-          productId: item.id,
-          quantity: item.quantity,
-        })),
-        totalAmount: orderData.total,
-        paymentMethod: formData.paymentMethod,
-        paymentStatus: formData.paymentMethod === "cod" ? "Pending" : "Paid",
-        deliveryInstructions: formData.codSpecialInstructions || null,
-        preferredDeliveryTime: formData.codPreferredTime || null,
-      };
+  //four
+  const handleMpesaSuccess = async (orderId) => {
+    clearCart();
+    setLoading(false);
 
-      // Create order in database
-      const response = await fetch(
-        "https://bobbyfurnitureonline.onrender.com/api/orders",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(apiOrderData),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to create order");
-      }
-
-      const result = await response.json();
-      return result.order_id;
-    } catch (error) {
-      console.error("Error creating order:", error);
-      throw error;
-    }
+    navigate(`/order-confirmation/${orderId}`, {
+      state: {
+        transactionId,
+        paymentMethod: "mpesa",
+        total,
+      },
+    });
   };
 
-  //new update 4
+  //five
+  const handleMpesaRetry = () => {
+    setMpesaStatus(null);
+    setTransactionId(null);
+    setOrderId(null);
+    setLoading(false);
+  };
+
+  //six
   const processPayment = async (paymentData) => {
     if (paymentData.method === "mpesa") {
       try {
@@ -486,7 +597,7 @@ const CheckoutPage = () => {
         if (result.success) {
           toast.info("📲 Waiting for M-Pesa confirmation...");
           // Poll until the payment completes
-          pollMpesaStatus(result.order_id);
+          // pollMpesaStatus(result.order_id);
         }
 
         return result;
@@ -498,98 +609,6 @@ const CheckoutPage = () => {
 
     // ✅ Other payment methods handled here (PayPal, card, COD)
     return { success: true };
-  };
-
-  //new update 5
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    if (!user || !user.id) {
-      toast.error("Please log in to place an order");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const paymentResult = await processPayment({
-        method: formData.paymentMethod,
-        amount: total,
-        mpesaPhone: formData.mpesaPhone,
-        user_id: user.id,
-        customer_name: `${user.first_name || ""} ${
-          user.last_name || ""
-        }`.trim(),
-        address: formData.address,
-      });
-
-      // 🟩 M-Pesa handled via pollMpesaStatus — do not proceed here
-      if (formData.paymentMethod === "mpesa") return;
-
-      // 🟩 Other payment methods (e.g., COD)
-      if (paymentResult.success) {
-        const orderId = await createOrder({ total });
-        clearCart();
-        navigate(`/order-confirmation/${orderId}`, {
-          state: {
-            transactionId: paymentResult.transactionId || null,
-            paymentMethod: formData.paymentMethod,
-            total,
-          },
-        });
-      } else {
-        toast.error("Payment failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Checkout error:", error);
-      toast.error(error.message || "Something went wrong. Please try again.");
-      setMpesaStatus("failed");
-    } finally {
-      // ⛔ Don’t stop loading for M-Pesa while polling
-      if (formData.paymentMethod !== "mpesa") {
-        setLoading(false);
-      }
-    }
-  };
-
-  //new update 3
-  const handleMpesaSuccess = async (orderIdFromMpesa) => {
-    try {
-      const subtotal = getCartTotal();
-      // const shipping = subtotal > 50000 ? 0 : 500;
-      const total = subtotal + shipping;
-
-      // ✅ Use existing order ID if provided from M-Pesa backend
-      const orderId = orderIdFromMpesa || (await createOrder({ total }));
-
-      clearCart();
-      setLoading(false);
-
-      // ✅ Navigate to order confirmation with correct transaction + order IDs
-      navigate(`/order-confirmation/${orderId}`, {
-        state: {
-          transactionId: transactionId,
-          paymentMethod: "mpesa",
-          total: total,
-        },
-      });
-    } catch (error) {
-      console.error("Order creation failed:", error);
-      toast.error(
-        "✅ Payment was successful but order creation failed. Please contact support."
-      );
-      setLoading(false);
-    }
-  };
-
-  // 🔁 Handle M-Pesa payment retry
-  const handleMpesaRetry = () => {
-    setMpesaStatus(null);
-    setTransactionId(null);
-    setOrderId(null); // ✅ reset backend order reference too
-    setLoading(false);
   };
 
   // const subtotal = getCartTotal();
@@ -703,74 +722,6 @@ const CheckoutPage = () => {
 
   const renderPaymentForm = () => {
     switch (formData.paymentMethod) {
-      case "card":
-        return (
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="cardName">Cardholder Name</Label>
-              <Input
-                id="cardName"
-                name="cardName"
-                value={formData.cardName}
-                onChange={handleChange}
-                className={errors.cardName ? "border-red-500" : ""}
-                placeholder="John Doe"
-              />
-              {errors.cardName && (
-                <p className="text-sm text-red-600 mt-1">{errors.cardName}</p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="cardNumber">Card Number</Label>
-              <Input
-                id="cardNumber"
-                name="cardNumber"
-                placeholder="1234 5678 9012 3456"
-                value={formData.cardNumber}
-                onChange={handleChange}
-                className={errors.cardNumber ? "border-red-500" : ""}
-              />
-              {errors.cardNumber && (
-                <p className="text-sm text-red-600 mt-1">{errors.cardNumber}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="expiryDate">Expiry Date</Label>
-                <Input
-                  id="expiryDate"
-                  name="expiryDate"
-                  placeholder="MM/YY"
-                  value={formData.expiryDate}
-                  onChange={handleChange}
-                  className={errors.expiryDate ? "border-red-500" : ""}
-                />
-                {errors.expiryDate && (
-                  <p className="text-sm text-red-600 mt-1">
-                    {errors.expiryDate}
-                  </p>
-                )}
-              </div>
-              <div>
-                <Label htmlFor="cvv">CVV</Label>
-                <Input
-                  id="cvv"
-                  name="cvv"
-                  placeholder="123"
-                  value={formData.cvv}
-                  onChange={handleChange}
-                  className={errors.cvv ? "border-red-500" : ""}
-                />
-                {errors.cvv && (
-                  <p className="text-sm text-red-600 mt-1">{errors.cvv}</p>
-                )}
-              </div>
-            </div>
-          </div>
-        );
-
       case "mpesa":
         return (
           <div className="space-y-4">
@@ -805,40 +756,6 @@ const CheckoutPage = () => {
             </div>
 
             {renderMpesaStatus()}
-          </div>
-        );
-
-      case "paypal":
-        return (
-          <div className="space-y-4">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-center mb-2">
-                <Wallet className="h-5 w-5 text-blue-600 mr-2" />
-                <h4 className="font-medium text-blue-800">PayPal Payment</h4>
-              </div>
-              <p className="text-sm text-blue-700">
-                You will be redirected to PayPal to complete your payment
-                securely.
-              </p>
-            </div>
-
-            <div>
-              <Label htmlFor="paypalEmail">PayPal Email</Label>
-              <Input
-                id="paypalEmail"
-                name="paypalEmail"
-                type="email"
-                placeholder="your-email@example.com"
-                value={formData.paypalEmail}
-                onChange={handleChange}
-                className={errors.paypalEmail ? "border-red-500" : ""}
-              />
-              {errors.paypalEmail && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.paypalEmail}
-                </p>
-              )}
-            </div>
           </div>
         );
 
@@ -1108,26 +1025,6 @@ const CheckoutPage = () => {
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-gray-50">
                       <RadioGroupItem
-                        value="card"
-                        id="card"
-                        disabled={mpesaStatus === "pending"}
-                      />
-                      <Label
-                        htmlFor="card"
-                        className="flex items-center cursor-pointer flex-1"
-                      >
-                        <CreditCard className="h-5 w-5 mr-2" />
-                        <div>
-                          <div className="font-medium">Credit/Debit Card</div>
-                          <div className="text-sm text-gray-500">
-                            Visa, Mastercard, American Express
-                          </div>
-                        </div>
-                      </Label>
-                    </div>
-
-                    <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-gray-50">
-                      <RadioGroupItem
                         value="mpesa"
                         id="mpesa"
                         disabled={mpesaStatus === "pending"}
@@ -1141,26 +1038,6 @@ const CheckoutPage = () => {
                           <div className="font-medium">M-Pesa</div>
                           <div className="text-sm text-gray-500">
                             Pay with your M-Pesa mobile money
-                          </div>
-                        </div>
-                      </Label>
-                    </div>
-
-                    <div className="flex items-center space-x-2 p-4 border rounded-lg hover:bg-gray-50">
-                      <RadioGroupItem
-                        value="paypal"
-                        id="paypal"
-                        disabled={mpesaStatus === "pending"}
-                      />
-                      <Label
-                        htmlFor="paypal"
-                        className="flex items-center cursor-pointer flex-1"
-                      >
-                        <Wallet className="h-5 w-5 mr-2 text-blue-600" />
-                        <div>
-                          <div className="font-medium">PayPal</div>
-                          <div className="text-sm text-gray-500">
-                            Pay securely with your PayPal account
                           </div>
                         </div>
                       </Label>
@@ -1194,15 +1071,10 @@ const CheckoutPage = () => {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  {formData.paymentMethod === "card" && (
-                    <CreditCard className="h-5 w-5 mr-2" />
-                  )}
                   {formData.paymentMethod === "mpesa" && (
                     <Smartphone className="h-5 w-5 mr-2 text-green-600" />
                   )}
-                  {formData.paymentMethod === "paypal" && (
-                    <Wallet className="h-5 w-5 mr-2 text-blue-600" />
-                  )}
+
                   {formData.paymentMethod === "cod" && (
                     <Truck className="h-5 w-5 mr-2 text-orange-600" />
                   )}

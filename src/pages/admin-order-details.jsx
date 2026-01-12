@@ -568,10 +568,20 @@ const AdminOrderDetail = () => {
   }
 
   // Calculate order totals
-  const subtotal = order.total_amount || 0;
-  const tax = subtotal * 0.16;
-  const shipping = subtotal > 50000 ? 0 : 500;
-  const total = subtotal + tax + shipping;
+  const itemPrices = order.items.map((item) => item.price);
+  const itemsAmount = order.items.reduce(
+    (sum, item) => sum + item.quantity * Number(item.price),
+    0
+  );
+  const subtotal = itemsAmount;
+  const total = order.total_amount || 0;
+  // const tax = subtotal * 0.16;
+  // const shipping = subtotal > 50000 ? 0 : 500;
+  const shipping = total - subtotal;
+  // single line – returns all item prices
+
+  // console.log(itemsAmount);
+  console.log(order);
 
   // Get status class for print
   const getStatusClass = (status) => {
@@ -590,6 +600,16 @@ const AdminOrderDetail = () => {
         return "";
     }
   };
+
+  //payments info
+  const paymentStatus = order.payment?.status;
+  const paymentMethod =
+    order.payment?.method?.toLowerCase() === "cod"
+      ? "Cash on delivery"
+      : order.payment?.method;
+
+  // console.log("Payment Status:", paymentStatus); // "Pending"
+  // console.log("Payment Method:", paymentMethod); // "cod"
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -663,11 +683,11 @@ const AdminOrderDetail = () => {
                   </p>
                   <p>
                     <strong>Payment Method:</strong>{" "}
-                    {order.payment_method || "Not specified"}
+                    {paymentMethod || "Not specified"}
                   </p>
                   <p>
                     <strong>Payment Status:</strong>{" "}
-                    {order.payment_status || "Pending"}
+                    {paymentStatus || "Pending"}
                   </p>
                 </div>
               </div>
@@ -727,8 +747,8 @@ const AdminOrderDetail = () => {
                 <div className="total-value">{formatCurrency(subtotal)}</div>
               </div>
               <div className="total-row">
-                <div className="total-label">Tax (16%):</div>
-                <div className="total-value">{formatCurrency(tax)}</div>
+                {/* <div className="total-label">Tax (16%):</div> */}
+                {/* <div className="total-value">{formatCurrency(tax)}</div> */}
               </div>
               <div className="total-row">
                 <div className="total-label">Shipping:</div>
@@ -827,8 +847,8 @@ const AdminOrderDetail = () => {
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Tax (16%)</span>
-                        <span>{formatCurrency(tax)}</span>
+                        {/* <span>Tax (16%)</span> */}
+                        {/* <span>{formatCurrency(tax)}</span> */}
                       </div>
                       <Separator />
                       <div className="flex justify-between font-medium text-lg">
@@ -980,22 +1000,20 @@ const AdminOrderDetail = () => {
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Payment Method</span>
                   <span className="text-sm font-medium capitalize">
-                    {order.payment_method || "Not specified"}
+                    {paymentMethod || "Not specified"}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Payment Status</span>
                   <Badge
-                    variant={
-                      order.payment_status === "Paid" ? "default" : "secondary"
-                    }
+                    variant={paymentStatus === "Paid" ? "default" : "secondary"}
                     className={
-                      order.payment_status === "Paid"
+                      paymentStatus === "Paid"
                         ? "bg-green-100 text-green-800"
                         : "bg-yellow-100 text-yellow-800"
                     }
                   >
-                    {order.payment_status || "Pending"}
+                    {paymentStatus || "Pending"}
                   </Badge>
                 </div>
                 <Separator />

@@ -258,8 +258,8 @@ useEffect(() => {
 
 
   return (
-    <div className="bg-[#0B3D2E] bg-[url('/banners/bg_img.jpg')] bg-no-repeat bg-top">
-
+    // bg-[url('/banners/bg_img.jpg')] bg-no-repeat bg-top
+    <div className="bg-[#e9e9e9]">
       <main className="min-h-screen mx-auto max-w-[1170px] py-1 sm:py-2 md:py-4">
 
         {/* ================= HERO SECTION ================= */}
@@ -272,7 +272,7 @@ useEffect(() => {
           <ProductSectionDynamic
             title="Featured Furniture Deals in Kenya"
             viewMoreLink="/featured"
-            color="red-500"
+            color="blue-500"
             text="white"
             type="featured"
             limit={9}
@@ -284,7 +284,7 @@ useEffect(() => {
           <ProductSectionDynamic
             title="New Furniture Arrivals in Kenya"
             viewMoreLink="/new-arrivals"
-            color="green-500"
+            color="blue-500"
             text="white"
             type="new-arrivals"
             limit={9}

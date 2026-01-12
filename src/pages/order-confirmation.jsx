@@ -30,7 +30,7 @@ const OrderConfirmationPage = () => {
 
         // Fetch order details from the API
         const response = await fetch(
-          `https://bobbyfurnitureonline.onrender.com/api/orders/${orderId}`
+          `https://bobbyfurnitureonline.onrender.com/api/orders/id/${orderId}`
         );
 
         if (!response.ok) {

@@ -37,6 +37,7 @@ import {
   checkApiHealth,
   fetchCategories,
 } from "../lib/api-final";
+import { getAllUsers } from "../lib/api-auth";
 import ConnectionStatus from "../components/connection-status";
 
 const AdminDashboard = () => {
@@ -53,6 +54,9 @@ const AdminDashboard = () => {
     topCategories: [],
     salesTrend: null,
   });
+  //new
+  const [totalUsers, setTotalUsers] = useState(null);
+  const [totalOrders, setTotalOrders] = useState(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -145,6 +149,11 @@ const AdminDashboard = () => {
         salesTrend: calculateSalesTrend(),
       });
 
+      console.log(dashboardData.totalUsers);
+      console.log(dashboardData.totalProducts);
+      console.log(dashboardData.totalOrders);
+      console.log(dashboardData.totalRevenue);
+
       // Generate recent activity
       setRecentActivity(generateRecentActivity(products));
       setLastUpdated(new Date());
@@ -156,6 +165,50 @@ const AdminDashboard = () => {
       setLoading(false);
       setRefreshing(false);
     }
+  }, []);
+
+  //total users
+  useEffect(() => {
+    const fetchTotalUsers = async () => {
+      try {
+        const res = await fetch(
+          "https://bobbyfurnitureonline.onrender.com/users/total-users",
+          {
+            method: "GET",
+            credentials: "include", // 🔥 VERY IMPORTANT: sends cookies
+          }
+        );
+
+        const data = await res.json();
+        setTotalUsers(data.totalUsers);
+      } catch (error) {
+        console.error("Error fetching total users:", error);
+      }
+    };
+
+    fetchTotalUsers();
+  }, []);
+
+  //total orders
+  useEffect(() => {
+    const fetchTotalOrders = async () => {
+      try {
+        const res = await fetch(
+          "https://bobbyfurnitureonline.onrender.com/api/orders/total-orders",
+          {
+            method: "GET",
+            credentials: "include", // 🔥 required for cookies
+          }
+        );
+
+        const data = await res.json();
+        setTotalOrders(data.totalOrders);
+      } catch (error) {
+        console.error("Error fetching total orders:", error);
+      }
+    };
+
+    fetchTotalOrders();
   }, []);
 
   // Generate mock recent orders
@@ -500,7 +553,7 @@ const AdminDashboard = () => {
                       Total Users
                     </p>
                     <h3 className="text-2xl font-bold text-gray-900">
-                      {dashboardData.totalUsers || 0}
+                      {totalUsers || 0}
                     </h3>
                     <p className="text-xs text-gray-500 mt-1">
                       Registered customers
@@ -533,7 +586,7 @@ const AdminDashboard = () => {
                       Total Orders
                     </p>
                     <h3 className="text-2xl font-bold text-gray-900">
-                      {dashboardData.totalOrders || 0}
+                      {totalOrders || 0}
                     </h3>
                     <div className="flex items-center gap-1 mt-1">
                       <Badge variant="outline" className="text-xs">

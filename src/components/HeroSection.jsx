@@ -12,10 +12,28 @@ const HeroSection = () => {
   const banners = [
     {
       id: 1,
-      image: "/banners/bf1.jpg?height=400&width=800&text=Banner+1",
-      alt: "Quality Furniture for Sale in Kenya - Affordable Home and Office Furniture",
+      image: "/banners/n1.jpg?height=400&width=800&text=Banner+1",
+      alt: "Banner 1",
       link: "/all-products",
     },
+    {
+      id: 2,
+      image: "/banners/n2.gif?height=400&width=800&text=Banner+2",
+      alt: "Banner 2",
+      link: "/all-products",
+    },
+    {
+      id: 3,
+      image: "/banners/n3.jpg?height=400&width=800&text=Banner+3",
+      alt: "Banner 3",
+      link: "/all-products",
+    },
+    //   {
+    //     id: 4,
+    //     image: "/banners/b4.gif?height=400&width=800&text=Banner+3",
+    //     alt: "Banner 3",
+    //     link: "/all-products",
+    //   },
   ];
 
   const [currentBanner, setCurrentBanner] = useState(0);

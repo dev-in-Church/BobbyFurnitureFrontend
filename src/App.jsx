@@ -32,6 +32,7 @@ import CheckoutPage from "./pages/checkout-page";
 import OrderConfirmationPage from "./pages/order-confirmation";
 import UserAccountPage from "./pages/user-account";
 import OrderHistoryPage from "./pages/order-history";
+import OrderDetailsPage from "./pages/order-details";
 import ContactPage from "./pages/contact-page";
 import AboutPage from "./pages/about-page";
 import HelpCenterPage from "./pages/help-center";
@@ -188,6 +189,14 @@ const App = () => {
                     element={
                       <ProtectedRoute>
                         <CheckoutPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/orders/:orderId"
+                    element={
+                      <ProtectedRoute>
+                        <OrderDetailsPage />
                       </ProtectedRoute>
                     }
                   />
