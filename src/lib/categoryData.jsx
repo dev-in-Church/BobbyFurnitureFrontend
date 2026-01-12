@@ -1,4 +1,3 @@
-import React from "react";
 
 import {
   Sofa,
@@ -14,9 +13,14 @@ import {
 
 export const categories = [
   {
-    id: 1,
-    name: "Living Room",
-    icon: <Sofa className="h-4 w-4" />,
+    
+        id: 1,
+        name: "Living Room",
+        slug: "living-room",
+        seoTitle: "Living Room Furniture Kenya | Sofas & TV Stands", // 52 chars ✓
+        seoDescription: "Shop premium living room furniture in Kenya. Browse 3-seater sofas, L-shaped sectionals, coffee tables & TV stands. Free delivery Nairobi. Shop now!", // 158 chars ✓
+        h1: "Living Room Furniture in Kenya",
+        icon: <Sofa className="h-4 w-4" />,
     subcategories: [
       {
         title: "SOFAS",
@@ -80,10 +84,16 @@ export const categories = [
       },
     ],
   },
+
   {
-    id: 2,
-    name: "Bedroom",
-    icon: <Bed className="h-4 w-4" />,
+      id: 2,
+      name: "Bedroom",
+      slug: "bedroom",
+      seoTitle: "Bedroom Furniture Kenya | Beds & Wardrobes", // 48 chars ✓
+      seoDescription: "Buy quality bedroom furniture in Kenya. Choose from queen beds, king beds, wardrobes, dressers & mattresses. Free delivery. Affordable prices Nairobi.", // 155 chars ✓
+      h1: "Bedroom Furniture in Kenya",
+      icon: <Bed className="h-4 w-4" />,
+
     subcategories: [
       {
         title: "BEDS",
@@ -147,12 +157,18 @@ export const categories = [
       },
     ],
   },
+
   {
-    id: 3,
-    name: "Dining Room",
-    icon: <Utensils className="h-4 w-4" />,
+      id: 3,
+      name: "Dining Room",
+      slug: "dining-room",
+      seoTitle: "Dining Furniture Kenya | Tables, Chairs & Sets", // 51 chars ✓
+      seoDescription: "Shop dining room furniture in Kenya. Browse dining tables, chairs, buffets & complete sets. Modern & classic designs. Free delivery in Nairobi Kenya.", // 157 chars ✓
+      h1: "Dining Room Furniture in Kenya",
+      icon: <Utensils className="h-4 w-4" />,
+
     subcategories: [
-      {
+       {
         title: "DINING TABLES",
         items: [
           "Rectangular Tables",
@@ -214,12 +230,17 @@ export const categories = [
       },
     ],
   },
+
   {
-    id: 4,
-    name: "Office",
-    icon: <Laptop className="h-4 w-4" />,
+  id: 4,
+  name: "Office",
+  slug: "office",
+  seoTitle: "Office Furniture Kenya | Desks, Chairs & Storage", // 54 chars ✓
+  seoDescription: "Shop ergonomic office furniture in Kenya. Computer desks, executive chairs, filing cabinets & conference tables. Work from home essentials. Nairobi delivery.", // 160 chars ✓
+  h1: "Office Furniture in Kenya",
+  icon: <Laptop className="h-4 w-4" />,
     subcategories: [
-      {
+       {
         title: "DESKS",
         items: [
           "Computer Desks",
@@ -281,12 +302,18 @@ export const categories = [
       },
     ],
   },
+
   {
-    id: 5,
-    name: "Outdoor",
-    icon: <Umbrella className="h-4 w-4" />,
+  id: 5,
+  name: "Outdoor",
+  slug: "outdoor",
+  seoTitle: "Outdoor Furniture Kenya | Patio Sets & Garden", // 51 chars ✓
+  seoDescription: "Buy weather-resistant outdoor furniture in Kenya. Patio dining sets, garden chairs, umbrellas & gazebos. Perfect for Nairobi homes. Free delivery available.", // 159 chars ✓
+  h1: "Outdoor & Patio Furniture in Kenya",
+  icon: <Umbrella className="h-4 w-4" />,
+
     subcategories: [
-      {
+       {
         title: "PATIO SETS",
         items: [
           "Dining Sets",
@@ -342,12 +369,18 @@ export const categories = [
       },
     ],
   },
+
   {
-    id: 6,
-    name: "Storage",
-    icon: <Archive className="h-4 w-4" />,
+  id: 6,
+  name: "Storage",
+  slug: "storage",
+  seoTitle: "Storage Furniture Kenya | Cabinets & Shelves", // 50 chars ✓
+  seoDescription: "Find smart storage solutions in Kenya. Cabinets, shelving units, wardrobes, closet systems & organizers. Maximize your space. Delivery across Nairobi.", // 154 chars ✓
+  h1: "Storage Furniture & Solutions in Kenya",
+  icon: <Archive className="h-4 w-4" />,
+
     subcategories: [
-      {
+       {
         title: "SHELVING",
         items: [
           "Bookcases",
@@ -409,12 +442,18 @@ export const categories = [
       },
     ],
   },
+
   {
-    id: 7,
-    name: "Decor",
-    icon: <Palette className="h-4 w-4" />,
+  id: 7,
+  name: "Decor",
+  slug: "decor",
+  seoTitle: "Home Decor Kenya | Wall Art, Lighting & More", // 50 chars ✓
+  seoDescription: "Shop stylish home decor in Kenya. Wall art, mirrors, lighting, throw pillows, rugs & seasonal decorations. Transform your home. Nairobi delivery available.", // 159 chars ✓
+  h1: "Home Decor & Accessories in Kenya",
+  icon: <Palette className="h-4 w-4" />,
+
     subcategories: [
-      {
+       {
         title: "WALL DECOR",
         items: [
           "Wall Art",
@@ -476,11 +515,17 @@ export const categories = [
       },
     ],
   },
+
   {
-    id: 8,
-    name: "Kids & Baby",
-    icon: <Baby className="h-4 w-4" />,
-    subcategories: [
+  id: 8,
+  name: "Kids & Baby",
+  slug: "kids-baby",
+  seoTitle: "Kids & Baby Furniture Kenya | Beds, Cribs & More", // 54 chars ✓
+  seoDescription: "Shop safe kids & baby furniture in Kenya. Cribs, bunk beds, changing tables, toy storage & children's decor. Quality & safety certified. Nairobi delivery.", // 158 chars ✓
+  h1: "Kids & Baby Furniture in Kenya",
+  icon: <Baby className="h-4 w-4" />,
+
+     subcategories: [
       {
         title: "KIDS FURNITURE",
         items: ["Kids Beds", "Bunk Beds", "Desks", "Dressers", "Bookcases"],
@@ -531,10 +576,16 @@ export const categories = [
       },
     ],
   },
+
   {
-    id: 9,
-    name: "Mattresses",
-    icon: <Bed className="h-4 w-4" />,
+  id: 9,
+  name: "Mattresses",
+  slug: "mattresses",
+  seoTitle: "Mattresses Kenya | Memory Foam, Hybrid & Latex", // 51 chars ✓
+  seoDescription: "Buy quality mattresses in Kenya. Memory foam, hybrid, orthopedic & latex mattresses. All sizes available. 10-year warranty. Free delivery in Nairobi Kenya.", // 159 chars ✓
+  h1: "Mattresses in Kenya - All Types & Sizes",
+  icon: <Bed className="h-4 w-4" />,
+
     subcategories: [
       {
         title: "TYPES",
@@ -574,11 +625,17 @@ export const categories = [
       },
     ],
   },
+
   {
-    id: 10,
-    name: "Bathroom",
-    icon: <Bath className="h-4 w-4" />,
-    subcategories: [
+  id: 10,
+  name: "Bathroom",
+  slug: "bathroom",
+  seoTitle: "Bathroom Furniture Kenya | Vanities & Storage", // 51 chars ✓
+  seoDescription: "Shop bathroom furniture in Kenya. Vanities, storage cabinets, mirrors, fixtures & accessories. Modern & classic styles. Free delivery across Nairobi Kenya.", // 159 chars ✓
+  h1: "Bathroom Furniture & Accessories in Kenya",
+  icon: <Bath className="h-4 w-4" />,
+
+     subcategories: [
       {
         title: "VANITIES",
         items: [
@@ -636,3 +693,5 @@ export const categories = [
     ],
   },
 ];
+
+

@@ -1,43 +1,38 @@
-"use client";
-
 import { useState } from "react";
-import {
-  Sofa,
-  Bed,
-  Utensils,
-  Laptop,
-  Umbrella,
-  Archive,
-  Palette,
-  Baby,
-  Bath,
-} from "lucide-react";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-
-// 🧩 Move category data outside to make it exportable/reusable
 import { categories } from "../lib/categoryData";
 
-const CategoryItem = ({ category, isActive, setActiveCategory }) => (
-  <li
-    className={clsx("relative h-full", {
-      "text-primary": isActive,
-    })}
-    onMouseEnter={() => setActiveCategory(category.id)}
-    onMouseLeave={() => setActiveCategory(null)}
-  >
-    <Link
-      to={`/category/${category.name.toLowerCase().replace(/\s+/g, "-")}`}
-      className="flex items-center px-4"
+// 🔧 Slug utility (MUST MATCH CategoryPage)
+const slugify = (text) =>
+  text.toLowerCase().replace(/&/g, "and").replace(/\s+/g, "-");
+
+const CategoryItem = ({ category, isActive, setActiveCategory }) => {
+  const categorySlug = slugify(category.name);
+
+  return (
+    <li
+      className={clsx("relative h-full", {
+        "text-primary": isActive,
+      })}
+      onMouseEnter={() => setActiveCategory(category.id)}
+      onMouseLeave={() => setActiveCategory(null)}
     >
-      <span className="mr-3 w-6 text-center">{category.icon}</span>
-      <span className="text-sm">{category.name}</span>
-    </Link>
-  </li>
-);
+      <Link
+        to={`/category/${categorySlug}`}
+        className="flex items-center px-4 py-2"
+      >
+        <span className="mr-3 w-6 text-center">{category.icon}</span>
+        <span className="text-sm">{category.name}</span>
+      </Link>
+    </li>
+  );
+};
 
 const SubcategoriesPanel = ({ category, setActiveCategory }) => {
   if (!category || category.subcategories.length === 0) return null;
+
+  const categorySlug = slugify(category.name);
 
   return (
     <div
@@ -46,15 +41,17 @@ const SubcategoriesPanel = ({ category, setActiveCategory }) => {
       onMouseLeave={() => setActiveCategory(null)}
     >
       {category.subcategories.map((subcategory, index) => (
-        <div key={index} className="space-y-1">
-          <h3 className="font-bold text-sm text-gray-700 underline">
+        <div key={index} className="space-y-2">
+          {/* H3 for SEO hierarchy */}
+          <h3 className="font-semibold text-sm text-gray-700">
             {subcategory.title}
           </h3>
-          <ul>
+
+          <ul className="space-y-1">
             {subcategory.items.map((item, idx) => (
               <li key={idx}>
                 <Link
-                  to={`/category/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                  to={`/category/${categorySlug}/${slugify(item)}`}
                   className="text-sm text-gray-600 hover:text-primary"
                 >
                   {item}
@@ -70,13 +67,17 @@ const SubcategoriesPanel = ({ category, setActiveCategory }) => {
 
 const CategoryPanel = () => {
   const [activeCategory, setActiveCategory] = useState(null);
+
   const activeCategoryData = categories.find(
     (cat) => cat.id === activeCategory
   );
 
   return (
-    <div className="relative hidden lg:block bg-white rounded-sm h-full shadow-md">
-      <ul className="flex flex-col h-full py-3 justify-between">
+    <nav
+      aria-label="Product categories"
+      className="relative hidden lg:block bg-white rounded-sm h-full shadow-md"
+    >
+      <ul className="flex flex-col h-full py-3">
         {categories.map((category) => (
           <CategoryItem
             key={category.id}
@@ -93,7 +94,7 @@ const CategoryPanel = () => {
           setActiveCategory={setActiveCategory}
         />
       )}
-    </div>
+    </nav>
   );
 };
 
