@@ -205,10 +205,10 @@ const ProductGrid = ({ products, loading }) => {
                 )}
 
                 {/* bottom badge */}
-                <img
+                {/* <img
                   src="/banners/corner.png"
                   className="absolute bottom-0 left-0 h-12 z-10"
-                />
+                /> */}
 
                 {/* In Cart Indicator */}
                 {inCart && (
