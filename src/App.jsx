@@ -57,6 +57,7 @@ import ErrorBoundary from "./components/error-boundary";
 ///others
 import UploadComponent from "./components/UploadComponent";
 import GenericProductPage from "./pages/GenericProductPage";
+import WhatsAppFloat from "./components/WhatsAppFloat.jsx";
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requireAdmin = false }) => {
@@ -133,6 +134,7 @@ const App = () => {
       {/* <Router> */}
       <QueryClientProvider client={queryClient}>
         <ScrollToTop />
+        <WhatsAppFloat />
         <AuthProvider>
           <CartProvider>
             <WishlistProvider>

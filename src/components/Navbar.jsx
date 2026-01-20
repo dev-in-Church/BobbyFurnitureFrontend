@@ -507,6 +507,7 @@ const CATEGORIES = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const categoryDropdownRef = useRef(null);
   const location = useLocation();
@@ -661,7 +662,7 @@ export default function Navbar() {
                     className="relative"
                     onMouseEnter={() =>
                       setHoveredCategory(
-                        category.subcategories.length > 0 ? category : null
+                        category.subcategories.length > 0 ? category : null,
                       )
                     }
                   >
@@ -710,7 +711,7 @@ export default function Navbar() {
                           ))}
                         </ul>
                       </div>
-                    )
+                    ),
                   )}
                 </div>
                 <div className="mt-4 pt-3 border-t border-gray-300">
@@ -730,7 +731,7 @@ export default function Navbar() {
   };
 
   const renderMobileMenu = () => (
-    <Sheet>
+    <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="md:hidden">
           <Menu className="h-6 w-6" />
@@ -764,6 +765,7 @@ export default function Navbar() {
                     <Link
                       key={index}
                       to={category.url}
+                      onClick={() => setMobileMenuOpen(false)}
                       className="flex items-center py-2 text-sm"
                     >
                       {category.icon}
@@ -836,10 +838,18 @@ export default function Navbar() {
                     </>
                   ) : (
                     <>
-                      <Link to="/login" className="py-2 text-sm">
+                      <Link
+                        to="/login"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="py-2 text-sm"
+                      >
                         Login
                       </Link>
-                      <Link to="/register" className="py-2 text-sm">
+                      <Link
+                        to="/register"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="py-2 text-sm"
+                      >
                         Register
                       </Link>
                     </>
@@ -852,22 +862,46 @@ export default function Navbar() {
               <AccordionTrigger className="py-2">Help</AccordionTrigger>
               <AccordionContent>
                 <div className="flex flex-col space-y-2 pl-4">
-                  <Link to="/help" className="py-2 text-sm">
+                  <Link
+                    to="/help"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-2 text-sm"
+                  >
                     Help Center
                   </Link>
-                  <Link to="/place-order" className="py-2 text-sm">
+                  <Link
+                    to="/place-order"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-2 text-sm"
+                  >
                     Place an Order
                   </Link>
-                  <Link to="/payment-options" className="py-2 text-sm">
+                  <Link
+                    to="/payment-options"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-2 text-sm"
+                  >
                     Payment Options
                   </Link>
-                  <Link to="/track-order" className="py-2 text-sm">
+                  <Link
+                    to="/track-order"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-2 text-sm"
+                  >
                     Track an Order
                   </Link>
-                  <Link to="/cancel-order" className="py-2 text-sm">
+                  <Link
+                    to="/cancel-order"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-2 text-sm"
+                  >
                     Cancel an Order
                   </Link>
-                  <Link to="/returns-refunds" className="py-2 text-sm">
+                  <Link
+                    to="/returns-refunds"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="py-2 text-sm"
+                  >
                     Returns & Refunds
                   </Link>
                 </div>
@@ -876,10 +910,18 @@ export default function Navbar() {
           </Accordion>
 
           <div className="mt-6 space-y-2">
-            <Link to="/about" className="flex items-center py-2 text-sm">
+            <Link
+              to="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center py-2 text-sm"
+            >
               About
             </Link>
-            <Link to="/contact" className="flex items-center py-2 text-sm">
+            <Link
+              to="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center py-2 text-sm"
+            >
               Contact
             </Link>
           </div>
