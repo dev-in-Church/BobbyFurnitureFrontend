@@ -31,7 +31,7 @@ export default function HomeDynamic() {
     priceRange: "KES",
     address: {
       "@type": "PostalAddress",
-      streetAddress: "Your Street Address",
+      streetAddress: "Kahawa Sukari",
       addressLocality: "Nairobi",
       addressRegion: "Nairobi County",
       postalCode: "00100",
