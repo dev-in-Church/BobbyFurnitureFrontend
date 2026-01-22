@@ -966,9 +966,7 @@ export default function Navbar() {
 
               {/* Category Dropdown (Desktop) */}
               {location.pathname !== "/" && (
-                <div className="hidden md:block ml-2">
-                  {renderCategoryDropdown()}
-                </div>
+                <div className="hidden ml-2">{renderCategoryDropdown()}</div>
               )}
 
               {/* Logo */}
