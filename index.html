@@ -24,6 +24,24 @@
       content="tDKJrb9Zp5UTt3oLzJShIOOfbtpFOojDzXOR0qYMCGY"
     />
 
+    <script
+      id="merchantWidgetScript"
+      src="https://www.gstatic.com/shopping/merchant/merchantwidget.js"
+      defer
+    ></script>
+
+    <script>
+      merchantWidgetScript.addEventListener("load", function () {
+        merchantwidget.start({
+          // REQUIRED FIELDS
+          merchant_id: 5597129990,
+
+          // OPTIONAL FIELDS
+          position: POSITION,
+          region: REGION,
+        });
+      });
+    </script>
     <link rel="icon" type="image/svg+xml" href="/logo5.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bobby Interiors | Online Furniture Store</title>
