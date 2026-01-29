@@ -14,35 +14,79 @@ import {
 import { Badge } from "../components/ui/badge";
 
 const ShippingPolicy = () => {
-  const shippingRates = [
-    { location: "Nairobi", timeframe: "2-3 business days", cost: "KES 500" },
+  const deliveryZones = [
+    { fare: 1000, areas: ["Kahawa Sukari", "Kahawa Wendani"] },
+    { fare: 1500, areas: ["Githurai 45", "Baracks"] },
     {
-      location: "Other Kenya Cities",
-      timeframe: "4-7 business days",
-      cost: "KES 1,000",
+      fare: 2000,
+      areas: [
+        "Bypass - Kamakis - corner - OJ",
+        "Kwa Kairu - Kimbo",
+        "Membley - Tatu City - Ruiru town",
+        "Carwash - Roysambu - Mwikki",
+        "Roasters - Zimmerman - Githurai 44 - Kahawa West",
+        "Mwihoko",
+      ],
     },
     {
-      location: "Outskirts",
-      timeframe: "7-10 business days",
-      cost: "KES 1,500",
+      fare: 2500,
+      areas: [
+        "Witeithie - Juja - Kroad - Toll",
+        "Pangani - Muthaiga - allsops",
+        "Babadogo - Lucky summer - Njiru",
+      ],
+    },
+    {
+      fare: 3000,
+      areas: [
+        "Thika - Kiambu - Ruaka",
+        "Muchatha - Parkland - Nairobi CBD",
+        "Kariobangi - Umoja - Donholm - Buruburu",
+        "Embakasi - Utawala - Ruai - Chokaa",
+      ],
+    },
+    {
+      fare: 3500,
+      areas: [
+        "Makongeni - Landless",
+        "Westland - Kangemi - Uthiru - Kinoo - Muthiga",
+        "Kileleshwa - Lavington - Kawangware - Ngong to Racecourse",
+        "Kitsuru - Gachie - Wagige - Lower Kabete - Banana",
+        "Langata - South B & C - Imara Daima",
+      ],
+    },
+    {
+      fare: 4000,
+      areas: [
+        "Kikuyu - Karen - Kenol",
+        "Syokimau - Mlolongo - Athi River - Kamulu - Joska",
+      ],
+    },
+    {
+      fare: 4500,
+      areas: ["Ngong Town", "Rongai Town", "Kitengela Town", "Malaa"],
     },
   ];
 
   const sections = [
     {
-      title: "Shipping Areas",
+      title: "Delivery Coverage",
       icon: MapPin,
-      content: `We currently deliver to all areas within Kenya. Standard delivery times vary based on your location:
-      - Nairobi Metropolitan Area: 2-3 business days
-      - Other Major Cities: 4-7 business days
-      - Rural and Remote Areas: 7-10 business days
-      
-      Delivery times are estimates and not guaranteed. Unforeseen circumstances may cause delays.`,
+      content: `We deliver to selected areas within the Nairobi region and surrounding towns. Delivery is only available to the zones listed below. Our team will confirm your delivery zone during checkout.
+
+Standard Delivery:
+- Nairobi Metropolitan Areas: 2-3 business days
+- Surrounding Towns (Thika, Kiambu, Ruaka, etc.): 3-4 business days
+- Outskirts (Kitengela, Rongai, Ngong, Karen, etc.): 4-5 business days
+
+Delivery times are estimates and not guaranteed. Unforeseen circumstances may cause delays.`,
     },
     {
       title: "Shipping Costs",
       icon: Truck,
-      content: `Shipping costs are calculated based on your delivery location and order weight. Costs are displayed at checkout before you complete your purchase. Free shipping may be available on orders exceeding a certain amount (details provided during checkout).`,
+      content: `Shipping costs are determined by your selected delivery location at checkout and are fixed per zone (not based on weight). Each delivery zone has a specific shipping fare displayed in the Delivery Zones table below. 
+
+The exact shipping cost will be calculated and displayed at checkout before you complete your purchase, allowing you to review and confirm the fee. Once you select your delivery area, the corresponding shipping fare will be applied to your order.`,
     },
     {
       title: "Order Processing",
@@ -128,47 +172,39 @@ const ShippingPolicy = () => {
           </p>
         </div>
 
-        {/* Shipping Rates Table */}
+        {/* Delivery Zones Table */}
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Truck className="h-6 w-6 mr-3 text-blue-600" />
-              Shipping Rates & Timeframes
+              <MapPin className="h-6 w-6 mr-3 text-blue-600" />
+              Delivery Zones & Shipping Fares
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b-2 border-gray-200">
-                    <th className="text-left py-3 px-4 font-semibold">
-                      Location
-                    </th>
-                    <th className="text-left py-3 px-4 font-semibold">
-                      Delivery Timeframe
-                    </th>
-                    <th className="text-left py-3 px-4 font-semibold">
-                      Shipping Cost
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {shippingRates.map((rate, index) => (
-                    <tr
-                      key={index}
-                      className="border-b border-gray-100 hover:bg-gray-50"
-                    >
-                      <td className="py-3 px-4">{rate.location}</td>
-                      <td className="py-3 px-4">{rate.timeframe}</td>
-                      <td className="py-3 px-4">{rate.cost}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="space-y-6">
+              {deliveryZones.map((zone, index) => (
+                <div
+                  key={index}
+                  className="border-l-4 border-blue-600 pl-4 py-2"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold text-gray-800">
+                      Zone {index + 1}
+                    </h4>
+                    <Badge className="bg-blue-600 text-white">
+                      KES {zone.fare.toLocaleString()}
+                    </Badge>
+                  </div>
+                  <p className="text-sm text-gray-600">
+                    {zone.areas.join(", ")}
+                  </p>
+                </div>
+              ))}
             </div>
-            <p className="text-xs text-gray-500 mt-4">
-              *Timeframes are business days (Monday-Friday) excluding public
-              holidays
+            <p className="text-xs text-gray-500 mt-6 pt-6 border-t">
+              *Shipping fares are fixed per delivery zone and apply to all
+              orders. Select your delivery area at checkout to confirm your
+              shipping cost.
             </p>
           </CardContent>
         </Card>
