@@ -37,6 +37,10 @@ import ContactPage from "./pages/contact-page";
 import AboutPage from "./pages/about-page";
 import HelpCenterPage from "./pages/help-center";
 import AuthSuccess from "./pages/auth-success.jsx";
+import PrivacyPolicy from "./pages/privacy-policy.jsx";
+import TermsAndConditions from "./pages/terms-and-conditions.jsx";
+import ShippingPolicy from "./pages/shipping-policy.jsx";
+import ReturnPolicy from "./pages/return-policy.jsx";
 
 // Admin Components
 import AdminDashboard from "./pages/admin-dashboard-enhanced";
@@ -175,6 +179,15 @@ const App = () => {
                   <Route path="/contact" element={<ContactPage />} />
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/help" element={<HelpCenterPage />} />
+
+                  {/* other */}
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/return-policy" element={<ReturnPolicy />} />
+                  <Route path="/shipping-policy" element={<ShippingPolicy />} />
+                  <Route
+                    path="/terms-and-conditions"
+                    element={<TermsAndConditions />}
+                  />
 
                   {/* Auth Routes */}
                   <Route path="/login" element={<LoginPage />} />

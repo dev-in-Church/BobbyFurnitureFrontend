@@ -450,7 +450,7 @@ const EnhancedFooter = () => {
               </a>
               <span className="hidden md:inline">|</span>
               <a
-                href="/terms-of-service"
+                href="/terms-and-conditions"
                 className="hover:text-blue-400 transition-colors"
               >
                 Terms of Service
