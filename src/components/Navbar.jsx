@@ -49,6 +49,7 @@ import { useAuth } from "../contexts/auth-context";
 import { useCart, CartProvider } from "../contexts/cart-context";
 import { useWishlist } from "../contexts/wishlist-context";
 import Banner from "./Banner";
+import BackButton from "./backButton";
 
 // Social media links
 const SOCIAL_LINKS = [
@@ -961,6 +962,9 @@ export default function Navbar() {
         <div className="w-full bg-white">
           <div className="container mx-auto flex h-[3rem] sm:h-14 items-end sm:items-center justify-between px-6">
             <div className="flex items-center gap-2">
+              {/* Mobile Back Button */}
+              {location.pathname !== "/" && <BackButton />}
+
               {/* Mobile Menu */}
               {renderMobileMenu()}
 
