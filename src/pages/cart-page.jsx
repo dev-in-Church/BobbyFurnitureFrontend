@@ -28,6 +28,7 @@ import {
   Gift,
 } from "lucide-react";
 import { toast } from "react-toastify";
+import { currencyFormatter } from "../utils/currencyFormatter";
 
 const CartPage = () => {
   const { cartItems, updateQuantity, removeFromCart, getCartTotal, clearCart } =
@@ -93,7 +94,9 @@ const CartPage = () => {
                   <div className="flex-shrink-0">
                     <img
                       src={
-                        item.image || `/placeholder.svg?height=120&width=120`
+                        item.image ||
+                        item.images?.[0] ||
+                        `/placeholder.svg?height=120&width=120`
                       }
                       alt={item.name}
                       className="w-24 h-24 object-cover rounded-lg"
@@ -151,10 +154,10 @@ const CartPage = () => {
 
                       <div className="text-right">
                         <p className="text-lg font-bold text-gray-900">
-                          KSh {(item.price * item.quantity).toLocaleString()}
+                          {currencyFormatter.format(item.price * item.quantity)}
                         </p>
                         <p className="text-sm text-gray-600">
-                          KSh {item.price.toLocaleString()} each
+                          {currencyFormatter.format(item.price)} each
                         </p>
                       </div>
                     </div>
@@ -196,7 +199,7 @@ const CartPage = () => {
 
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span>KSh {subtotal.toLocaleString()}</span>
+                  <span>{currencyFormatter.format(subtotal)}</span>
                 </div>
               </div>
 

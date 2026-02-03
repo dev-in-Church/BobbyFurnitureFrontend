@@ -16,6 +16,7 @@ import {
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
+import { currencyFormatter } from "../utils/currencyFormatter";
 
 const ProductCardEnhanced = ({ product, className = "" }) => {
   const { addToCart } = useCart();
@@ -49,7 +50,7 @@ const ProductCardEnhanced = ({ product, className = "" }) => {
     product.originalPrice && product.price
       ? Math.round(
           ((product.originalPrice - product.price) / product.originalPrice) *
-            100
+            100,
         )
       : 0;
 
@@ -201,12 +202,12 @@ const ProductCardEnhanced = ({ product, className = "" }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <span className="text-lg font-bold text-blue-600">
-                KSh {product.price?.toLocaleString()}
+                {currencyFormatter.format(product.price)}
               </span>
               {product.originalPrice &&
                 product.originalPrice > product.price && (
                   <span className="text-sm text-gray-500 line-through">
-                    KSh {product.originalPrice.toLocaleString()}
+                    {currencyFormatter.format(product.originalPrice)}
                   </span>
                 )}
             </div>
