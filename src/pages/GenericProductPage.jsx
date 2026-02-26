@@ -34,7 +34,7 @@ const GenericProductPage = ({ type }) => {
           .split("-")
           .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
           .join(" ");
-      setTitle(`${formatted} Furniture`);
+      setTitle(`${formatted}`);
     } else if (type === "featured") {
       setTitle("Featured Products");
     } else if (type === "new-arrivals") {
@@ -53,19 +53,19 @@ const GenericProductPage = ({ type }) => {
             category,
             pagination.page,
             pagination.limit,
-            sort
+            sort,
           );
         } else if (type === "featured") {
           response = await fetchFeaturedProducts(
             pagination.page,
             pagination.limit,
-            sort
+            sort,
           );
         } else if (type === "new-arrivals") {
           response = await fetchNewArrivals(
             pagination.page,
             pagination.limit,
-            sort
+            sort,
           );
         }
         setProducts(response.products);
@@ -93,8 +93,8 @@ const GenericProductPage = ({ type }) => {
           type === "featured"
             ? "bg-yellow-500 text-white"
             : type === "new-arrivals"
-            ? "bg-primary text-white"
-            : "bg-white text-gray-900"
+              ? "bg-primary text-white"
+              : "bg-white text-gray-900"
         }`}
       >
         <h1 className="text-3xl font-bold">{title}</h1>

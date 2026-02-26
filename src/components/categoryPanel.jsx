@@ -69,7 +69,7 @@ const CategoryPanel = () => {
   const [activeCategory, setActiveCategory] = useState(null);
 
   const activeCategoryData = categories.find(
-    (cat) => cat.id === activeCategory
+    (cat) => cat.id === activeCategory,
   );
 
   return (
@@ -87,13 +87,14 @@ const CategoryPanel = () => {
           />
         ))}
       </ul>
-
+      {/* disbled here, enable later */}
+      {/* 
       {activeCategory && (
         <SubcategoriesPanel
           category={activeCategoryData}
           setActiveCategory={setActiveCategory}
         />
-      )}
+      )} */}
     </nav>
   );
 };

@@ -154,18 +154,18 @@ const App = () => {
                     element={<CategoryPage />}
                   /> */}
 
-                  {/* 🪑 Category pages */}
+                  {/*Category pages */}
                   <Route
                     path="/category/:category"
                     element={<GenericProductPage type="category" />}
                   />
-                  {/* 🌟 Featured page */}
+                  {/*Featured page */}
                   <Route
                     path="/featured"
                     element={<GenericProductPage type="featured" />}
                   />
 
-                  {/* 🆕 New arrivals page */}
+                  {/*New arrivals page */}
                   <Route
                     path="/new-arrivals"
                     element={<GenericProductPage type="new-arrivals" />}

@@ -81,7 +81,7 @@ const CategoryPage = () => {
           pagination.page,
           pagination.limit,
           sort,
-          filters
+          filters,
         );
 
         setProducts(response.products);

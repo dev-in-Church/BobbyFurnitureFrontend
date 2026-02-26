@@ -193,92 +193,92 @@ const CATEGORIES = [
       },
     ],
   },
-  {
-    name: "Office",
-    icon: <Briefcase className="h-5 w-5 mr-2" />,
-    url: "/category/office",
-    subcategories: [
-      {
-        name: "Desks",
-        items: [
-          "Executive Desks",
-          "Standing Desks",
-          "Computer Desks",
-          "Writing Desks",
-        ],
-      },
-      {
-        name: "Office Chairs",
-        items: [
-          "Ergonomic Chairs",
-          "Executive Chairs",
-          "Task Chairs",
-          "Gaming Chairs",
-        ],
-      },
-      {
-        name: "Storage",
-        items: [
-          "Filing Cabinets",
-          "Bookcases",
-          "Office Shelving",
-          "Storage Boxes",
-        ],
-      },
-      {
-        name: "Accessories",
-        items: [
-          "Desk Lamps",
-          "Monitor Stands",
-          "Keyboard Trays",
-          "Cable Management",
-        ],
-      },
-    ],
-  },
-  {
-    name: "Kitchen",
-    icon: <Coffee className="h-5 w-5 mr-2" />,
-    url: "/category/kitchen",
-    subcategories: [
-      {
-        name: "Kitchen Islands",
-        items: [
-          "Rolling Islands",
-          "Stationary Islands",
-          "Kitchen Carts",
-          "Butcher Blocks",
-        ],
-      },
-      {
-        name: "Kitchen Storage",
-        items: [
-          "Pantry Cabinets",
-          "Kitchen Cabinets",
-          "Spice Racks",
-          "Bakers Racks",
-        ],
-      },
-      {
-        name: "Breakfast Nooks",
-        items: [
-          "Breakfast Tables",
-          "Counter Height Sets",
-          "Banquette Seating",
-          "Corner Breakfast Sets",
-        ],
-      },
-      {
-        name: "Kitchen Accessories",
-        items: [
-          "Kitchen Stools",
-          "Pot Racks",
-          "Wine Storage",
-          "Microwave Carts",
-        ],
-      },
-    ],
-  },
+  // {
+  //   name: "Office",
+  //   icon: <Briefcase className="h-5 w-5 mr-2" />,
+  //   url: "/category/office",
+  //   subcategories: [
+  //     {
+  //       name: "Desks",
+  //       items: [
+  //         "Executive Desks",
+  //         "Standing Desks",
+  //         "Computer Desks",
+  //         "Writing Desks",
+  //       ],
+  //     },
+  //     {
+  //       name: "Office Chairs",
+  //       items: [
+  //         "Ergonomic Chairs",
+  //         "Executive Chairs",
+  //         "Task Chairs",
+  //         "Gaming Chairs",
+  //       ],
+  //     },
+  //     {
+  //       name: "Storage",
+  //       items: [
+  //         "Filing Cabinets",
+  //         "Bookcases",
+  //         "Office Shelving",
+  //         "Storage Boxes",
+  //       ],
+  //     },
+  //     {
+  //       name: "Accessories",
+  //       items: [
+  //         "Desk Lamps",
+  //         "Monitor Stands",
+  //         "Keyboard Trays",
+  //         "Cable Management",
+  //       ],
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Kitchen",
+  //   icon: <Coffee className="h-5 w-5 mr-2" />,
+  //   url: "/category/kitchen",
+  //   subcategories: [
+  //     {
+  //       name: "Kitchen Islands",
+  //       items: [
+  //         "Rolling Islands",
+  //         "Stationary Islands",
+  //         "Kitchen Carts",
+  //         "Butcher Blocks",
+  //       ],
+  //     },
+  //     {
+  //       name: "Kitchen Storage",
+  //       items: [
+  //         "Pantry Cabinets",
+  //         "Kitchen Cabinets",
+  //         "Spice Racks",
+  //         "Bakers Racks",
+  //       ],
+  //     },
+  //     {
+  //       name: "Breakfast Nooks",
+  //       items: [
+  //         "Breakfast Tables",
+  //         "Counter Height Sets",
+  //         "Banquette Seating",
+  //         "Corner Breakfast Sets",
+  //       ],
+  //     },
+  //     {
+  //       name: "Kitchen Accessories",
+  //       items: [
+  //         "Kitchen Stools",
+  //         "Pot Racks",
+  //         "Wine Storage",
+  //         "Microwave Carts",
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     name: "Outdoor",
     icon: <Sofa className="h-5 w-5 mr-2" />,
@@ -325,7 +325,7 @@ const CATEGORIES = [
   {
     name: "Kids & Nursery",
     icon: <Bed className="h-5 w-5 mr-2" />,
-    url: "/category/kids-nursery",
+    url: "/category/kids",
     subcategories: [
       {
         name: "Kids Beds",
@@ -406,7 +406,7 @@ const CATEGORIES = [
   {
     name: "Home Decor",
     icon: <Coffee className="h-5 w-5 mr-2" />,
-    url: "/category/home-decor",
+    url: "/category/decor",
     subcategories: [
       {
         name: "Lighting",
@@ -453,7 +453,7 @@ const CATEGORIES = [
   {
     name: "Storage & Organization",
     icon: <Briefcase className="h-5 w-5 mr-2" />,
-    url: "/category/storage-organization",
+    url: "/category/storage",
     subcategories: [
       {
         name: "Shelving",
@@ -500,7 +500,7 @@ const CATEGORIES = [
   {
     name: "All Categories",
     icon: <LayoutGrid className="h-5 w-5 mr-2" />,
-    url: "/categories",
+    url: "/all-products",
     subcategories: [],
   },
 ];
