@@ -1,4 +1,3 @@
-
 import {
   Sofa,
   Bed,
@@ -9,18 +8,20 @@ import {
   Palette,
   Baby,
   Bath,
+  LayoutGrid,
+  BedDouble,
 } from "lucide-react";
 
 export const categories = [
   {
-    
-        id: 1,
-        name: "Living Room",
-        slug: "living-room",
-        seoTitle: "Living Room Furniture Kenya | Sofas & TV Stands", 
-        seoDescription: "Shop premium living room furniture in Kenya. Browse 3-seater sofas, L-shaped sectionals, coffee tables & TV stands. Shop now!",
-        h1: "Living Room Furniture in Kenya",
-        icon: <Sofa className="h-4 w-4" />,
+    id: 1,
+    name: "Living Room",
+    slug: "category/living-room",
+    seoTitle: "Living Room Furniture Kenya | Sofas & TV Stands",
+    seoDescription:
+      "Shop premium living room furniture in Kenya. Browse 3-seater sofas, L-shaped sectionals, coffee tables & TV stands. Shop now!",
+    h1: "Living Room Furniture in Kenya",
+    icon: <Sofa className="h-4 w-4" />,
     subcategories: [
       {
         title: "SOFAS",
@@ -86,13 +87,14 @@ export const categories = [
   },
 
   {
-      id: 2,
-      name: "Bedroom",
-      slug: "bedroom",
-      seoTitle: "Bedroom Furniture Kenya | Beds & Wardrobes", 
-      seoDescription: "Buy quality bedroom furniture in Kenya. Choose from queen beds, king beds, wardrobes, dressers & mattresses. Affordable prices Nairobi.", 
-      h1: "Bedroom Furniture in Kenya",
-      icon: <Bed className="h-4 w-4" />,
+    id: 2,
+    name: "Bedroom",
+    slug: "category/bedroom",
+    seoTitle: "Bedroom Furniture Kenya | Beds & Wardrobes",
+    seoDescription:
+      "Buy quality bedroom furniture in Kenya. Choose from queen beds, king beds, wardrobes, dressers & mattresses. Affordable prices Nairobi.",
+    h1: "Bedroom Furniture in Kenya",
+    icon: <Bed className="h-4 w-4" />,
 
     subcategories: [
       {
@@ -159,16 +161,17 @@ export const categories = [
   },
 
   {
-      id: 3,
-      name: "Dining Room",
-      slug: "dining-room",
-      seoTitle: "Dining Furniture Kenya | Tables, Chairs & Sets",
-      seoDescription: "Shop dining room furniture in Kenya. Browse dining tables, chairs, buffets & complete sets. Modern & classic designs.", 
-      h1: "Dining Room Furniture in Kenya",
-      icon: <Utensils className="h-4 w-4" />,
+    id: 3,
+    name: "Dining Room",
+    slug: "category/dining-room",
+    seoTitle: "Dining Furniture Kenya | Tables, Chairs & Sets",
+    seoDescription:
+      "Shop dining room furniture in Kenya. Browse dining tables, chairs, buffets & complete sets. Modern & classic designs.",
+    h1: "Dining Room Furniture in Kenya",
+    icon: <Utensils className="h-4 w-4" />,
 
     subcategories: [
-       {
+      {
         title: "DINING TABLES",
         items: [
           "Rectangular Tables",
@@ -231,156 +234,162 @@ export const categories = [
     ],
   },
 
-  {
-  id: 4,
-  name: "Office",
-  slug: "office",
-  seoTitle: "Office Furniture Kenya | Desks, Chairs & Storage", 
-  seoDescription: "Shop ergonomic office furniture in Kenya. Computer desks, executive chairs, filing cabinets & conference tables. Work from home essentials. Nairobi delivery.", 
-  h1: "Office Furniture in Kenya",
-  icon: <Laptop className="h-4 w-4" />,
-    subcategories: [
-       {
-        title: "DESKS",
-        items: [
-          "Computer Desks",
-          "Writing Desks",
-          "Executive Desks",
-          "Standing Desks",
-          "L-Shaped Desks",
-        ],
-      },
-      {
-        title: "OFFICE CHAIRS",
-        items: [
-          "Ergonomic Chairs",
-          "Executive Chairs",
-          "Task Chairs",
-          "Mesh Chairs",
-          "Leather Office Chairs",
-        ],
-      },
-      {
-        title: "STORAGE",
-        items: [
-          "Filing Cabinets",
-          "Bookcases",
-          "Credenzas",
-          "Mobile Pedestals",
-          "Storage Cabinets",
-        ],
-      },
-      {
-        title: "OFFICE SETS",
-        items: [
-          "Complete Office Sets",
-          "Desk & Chair Sets",
-          "Executive Sets",
-          "Home Office Sets",
-          "Modular Office",
-        ],
-      },
-      {
-        title: "ACCESSORIES",
-        items: [
-          "Desk Lamps",
-          "Monitor Stands",
-          "Keyboard Trays",
-          "Cable Management",
-          "Desk Organizers",
-        ],
-      },
-      {
-        title: "CONFERENCE",
-        items: [
-          "Conference Tables",
-          "Meeting Chairs",
-          "Presentation Boards",
-          "Podiums",
-          "Training Tables",
-        ],
-      },
-    ],
-  },
+  // office
+  // {
+  //   id: 4,
+  //   name: "Office",
+  //   slug: "office",
+  //   seoTitle: "Office Furniture Kenya | Desks, Chairs & Storage",
+  //   seoDescription:
+  //     "Shop ergonomic office furniture in Kenya. Computer desks, executive chairs, filing cabinets & conference tables. Work from home essentials. Nairobi delivery.",
+  //   h1: "Office Furniture in Kenya",
+  //   icon: <Laptop className="h-4 w-4" />,
+  //   subcategories: [
+  //     {
+  //       title: "DESKS",
+  //       items: [
+  //         "Computer Desks",
+  //         "Writing Desks",
+  //         "Executive Desks",
+  //         "Standing Desks",
+  //         "L-Shaped Desks",
+  //       ],
+  //     },
+  //     {
+  //       title: "OFFICE CHAIRS",
+  //       items: [
+  //         "Ergonomic Chairs",
+  //         "Executive Chairs",
+  //         "Task Chairs",
+  //         "Mesh Chairs",
+  //         "Leather Office Chairs",
+  //       ],
+  //     },
+  //     {
+  //       title: "STORAGE",
+  //       items: [
+  //         "Filing Cabinets",
+  //         "Bookcases",
+  //         "Credenzas",
+  //         "Mobile Pedestals",
+  //         "Storage Cabinets",
+  //       ],
+  //     },
+  //     {
+  //       title: "OFFICE SETS",
+  //       items: [
+  //         "Complete Office Sets",
+  //         "Desk & Chair Sets",
+  //         "Executive Sets",
+  //         "Home Office Sets",
+  //         "Modular Office",
+  //       ],
+  //     },
+  //     {
+  //       title: "ACCESSORIES",
+  //       items: [
+  //         "Desk Lamps",
+  //         "Monitor Stands",
+  //         "Keyboard Trays",
+  //         "Cable Management",
+  //         "Desk Organizers",
+  //       ],
+  //     },
+  //     {
+  //       title: "CONFERENCE",
+  //       items: [
+  //         "Conference Tables",
+  //         "Meeting Chairs",
+  //         "Presentation Boards",
+  //         "Podiums",
+  //         "Training Tables",
+  //       ],
+  //     },
+  //   ],
+  // },
+
+  // outdoor
+
+  // {
+  //   id: 5,
+  //   name: "Outdoor",
+  //   slug: "outdoor",
+  //   seoTitle: "Outdoor Furniture Kenya | Patio Sets & Garden",
+  //   seoDescription:
+  //     "Buy weather-resistant outdoor furniture in Kenya. Patio dining sets, garden chairs, umbrellas & gazebos. Perfect for Nairobi homes.",
+  //   h1: "Outdoor & Patio Furniture in Kenya",
+  //   icon: <Umbrella className="h-4 w-4" />,
+
+  //   subcategories: [
+  //     {
+  //       title: "PATIO SETS",
+  //       items: [
+  //         "Dining Sets",
+  //         "Conversation Sets",
+  //         "Bistro Sets",
+  //         "Sectional Sets",
+  //         "Bar Sets",
+  //       ],
+  //     },
+  //     {
+  //       title: "SEATING",
+  //       items: [
+  //         "Outdoor Sofas",
+  //         "Lounge Chairs",
+  //         "Adirondack Chairs",
+  //         "Hammocks",
+  //         "Porch Swings",
+  //       ],
+  //     },
+  //     {
+  //       title: "TABLES",
+  //       items: [
+  //         "Dining Tables",
+  //         "Side Tables",
+  //         "Coffee Tables",
+  //         "Bar Tables",
+  //         "Folding Tables",
+  //       ],
+  //     },
+  //     {
+  //       title: "SHADE",
+  //       items: ["Umbrellas", "Canopies", "Pergolas", "Gazebos", "Shade Sails"],
+  //     },
+  //     {
+  //       title: "OUTDOOR DECOR",
+  //       items: [
+  //         "Outdoor Rugs",
+  //         "Planters",
+  //         "Outdoor Lighting",
+  //         "Garden Sculptures",
+  //         "Fountains",
+  //       ],
+  //     },
+  //     {
+  //       title: "MATERIALS",
+  //       items: [
+  //         "Wicker/Rattan",
+  //         "Teak",
+  //         "Aluminum",
+  //         "Wrought Iron",
+  //         "Plastic/Resin",
+  //       ],
+  //     },
+  //   ],
+  // },
 
   {
-  id: 5,
-  name: "Outdoor",
-  slug: "outdoor",
-  seoTitle: "Outdoor Furniture Kenya | Patio Sets & Garden", 
-  seoDescription: "Buy weather-resistant outdoor furniture in Kenya. Patio dining sets, garden chairs, umbrellas & gazebos. Perfect for Nairobi homes.", 
-  h1: "Outdoor & Patio Furniture in Kenya",
-  icon: <Umbrella className="h-4 w-4" />,
+    id: 6,
+    name: "Storage",
+    slug: "category/storage",
+    seoTitle: "Storage Furniture Kenya | Cabinets & Shelves",
+    seoDescription:
+      "Find smart storage solutions in Kenya. Cabinets, shelving units, wardrobes, closet systems & organizers. Maximize your space. Delivery across Nairobi.",
+    h1: "Storage Furniture & Solutions in Kenya",
+    icon: <Archive className="h-4 w-4" />,
 
     subcategories: [
-       {
-        title: "PATIO SETS",
-        items: [
-          "Dining Sets",
-          "Conversation Sets",
-          "Bistro Sets",
-          "Sectional Sets",
-          "Bar Sets",
-        ],
-      },
       {
-        title: "SEATING",
-        items: [
-          "Outdoor Sofas",
-          "Lounge Chairs",
-          "Adirondack Chairs",
-          "Hammocks",
-          "Porch Swings",
-        ],
-      },
-      {
-        title: "TABLES",
-        items: [
-          "Dining Tables",
-          "Side Tables",
-          "Coffee Tables",
-          "Bar Tables",
-          "Folding Tables",
-        ],
-      },
-      {
-        title: "SHADE",
-        items: ["Umbrellas", "Canopies", "Pergolas", "Gazebos", "Shade Sails"],
-      },
-      {
-        title: "OUTDOOR DECOR",
-        items: [
-          "Outdoor Rugs",
-          "Planters",
-          "Outdoor Lighting",
-          "Garden Sculptures",
-          "Fountains",
-        ],
-      },
-      {
-        title: "MATERIALS",
-        items: [
-          "Wicker/Rattan",
-          "Teak",
-          "Aluminum",
-          "Wrought Iron",
-          "Plastic/Resin",
-        ],
-      },
-    ],
-  },
-
-  {
-  id: 6,
-  name: "Storage",
-  slug: "storage",
-  seoTitle: "Storage Furniture Kenya | Cabinets & Shelves", 
-  seoDescription: "Find smart storage solutions in Kenya. Cabinets, shelving units, wardrobes, closet systems & organizers. Maximize your space. Delivery across Nairobi.", 
-  h1: "Storage Furniture & Solutions in Kenya",
-  icon: <Archive className="h-4 w-4" />,
-
-    subcategories: [
-       {
         title: "SHELVING",
         items: [
           "Bookcases",
@@ -444,16 +453,17 @@ export const categories = [
   },
 
   {
-  id: 7,
-  name: "Decor",
-  slug: "decor",
-  seoTitle: "Home Decor Kenya | Wall Art, Lighting & More", 
-  seoDescription: "Shop stylish home decor in Kenya. Wall art, mirrors, lighting, throw pillows, rugs & seasonal decorations. Transform your home. Nairobi delivery available.",
-  h1: "Home Decor & Accessories in Kenya",
-  icon: <Palette className="h-4 w-4" />,
+    id: 7,
+    name: "Decor",
+    slug: "category/decor",
+    seoTitle: "Home Decor Kenya | Wall Art, Lighting & More",
+    seoDescription:
+      "Shop stylish home decor in Kenya. Wall art, mirrors, lighting, throw pillows, rugs & seasonal decorations. Transform your home. Nairobi delivery available.",
+    h1: "Home Decor & Accessories in Kenya",
+    icon: <Palette className="h-4 w-4" />,
 
     subcategories: [
-       {
+      {
         title: "WALL DECOR",
         items: [
           "Wall Art",
@@ -517,15 +527,16 @@ export const categories = [
   },
 
   {
-  id: 8,
-  name: "Kids & Baby",
-  slug: "kids-baby",
-  seoTitle: "Kids & Baby Furniture Kenya | Beds, Cribs & More", 
-  seoDescription: "Shop safe kids & baby furniture in Kenya. Cribs, bunk beds, changing tables, toy storage & children's decor. Quality & safety certified. Nairobi delivery.", 
-  h1: "Kids & Baby Furniture in Kenya",
-  icon: <Baby className="h-4 w-4" />,
+    id: 8,
+    name: "Kids & Baby",
+    slug: "category/kids",
+    seoTitle: "Kids & Baby Furniture Kenya | Beds, Cribs & More",
+    seoDescription:
+      "Shop safe kids & baby furniture in Kenya. Cribs, bunk beds, changing tables, toy storage & children's decor. Quality & safety certified. Nairobi delivery.",
+    h1: "Kids & Baby Furniture in Kenya",
+    icon: <Baby className="h-4 w-4" />,
 
-     subcategories: [
+    subcategories: [
       {
         title: "KIDS FURNITURE",
         items: ["Kids Beds", "Bunk Beds", "Desks", "Dressers", "Bookcases"],
@@ -578,13 +589,14 @@ export const categories = [
   },
 
   {
-  id: 9,
-  name: "Mattresses",
-  slug: "mattresses",
-  seoTitle: "Mattresses Kenya | Memory Foam, Hybrid & Latex", 
-  seoDescription: "Buy quality mattresses in Kenya. Memory foam, hybrid, orthopedic & latex mattresses. All sizes available. 10-year warranty.", 
-  h1: "Mattresses in Kenya - All Types & Sizes",
-  icon: <Bed className="h-4 w-4" />,
+    id: 9,
+    name: "Mattresses",
+    slug: "category/mattresses",
+    seoTitle: "Mattresses Kenya | Memory Foam, Hybrid & Latex",
+    seoDescription:
+      "Buy quality mattresses in Kenya. Memory foam, hybrid, orthopedic & latex mattresses. All sizes available. 10-year warranty.",
+    h1: "Mattresses in Kenya - All Types & Sizes",
+    icon: <BedDouble className="h-4 w-4" />,
 
     subcategories: [
       {
@@ -626,72 +638,122 @@ export const categories = [
     ],
   },
 
-  {
-  id: 10,
-  name: "Bathroom",
-  slug: "bathroom",
-  seoTitle: "Bathroom Furniture Kenya | Vanities & Storage", 
-  seoDescription: "Shop bathroom furniture in Kenya. Vanities, storage cabinets, mirrors, fixtures & accessories. Modern & classic styles.", 
-  h1: "Bathroom Furniture & Accessories in Kenya",
-  icon: <Bath className="h-4 w-4" />,
+  // bathroom
+  // {
+  //   id: 10,
+  //   name: "Bathroom",
+  //   slug: "bathroom",
+  //   seoTitle: "Bathroom Furniture Kenya | Vanities & Storage",
+  //   seoDescription:
+  //     "Shop bathroom furniture in Kenya. Vanities, storage cabinets, mirrors, fixtures & accessories. Modern & classic styles.",
+  //   h1: "Bathroom Furniture & Accessories in Kenya",
+  //   icon: <Bath className="h-4 w-4" />,
 
-     subcategories: [
-      {
-        title: "VANITIES",
-        items: [
-          "Single Vanities",
-          "Double Vanities",
-          "Vessel Sink Vanities",
-          "Wall-Mounted Vanities",
-          "Corner Vanities",
-        ],
-      },
-      {
-        title: "STORAGE",
-        items: [
-          "Linen Cabinets",
-          "Over-Toilet Storage",
-          "Medicine Cabinets",
-          "Bathroom Shelving",
-          "Towel Storage",
-        ],
-      },
-      {
-        title: "FIXTURES",
-        items: ["Faucets", "Sinks", "Shower Heads", "Bathtubs", "Toilets"],
-      },
-      {
-        title: "ACCESSORIES",
-        items: [
-          "Towel Bars",
-          "Toilet Paper Holders",
-          "Shower Caddies",
-          "Soap Dispensers",
-          "Bathroom Mirrors",
-        ],
-      },
-      {
-        title: "BATH LINENS",
-        items: [
-          "Bath Towels",
-          "Hand Towels",
-          "Washcloths",
-          "Bath Mats",
-          "Shower Curtains",
-        ],
-      },
-      {
-        title: "DECOR",
-        items: [
-          "Bathroom Art",
-          "Decorative Storage",
-          "Candles",
-          "Plants",
-          "Bathroom Sets",
-        ],
-      },
-    ],
+  //   subcategories: [
+  //     {
+  //       title: "VANITIES",
+  //       items: [
+  //         "Single Vanities",
+  //         "Double Vanities",
+  //         "Vessel Sink Vanities",
+  //         "Wall-Mounted Vanities",
+  //         "Corner Vanities",
+  //       ],
+  //     },
+  //     {
+  //       title: "STORAGE",
+  //       items: [
+  //         "Linen Cabinets",
+  //         "Over-Toilet Storage",
+  //         "Medicine Cabinets",
+  //         "Bathroom Shelving",
+  //         "Towel Storage",
+  //       ],
+  //     },
+  //     {
+  //       title: "FIXTURES",
+  //       items: ["Faucets", "Sinks", "Shower Heads", "Bathtubs", "Toilets"],
+  //     },
+  //     {
+  //       title: "ACCESSORIES",
+  //       items: [
+  //         "Towel Bars",
+  //         "Toilet Paper Holders",
+  //         "Shower Caddies",
+  //         "Soap Dispensers",
+  //         "Bathroom Mirrors",
+  //       ],
+  //     },
+  //     {
+  //       title: "BATH LINENS",
+  //       items: [
+  //         "Bath Towels",
+  //         "Hand Towels",
+  //         "Washcloths",
+  //         "Bath Mats",
+  //         "Shower Curtains",
+  //       ],
+  //     },
+  //     {
+  //       title: "DECOR",
+  //       items: [
+  //         "Bathroom Art",
+  //         "Decorative Storage",
+  //         "Candles",
+  //         "Plants",
+  //         "Bathroom Sets",
+  //       ],
+  //     },
+  //   ],
+  // },
+
+  {
+    id: 11,
+    name: "All-categories",
+    slug: "all-products",
+    // seoTitle: "Mattresses Kenya | Memory Foam, Hybrid & Latex",
+    // seoDescription:
+    //   "Buy quality mattresses in Kenya. Memory foam, hybrid, orthopedic & latex mattresses. All sizes available. 10-year warranty.",
+    // h1: "Mattresses in Kenya - All Types & Sizes",
+    icon: <LayoutGrid className="h-4 w-4" />,
+
+    // subcategories: [
+    //   {
+    //     title: "TYPES",
+    //     items: ["Memory Foam", "Innerspring", "Hybrid", "Latex", "Adjustable"],
+    //   },
+    //   {
+    //     title: "SIZES",
+    //     items: ["King", "Queen", "Full", "Twin", "California King"],
+    //   },
+    //   {
+    //     title: "BRANDS",
+    //     items: ["Sealy", "Serta", "Tempur-Pedic", "Purple", "Casper"],
+    //   },
+    //   {
+    //     title: "FIRMNESS",
+    //     items: ["Soft", "Medium", "Firm", "Extra Firm", "Customizable"],
+    //   },
+    //   {
+    //     title: "ACCESSORIES",
+    //     items: [
+    //       "Mattress Toppers",
+    //       "Mattress Pads",
+    //       "Mattress Protectors",
+    //       "Bed Frames",
+    //       "Foundations",
+    //     ],
+    //   },
+    //   {
+    //     title: "SPECIALTY",
+    //     items: [
+    //       "Cooling Mattresses",
+    //       "Organic Mattresses",
+    //       "RV Mattresses",
+    //       "Crib Mattresses",
+    //       "Air Mattresses",
+    //     ],
+    //   },
+    // ],
   },
 ];
-
-

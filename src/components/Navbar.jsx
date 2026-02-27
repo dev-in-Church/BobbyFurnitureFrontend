@@ -23,6 +23,8 @@ import {
   Heart,
   Grid3X3,
   FolderTree,
+  Palette,
+  BedDouble,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -279,51 +281,51 @@ const CATEGORIES = [
   //     },
   //   ],
   // },
+  // {
+  //   name: "Outdoor",
+  //   icon: <Sofa className="h-5 w-5 mr-2" />,
+  //   url: "/category/outdoor",
+  //   subcategories: [
+  //     {
+  //       name: "Patio Furniture",
+  //       items: [
+  //         "Outdoor Sofas",
+  //         "Patio Dining Sets",
+  //         "Adirondack Chairs",
+  //         "Outdoor Benches",
+  //       ],
+  //     },
+  //     {
+  //       name: "Outdoor Dining",
+  //       items: [
+  //         "Outdoor Dining Tables",
+  //         "Outdoor Dining Chairs",
+  //         "Bistro Sets",
+  //         "Picnic Tables",
+  //       ],
+  //     },
+  //     {
+  //       name: "Outdoor Accessories",
+  //       items: [
+  //         "Patio Umbrellas",
+  //         "Outdoor Cushions",
+  //         "Outdoor Rugs",
+  //         "Patio Heaters",
+  //       ],
+  //     },
+  //     {
+  //       name: "Garden Furniture",
+  //       items: [
+  //         "Garden Benches",
+  //         "Planters",
+  //         "Garden Stools",
+  //         "Outdoor Storage",
+  //       ],
+  //     },
+  //   ],
+  // },
   {
-    name: "Outdoor",
-    icon: <Sofa className="h-5 w-5 mr-2" />,
-    url: "/category/outdoor",
-    subcategories: [
-      {
-        name: "Patio Furniture",
-        items: [
-          "Outdoor Sofas",
-          "Patio Dining Sets",
-          "Adirondack Chairs",
-          "Outdoor Benches",
-        ],
-      },
-      {
-        name: "Outdoor Dining",
-        items: [
-          "Outdoor Dining Tables",
-          "Outdoor Dining Chairs",
-          "Bistro Sets",
-          "Picnic Tables",
-        ],
-      },
-      {
-        name: "Outdoor Accessories",
-        items: [
-          "Patio Umbrellas",
-          "Outdoor Cushions",
-          "Outdoor Rugs",
-          "Patio Heaters",
-        ],
-      },
-      {
-        name: "Garden Furniture",
-        items: [
-          "Garden Benches",
-          "Planters",
-          "Garden Stools",
-          "Outdoor Storage",
-        ],
-      },
-    ],
-  },
-  {
-    name: "Kids & Nursery",
+    name: "Kids",
     icon: <Bed className="h-5 w-5 mr-2" />,
     url: "/category/kids",
     subcategories: [
@@ -369,43 +371,43 @@ const CATEGORIES = [
       },
     ],
   },
-  {
-    name: "Accent Furniture",
-    icon: <Coffee className="h-5 w-5 mr-2" />,
-    url: "/category/accent-furniture",
-    subcategories: [
-      {
-        name: "Accent Tables",
-        items: [
-          "Side Tables",
-          "Console Tables",
-          "Accent Chests",
-          "Pedestals",
-          "Nesting Tables",
-        ],
-      },
-      {
-        name: "Accent Seating",
-        items: ["Ottomans", "Poufs", "Benches", "Accent Stools", "Settees"],
-      },
-      {
-        name: "Wall Decor",
-        items: ["Wall Shelves", "Wall Art", "Mirrors", "Clocks", "Tapestries"],
-      },
-      {
-        name: "Room Dividers",
-        items: [
-          "Folding Screens",
-          "Bookcase Dividers",
-          "Hanging Dividers",
-          "Decorative Panels",
-        ],
-      },
-    ],
-  },
+  // {
+  //   name: "Accent Furniture",
+  //   icon: <Coffee className="h-5 w-5 mr-2" />,
+  //   url: "/category/accent-furniture",
+  //   subcategories: [
+  //     {
+  //       name: "Accent Tables",
+  //       items: [
+  //         "Side Tables",
+  //         "Console Tables",
+  //         "Accent Chests",
+  //         "Pedestals",
+  //         "Nesting Tables",
+  //       ],
+  //     },
+  //     {
+  //       name: "Accent Seating",
+  //       items: ["Ottomans", "Poufs", "Benches", "Accent Stools", "Settees"],
+  //     },
+  //     {
+  //       name: "Wall Decor",
+  //       items: ["Wall Shelves", "Wall Art", "Mirrors", "Clocks", "Tapestries"],
+  //     },
+  //     {
+  //       name: "Room Dividers",
+  //       items: [
+  //         "Folding Screens",
+  //         "Bookcase Dividers",
+  //         "Hanging Dividers",
+  //         "Decorative Panels",
+  //       ],
+  //     },
+  //   ],
+  // },
   {
     name: "Home Decor",
-    icon: <Coffee className="h-5 w-5 mr-2" />,
+    icon: <Palette className="h-5 w-5 mr-2" />,
     url: "/category/decor",
     subcategories: [
       {
@@ -451,7 +453,7 @@ const CATEGORIES = [
     ],
   },
   {
-    name: "Storage & Organization",
+    name: "Storage",
     icon: <Briefcase className="h-5 w-5 mr-2" />,
     url: "/category/storage",
     subcategories: [
@@ -496,6 +498,53 @@ const CATEGORIES = [
         ],
       },
     ],
+  },
+  {
+    name: "Mattresses",
+    icon: <BedDouble className="h-5 w-5 mr-2" />,
+    url: "/category/mattresses",
+    // subcategories: [
+    //   {
+    //     name: "Shelving",
+    //     items: [
+    //       "Bookcases",
+    //       "Wall Shelves",
+    //       "Cube Storage",
+    //       "Floating Shelves",
+    //       "Corner Shelves",
+    //     ],
+    //   },
+    //   {
+    //     name: "Cabinets",
+    //     items: [
+    //       "Storage Cabinets",
+    //       "Media Cabinets",
+    //       "Accent Cabinets",
+    //       "Bathroom Cabinets",
+    //       "Garage Cabinets",
+    //     ],
+    //   },
+    //   {
+    //     name: "Baskets & Bins",
+    //     items: [
+    //       "Storage Baskets",
+    //       "Decorative Bins",
+    //       "Underbed Storage",
+    //       "Toy Storage",
+    //       "Laundry Hampers",
+    //     ],
+    //   },
+    //   {
+    //     name: "Closet Organization",
+    //     items: [
+    //       "Closet Systems",
+    //       "Shoe Storage",
+    //       "Hanging Organizers",
+    //       "Jewelry Storage",
+    //       "Garment Racks",
+    //     ],
+    //   },
+    // ],
   },
   {
     name: "All Categories",

@@ -263,7 +263,11 @@ export default function HomeDynamic() {
         {/* ================= FEATURED / SPONSORED ================= */}
         <div className="mt-2">
           <ProductSectionDynamic
-            title="Featured Furniture Deals in Kenya"
+            title={
+              <>
+                Featured <span className="sr-only">Furniture in Kenya</span>
+              </>
+            }
             viewMoreLink="/featured"
             color="blue-500"
             text="white"
@@ -275,7 +279,11 @@ export default function HomeDynamic() {
         {/* ================= NEW ARRIVALS ================= */}
         <div className="mt-2">
           <ProductSectionDynamic
-            title="New Furniture Arrivals in Kenya"
+            title={
+              <>
+                New Arrivals <span className="sr-only">Furniture in Kenya</span>
+              </>
+            }
             viewMoreLink="/new-arrivals"
             color="blue-500"
             text="white"
@@ -287,7 +295,12 @@ export default function HomeDynamic() {
         {/* ================= KIDS FURNITURE ================= */}
         <div className="mt-2">
           <ProductSectionDynamic
-            title="Kids Furniture for Sale in Kenya"
+            title={
+              <>
+                Kids Furniture{" "}
+                <span className="sr-only">for Sale in Kenya</span>
+              </>
+            }
             viewMoreLink="/category/kids-room"
             color="white"
             text="gray-500"
@@ -299,7 +312,12 @@ export default function HomeDynamic() {
 
         <div className="mt-2">
           <ProductSectionDynamic
-            title="Bunk Beds & Double Deckers in Kenya"
+            title={
+              <>
+                Bunk Beds & Double Deckers{" "}
+                <span className="sr-only">for Sale in Kenya</span>
+              </>
+            }
             viewMoreLink="/category/kids-room-double-deckers"
             color="white"
             text="gray-500"
@@ -312,7 +330,11 @@ export default function HomeDynamic() {
         {/* ================= LIVING ROOM ================= */}
         <div className="mt-2">
           <ProductSectionDynamic
-            title="Sofa Sets for Sale in Kenya"
+            title={
+              <>
+                Sofa sets <span className="sr-only">for Sale in Kenya</span>
+              </>
+            }
             viewMoreLink="/category/living-room-sectional-sofas"
             color="white"
             text="gray-500"
@@ -324,7 +346,12 @@ export default function HomeDynamic() {
 
         <div className="mt-2">
           <ProductSectionDynamic
-            title="Living Room Furniture for Sale in Kenya"
+            title={
+              <>
+                Living Room Furniture{" "}
+                <span className="sr-only">for Sale in Kenya</span>
+              </>
+            }
             viewMoreLink="/category/living-room"
             color="white"
             text="gray-500"
@@ -337,7 +364,12 @@ export default function HomeDynamic() {
         {/* ================= DINING ROOM ================= */}
         <div className="mt-2">
           <ProductSectionDynamic
-            title="Dining Tables and Sets for Sale in Kenya"
+            title={
+              <>
+                Dining Tables and Sets{" "}
+                <span className="sr-only">for Sale in Kenya</span>
+              </>
+            }
             viewMoreLink="/category/dining-room"
             color="blue-500"
             text="white"

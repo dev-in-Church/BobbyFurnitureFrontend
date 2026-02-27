@@ -9,6 +9,7 @@ const slugify = (text) =>
 
 const CategoryItem = ({ category, isActive, setActiveCategory }) => {
   const categorySlug = slugify(category.name);
+  const categoryLink = slugify(category.slug);
 
   return (
     <li
@@ -18,10 +19,7 @@ const CategoryItem = ({ category, isActive, setActiveCategory }) => {
       onMouseEnter={() => setActiveCategory(category.id)}
       onMouseLeave={() => setActiveCategory(null)}
     >
-      <Link
-        to={`/category/${categorySlug}`}
-        className="flex items-center px-4 py-2"
-      >
+      <Link to={`${categoryLink}`} className="flex items-center px-4 py-2">
         <span className="mr-3 w-6 text-center">{category.icon}</span>
         <span className="text-sm">{category.name}</span>
       </Link>
