@@ -2,13 +2,22 @@ import React from "react";
 
 const WhatsAppFloat = () => {
   const phoneNumber = "254708156310"; // no + sign
-  const message = "Hello, I would like to inquire."; // optional
+  const message = "Hello, I would like to inquire.";
+
+  const handleClick = () => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "conversion", {
+        send_to: "AW-16889667182",
+      });
+    }
+  };
 
   return (
     <a
       href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleClick}
       style={styles.whatsappButton}
       aria-label="Chat on WhatsApp"
     >
