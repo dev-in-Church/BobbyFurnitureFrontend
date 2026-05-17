@@ -11,8 +11,8 @@ export default defineConfig({
       registerType: "autoUpdate",
 
       manifest: {
-        name: "Your App Name",
-        short_name: "YourApp",
+        name: "Bobby Furniture Kenya",
+        short_name: "BobbyInteriors",
         description: "My React Vite PWA",
         theme_color: "#000000",
         background_color: "#ffffff",
