@@ -138,7 +138,7 @@ const EnhancedFooter = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-8">
           {/* Company Info */}
           <div className="space-y-6">
             <div>
@@ -276,7 +276,9 @@ const EnhancedFooter = () => {
           </div>
 
           {/* Newsletter & Social */}
+
           <div>
+            {/*}
             <h3 className="text-lg font-semibold mb-6 relative inline-block">
               Stay Connected
               <span className="absolute bottom-0 left-0 w-1/2 h-0.5 bg-blue-500"></span>
@@ -332,6 +334,7 @@ const EnhancedFooter = () => {
                 </p>
               )}
             </form>
+            */}
 
             <h4 className="font-medium text-gray-200 mb-3">Follow Us</h4>
             <div className="flex space-x-4 mb-6">
@@ -394,6 +397,7 @@ const EnhancedFooter = () => {
         </div>
 
         {/* Awards & Certifications */}
+        {/*}
         <div className="mt-12 pt-8 border-t border-gray-800 mb-8">
           <h3 className="text-center text-lg font-semibold mb-6">
             Awards & Certifications
@@ -433,6 +437,7 @@ const EnhancedFooter = () => {
             </div>
           </div>
         </div>
+        */}
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-gray-800">
