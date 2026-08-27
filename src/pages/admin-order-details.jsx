@@ -106,7 +106,7 @@ const AdminOrderDetail = () => {
 
       // First, try the individual order endpoint
       const response = await fetch(
-        `https://bobbyfurnitureonline.onrender.com/api/orders/${orderId}`
+        `https://bobbyfurnitureonline.onrender.com/api/orders/${orderId}`,
       );
 
       console.log(`Response status: ${response.status}`);
@@ -114,27 +114,27 @@ const AdminOrderDetail = () => {
 
       if (!response.ok) {
         console.log(
-          "Individual order endpoint failed, trying to get from all orders..."
+          "Individual order endpoint failed, trying to get from all orders...",
         );
         setDebugInfo(
-          `Individual order failed (${response.status}), trying all orders...`
+          `Individual order failed (${response.status}), trying all orders...`,
         );
 
         // Fallback: Get all orders and find the specific one
         const allOrdersResponse = await fetch(
-          "https://bobbyfurnitureonline.onrender.com/api/orders"
+          "https://bobbyfurnitureonline.onrender.com/api/orders",
         );
 
         if (!allOrdersResponse.ok) {
           throw new Error(
-            `Both endpoints failed. Individual: ${response.status}, All orders: ${allOrdersResponse.status}`
+            `Both endpoints failed. Individual: ${response.status}, All orders: ${allOrdersResponse.status}`,
           );
         }
 
         const allOrders = await allOrdersResponse.json();
         console.log(`Found ${allOrders.length} total orders`);
         setDebugInfo(
-          `Found ${allOrders.length} total orders, searching for order ${orderId}...`
+          `Found ${allOrders.length} total orders, searching for order ${orderId}...`,
         );
 
         // Find the specific order by ID
@@ -142,12 +142,12 @@ const AdminOrderDetail = () => {
           (order) =>
             order.id == orderId ||
             order.public_id == orderId ||
-            order.id === Number.parseInt(orderId)
+            order.id === Number.parseInt(orderId),
         );
 
         if (!foundOrder) {
           throw new Error(
-            `Order ${orderId} not found in ${allOrders.length} orders`
+            `Order ${orderId} not found in ${allOrders.length} orders`,
           );
         }
 
@@ -240,12 +240,12 @@ const AdminOrderDetail = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ order_status: newStatus }),
-        }
+        },
       );
 
       if (!response.ok) {
         throw new Error(
-          `Failed to update order status: ${response.statusText}`
+          `Failed to update order status: ${response.statusText}`,
         );
       }
 
@@ -263,7 +263,7 @@ const AdminOrderDetail = () => {
   const deleteOrder = async () => {
     if (
       !window.confirm(
-        "Are you sure you want to delete this order? This action cannot be undone."
+        "Are you sure you want to delete this order? This action cannot be undone.",
       )
     ) {
       return;
@@ -274,7 +274,7 @@ const AdminOrderDetail = () => {
         `https://bobbyfurnitureonline.onrender.com/api/orders/${orderId}`,
         {
           method: "DELETE",
-        }
+        },
       );
 
       if (!response.ok) {
@@ -321,7 +321,7 @@ const AdminOrderDetail = () => {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Order #${order.public_id || order.id} - Bobby Furniture</title>
+          <title>Order #${order.public_id || order.id} - Bobby Furniture Kenya</title>
           <style>
             body {
               font-family: Arial, sans-serif;
@@ -571,7 +571,7 @@ const AdminOrderDetail = () => {
   const itemPrices = order.items.map((item) => item.price);
   const itemsAmount = order.items.reduce(
     (sum, item) => sum + item.quantity * Number(item.price),
-    0
+    0,
   );
   const subtotal = itemsAmount;
   const total = order.total_amount || 0;
@@ -651,7 +651,7 @@ const AdminOrderDetail = () => {
         <div className="hidden">
           <div id="print-content" ref={printContentRef}>
             <div className="header">
-              <div className="logo">Bobby Furniture</div>
+              <div className="logo">Bobby Furnitur Kenya</div>
               <div className="contact-info">
                 <p>bobbyfurnitures254@gmail.com | +254 708 156 310</p>
                 <p>Nairobi, Kenya</p>
@@ -672,7 +672,7 @@ const AdminOrderDetail = () => {
                     <strong>Status:</strong>
                     <span
                       className={`status-badge ${getStatusClass(
-                        order.order_status
+                        order.order_status,
                       )}`}
                     >
                       {order.order_status
@@ -779,7 +779,7 @@ const AdminOrderDetail = () => {
             )}
 
             <div className="footer">
-              <p>Thank you for shopping with Bobby Furniture!</p>
+              <p>Thank you for shopping with Bobby Furniture Kenya!</p>
               <p>
                 For any questions regarding this order, please contact us at
                 bobbyfurnitures254@gmail.com

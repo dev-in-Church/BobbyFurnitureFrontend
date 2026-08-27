@@ -150,7 +150,8 @@ export default function HomeDynamic() {
     };
 
     // ================== PAGE META ==================
-    document.title = "Bobby Furniture | Quality Furniture for Sale in Kenya";
+    document.title =
+      "Bobby Furniture Kenya| Quality Furniture for Sale in Kenya";
 
     setMetaTag(
       "description",

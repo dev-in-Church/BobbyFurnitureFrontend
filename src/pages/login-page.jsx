@@ -52,7 +52,7 @@ const LoginPage = () => {
     try {
       const result = await login(formData.email, formData.password);
       if (result.success) {
-        // ✅ Cookies are handled automatically, no token storage needed
+        //  Cookies are handled automatically, no token storage needed
         if (result.user.isAdmin) navigate("/admin", { replace: true });
         else navigate(from, { replace: true });
       }
@@ -64,7 +64,7 @@ const LoginPage = () => {
   };
 
   const handleGoogleLogin = () => {
-    // ✅ Works as before — backend should set the cookie on successful OAuth
+    //  Works as before — backend should set the cookie on successful OAuth
     window.location.href =
       "https://bobbyfurnitureonline.onrender.com/api/auth/google";
   };

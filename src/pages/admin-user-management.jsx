@@ -85,7 +85,7 @@ const AdminUserManagement = () => {
         atob(base64)
           .split("")
           .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-          .join("")
+          .join(""),
       );
       return JSON.parse(jsonPayload);
     } catch (e) {
@@ -103,30 +103,30 @@ const AdminUserManagement = () => {
   }
 
   // Check if user has admin role using backend verification
-  // ✅ Improved version with better error handling and cleanup
+  //  Improved version with better error handling and cleanup
   const checkAdminRole = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/users/verify-token`, {
         method: "GET",
-        credentials: "include", // ✅ backend will read the cookie
+        credentials: "include", //  backend will read the cookie
       });
 
       const data = await response.json();
 
       if (response.ok && data.user) {
-        console.log("✅ Token verified via backend:", data);
+        console.log(" Token verified via backend:", data);
         setTokenInfo(data.user);
         const hasAdminRole = !!data.user.isAdmin;
         setIsAdmin(hasAdminRole);
         return hasAdminRole;
       } else {
-        console.warn("⚠️ Backend verification failed:", data.message);
+        console.warn(" Backend verification failed:", data.message);
         setIsAdmin(false);
         setTokenInfo(null);
         return false;
       }
     } catch (error) {
-      console.error("🔥 Error verifying admin role:", error);
+      console.error("Error verifying admin role:", error);
       setIsAdmin(false);
       setTokenInfo(null);
       return false;
@@ -134,11 +134,11 @@ const AdminUserManagement = () => {
   };
 
   // Get token from cookies instead of localStorage
-  // ✅ Updated token getter (cookie-based)
+  //  Updated token getter (cookie-based)
   const getToken = () => {
     const token = getCookie("token");
 
-    console.log("🔑 Token check:", {
+    console.log("Token check:", {
       hasToken: !!token,
       tokenLength: token?.length || 0,
       tokenStart: token ? token.substring(0, 20) + "..." : "No token",
@@ -147,9 +147,9 @@ const AdminUserManagement = () => {
     return token;
   };
 
-  // ✅ Updated API helper (cookie-compatible)
+  //  Updated API helper (cookie-compatible)
   const apiCall = async (endpoint, options = {}) => {
-    console.log("🚀 API Call:", {
+    console.log("API Call:", {
       endpoint,
       method: options.method || "GET",
       timestamp: new Date().toISOString(),
@@ -161,7 +161,7 @@ const AdminUserManagement = () => {
         "Content-Type": "application/json",
         ...options.headers,
       },
-      credentials: "include", // ✅ send cookies automatically
+      credentials: "include", //  send cookies automatically
       body: options.body ? JSON.stringify(options.body) : undefined,
     };
 
@@ -174,7 +174,7 @@ const AdminUserManagement = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error("🔥 API Error:", error);
+      console.error("API Error:", error);
       throw error;
     }
   };
@@ -188,10 +188,10 @@ const AdminUserManagement = () => {
 
       console.log("👥 Fetching users...");
       const users = await apiCall("/users");
-      console.log("✅ Users fetched:", users);
+      console.log(" Users fetched:", users);
       setUsers(users || []);
     } catch (error) {
-      console.error("❌ Failed to fetch users:", error);
+      console.error("Failed to fetch users:", error);
       setError(error.message);
 
       // Don't show toast for auth errors since we show alert
@@ -209,12 +209,12 @@ const AdminUserManagement = () => {
   // Fetch total users count
   const fetchTotalUsers = async () => {
     try {
-      console.log("📊 Fetching total users...");
+      console.log("Fetching total users...");
       const response = await apiCall("/users/total-users");
-      console.log("✅ Total users fetched:", response);
+      console.log(" Total users fetched:", response);
       setTotalUsers(response.totalUsers || 0);
     } catch (error) {
-      console.error("❌ Failed to fetch total users:", error);
+      console.error("Failed to fetch total users:", error);
       // Don't set error state for this non-critical request
     }
   };
@@ -279,15 +279,15 @@ const AdminUserManagement = () => {
 
       await apiCall(`/users/${userId}/role`, {
         method: "PATCH",
-        body: { role: newRole }, // ✅ fixed
+        body: { role: newRole }, //  fixed
       });
 
       setUsers(
         users.map((user) =>
           user.id === userId
             ? { ...user, role: newRole, isAdmin: newRole === "admin" }
-            : user
-        )
+            : user,
+        ),
       );
 
       toast.success("User role updated successfully");
@@ -345,10 +345,10 @@ const AdminUserManagement = () => {
         fetchTotalUsers(); // This endpoint requires valid token but not admin role
 
         if (hasAdminRole) {
-          console.log("🔑 Admin privileges confirmed, fetching users");
+          console.log("Admin privileges confirmed, fetching users");
           fetchUsers();
         } else {
-          console.log("⚠️ No admin privileges detected");
+          console.log(" No admin privileges detected");
           setLoading(false);
         }
       }, 100);
@@ -396,7 +396,7 @@ const AdminUserManagement = () => {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       url: window.location.href,
-      tokenPresent: !!token, // ✅ replaced localStorage check
+      tokenPresent: !!token, //  replaced localStorage check
       tokenLength: token?.length || 0,
     };
 

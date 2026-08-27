@@ -46,7 +46,7 @@ const AllProductsPage = () => {
     setSearchParams(newSearchParams);
   }, [pagination.page, sort, filters, setSearchParams]);
 
-  // 🚀 React Query for Categories
+  // React Query for Categories
   const {
     data: categories = [],
     isLoading: categoriesLoading,
@@ -63,10 +63,10 @@ const AllProductsPage = () => {
       "products",
       { page: pagination.page, limit: pagination.limit, sort, filters },
     ],
-    [pagination.page, pagination.limit, sort, filters]
+    [pagination.page, pagination.limit, sort, filters],
   );
 
-  // 🚀 React Query for Products
+  // React Query for Products
   const {
     data: productsData,
     isLoading,
@@ -76,7 +76,7 @@ const AllProductsPage = () => {
     queryKey: productsQueryKey,
     queryFn: async () =>
       await fetchAllProducts(pagination.page, pagination.limit, sort, filters),
-    keepPreviousData: true, // 🔥 Keeps old products visible during refetch
+    keepPreviousData: true, //Keeps old products visible during refetch
     staleTime: 1000 * 60 * 5, // cache 5 min
   });
 

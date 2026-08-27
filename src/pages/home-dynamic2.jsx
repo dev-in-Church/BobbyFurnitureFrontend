@@ -18,7 +18,7 @@ export default function HomeDynamic() {
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    // ✅ Preload the lazy ones so they never remount while scrolling
+    //  Preload the lazy ones so they never remount while scrolling
     import("../components/home/FurnitureGrid");
     import("../components/home/QuickLinks");
   }, []);

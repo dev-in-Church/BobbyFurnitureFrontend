@@ -10,7 +10,7 @@ const AuthSuccessPage = () => {
   const { refreshUser } = useAuth();
   const [cookiesAllowed, setCookiesAllowed] = useState(true);
 
-  // ✅ Check if cookies are enabled in the browser
+  // Check if cookies are enabled in the browser
   useEffect(() => {
     try {
       document.cookie = "cookietest=1";
@@ -24,7 +24,7 @@ const AuthSuccessPage = () => {
     }
   }, []);
 
-  // ✅ Fetch user info if cookies are available
+  // Fetch user info if cookies are available
   useEffect(() => {
     if (!cookiesAllowed) return;
 
@@ -34,7 +34,7 @@ const AuthSuccessPage = () => {
           "https://bobbyfurnitureonline.onrender.com/api/auth/current",
           {
             credentials: "include",
-          }
+          },
         );
 
         if (!res.ok) {

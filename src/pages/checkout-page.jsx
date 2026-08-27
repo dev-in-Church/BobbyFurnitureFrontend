@@ -152,7 +152,7 @@ const CheckoutPage = () => {
     appliedCoupon?.type === "shipping"
       ? 0
       : deliveryZones.find((zone) =>
-          zone.areas.some((area) => area === selectedAddress)
+          zone.areas.some((area) => area === selectedAddress),
         )?.fare || 0;
 
   const handleApplyCoupon = () => {
@@ -217,7 +217,7 @@ const CheckoutPage = () => {
           (area) =>
             value.includes(area) ||
             value.includes("Ruiru") ||
-            value.includes("Kiambu")
+            value.includes("Kiambu"),
         )
       ) {
         detectedCity = "Kiambu";
@@ -400,7 +400,7 @@ const CheckoutPage = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(apiOrderData),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -443,7 +443,7 @@ const CheckoutPage = () => {
           address,
         });
         toast.error(
-          "❌ Missing order ID, phone, amount, or user info for payment."
+          "❌ Missing order ID, phone, amount, or user info for payment.",
         );
         return { success: false, error: "Missing required fields." };
       }
@@ -473,7 +473,7 @@ const CheckoutPage = () => {
             customer_name,
             address,
           }),
-        }
+        },
       );
 
       const result = await response.json();
@@ -488,7 +488,7 @@ const CheckoutPage = () => {
         setOrderId(orderId);
         setMpesaStatus("pending");
         toast.success(
-          "✅ STK push sent! Please complete the payment on your phone."
+          " STK push sent! Please complete the payment on your phone.",
         );
         pollMpesaStatus(orderId); // start polling
         return { success: true, orderId };
@@ -514,7 +514,7 @@ const CheckoutPage = () => {
 
       try {
         const response = await fetch(
-          `https://bobbyfurnitureonline.onrender.com/api/mpesa/status/${orderId}`
+          `https://bobbyfurnitureonline.onrender.com/api/mpesa/status/${orderId}`,
         );
         const result = await response.json();
 
@@ -523,9 +523,9 @@ const CheckoutPage = () => {
         if (paymentStatus === "Completed") {
           stopPolling = true;
           setMpesaStatus("success");
-          toast.success("✅ Payment successful!");
+          toast.success(" Payment successful!");
 
-          // ✅ Redirect to order confirmation automatically
+          //  Redirect to order confirmation automatically
           handleMpesaSuccess(orderId);
           return;
         }
@@ -607,7 +607,7 @@ const CheckoutPage = () => {
       }
     }
 
-    // ✅ Other payment methods handled here (PayPal, card, COD)
+    //  Other payment methods handled here (PayPal, card, COD)
     return { success: true };
   };
 
