@@ -35,6 +35,7 @@ import {
   FaWifi,
   FaSync,
   FaFileExport,
+  FaUpload,
 } from "react-icons/fa";
 import { MdWifiOff } from "react-icons/md";
 
@@ -73,6 +74,7 @@ import {
   updateProduct,
   deleteProduct,
   checkApiHealth,
+  uploadProductImages,
 } from "../lib/api-final";
 
 // Enhanced furniture categories with more detailed organization
@@ -304,6 +306,9 @@ const EnhancedManageProducts = () => {
 
   const [editProduct, setEditProduct] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [imagePreviews, setImagePreviews] = useState([]);
+  const [uploadingImages, setUploadingImages] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -379,13 +384,13 @@ const EnhancedManageProducts = () => {
   const calculateStats = useCallback(() => {
     const totalValue = products.reduce(
       (sum, product) => sum + (product.price || 0) * (product.stock || 0),
-      0
+      0,
     );
     const lowStock = products.filter(
-      (product) => (product.stock || 0) <= 5 && (product.stock || 0) > 0
+      (product) => (product.stock || 0) <= 5 && (product.stock || 0) > 0,
     ).length;
     const outOfStock = products.filter(
-      (product) => (product.stock || 0) === 0
+      (product) => (product.stock || 0) === 0,
     ).length;
 
     const categories = {};
@@ -408,14 +413,16 @@ const EnhancedManageProducts = () => {
           product.description
             ?.toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          product.category?.toLowerCase().includes(searchTerm.toLowerCase())
+          product.category?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
     // Category filter
     if (selectedCategory !== "all") {
       filtered = filtered.filter((product) =>
-        product.category?.toLowerCase().includes(selectedCategory.toLowerCase())
+        product.category
+          ?.toLowerCase()
+          .includes(selectedCategory.toLowerCase()),
       );
     }
 
@@ -449,14 +456,66 @@ const EnhancedManageProducts = () => {
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    if (name === "images") {
-      // ✅ keep the raw text so commas aren't stripped while typing
-      setFormData({ ...formData, images: value });
-    } else if (type === "checkbox") {
+    if (type === "checkbox") {
       setFormData({ ...formData, [name]: checked });
     } else {
       setFormData({ ...formData, [name]: value });
     }
+  };
+
+  const handleImageChange = (event) => {
+    const newFiles = Array.from(event.target.files || []);
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+
+    // Append newly selected files instead of replacing the previous selection.
+    const files = [...selectedFiles, ...newFiles];
+
+    if (files.length > 8) {
+      toast.error("You can upload a maximum of 8 images.");
+      event.target.value = "";
+      return;
+    }
+
+    if (
+      files.some(
+        (file) =>
+          !allowedTypes.includes(file.type) || file.size > 8 * 1024 * 1024,
+      )
+    ) {
+      toast.error(
+        "Images must be JPG, PNG, WEBP, or GIF files smaller than 8MB.",
+      );
+      event.target.value = "";
+      return;
+    }
+
+    setSelectedFiles(files);
+    setImagePreviews((previousPreviews) => [
+      ...previousPreviews,
+      ...newFiles.map((file) => URL.createObjectURL(file)),
+    ]);
+
+    // Clear the input so the same file can be selected again if needed.
+    event.target.value = "";
+  };
+
+  const removeImage = (index, isExistingImage = false) => {
+    if (isExistingImage) {
+      setFormData((previous) => ({
+        ...previous,
+        images: previous.images.filter((_, imageIndex) => imageIndex !== index),
+      }));
+      return;
+    }
+
+    const previewUrl = imagePreviews[index];
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setSelectedFiles((previous) =>
+      previous.filter((_, fileIndex) => fileIndex !== index),
+    );
+    setImagePreviews((previous) =>
+      previous.filter((_, previewIndex) => previewIndex !== index),
+    );
   };
 
   const handleCategoryChange = (category) => {
@@ -478,7 +537,9 @@ const EnhancedManageProducts = () => {
         !formData.name ||
         !formData.price ||
         !formData.category ||
-        !formData.stock
+        formData.stock === "" ||
+        formData.stock === null ||
+        formData.stock === undefined
       ) {
         toast.error("Please fill in all required fields.");
         setLoading(false);
@@ -490,16 +551,28 @@ const EnhancedManageProducts = () => {
         ? `${formData.category} - ${formData.subcategory}`
         : formData.category;
 
-      // Process images
-      let processedImages = formData.images;
-      if (typeof formData.images === "string") {
-        processedImages = formData.images
-          .split(",")
-          .map((url) => url.trim())
-          .filter((url) => url);
-      } else if (!Array.isArray(formData.images)) {
-        processedImages = [formData.images].filter(Boolean);
+      let uploadedImages = [];
+      if (selectedFiles.length > 0) {
+        setUploadingImages(true);
+        try {
+          uploadedImages = await uploadProductImages(selectedFiles);
+        } finally {
+          setUploadingImages(false);
+        }
       }
+
+      const existingImages = Array.isArray(formData.images)
+        ? formData.images
+        : typeof formData.images === "string"
+          ? formData.images
+              .split(",")
+              .map((url) => url.trim())
+              .filter(Boolean)
+          : [];
+      const processedImages =
+        uploadedImages.length > 0
+          ? [...existingImages, ...uploadedImages]
+          : existingImages;
 
       // Process tags
       const tags = formData.tags
@@ -534,10 +607,13 @@ const EnhancedManageProducts = () => {
       if (!editProduct) setIsFormVisible(false);
     } catch (error) {
       console.error("Error saving product:", error);
-      toast.error("Failed to save product. Please try again.");
+      toast.error(
+        error?.message || "Failed to save product. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+      setUploadingImages(false);
     }
-
-    setLoading(false);
   };
 
   const handleEdit = (product) => {
@@ -599,13 +675,13 @@ const EnhancedManageProducts = () => {
 
     if (
       window.confirm(
-        `Are you sure you want to delete ${selectedProducts.length} products?`
+        `Are you sure you want to delete ${selectedProducts.length} products?`,
       )
     ) {
       try {
         await Promise.all(selectedProducts.map((id) => deleteProduct(id)));
         toast.success(
-          `${selectedProducts.length} products deleted successfully!`
+          `${selectedProducts.length} products deleted successfully!`,
         );
         setSelectedProducts([]);
         fetchProducts();
@@ -677,6 +753,8 @@ const EnhancedManageProducts = () => {
     });
     setEditProduct(null);
     setExpandedCategory(null);
+    setSelectedFiles([]);
+    setImagePreviews([]);
   };
 
   const toggleForm = () => {
@@ -705,7 +783,7 @@ const EnhancedManageProducts = () => {
     currentPage,
     totalPages,
     isMobile,
-    isTablet
+    isTablet,
   );
 
   return (
@@ -1131,61 +1209,89 @@ const EnhancedManageProducts = () => {
                     </div>
                   </TabsContent>
                   <TabsContent value="media" className="space-y-4">
-                    {/* Image URLs Input */}
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">
-                        Image URLs{" "}
-                        <span className="text-gray-500 text-xs">
-                          (comma-separated)
-                        </span>
-                      </label>
-                      <div className="relative">
-                        <FaImage className="absolute left-3 top-3 text-gray-400" />
-                        <Input
-                          name="images"
-                          placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
-                          value={formData.images || ""}
-                          onChange={handleChange}
-                          className="pl-10"
-                          required
-                        />
-                      </div>
-                    </div>
+                    <div className="rounded-xl border border-[#e5d8ce] bg-[#fbf8f5] p-6">
+                      <h3 className="mb-6 text-base font-semibold text-[#2f211b]">
+                        Product Images
+                      </h3>
 
-                    {/* Image Preview */}
-                    {formData.images && formData.images.length > 0 && (
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">
-                          Image Preview
-                        </label>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                          {(Array.isArray(formData.images)
-                            ? formData.images
-                            : formData.images
-                                .split(",")
-                                .map((url) => url.trim())
-                                .filter(Boolean)
-                          ).map((img, index) => (
-                            <div key={index} className="relative group">
+                      <div className="flex flex-wrap items-start gap-4">
+                        {imagePreviews.map((img, index) => (
+                          <div
+                            key={`${img}-${index}`}
+                            className="relative h-32 w-32"
+                          >
+                            <img
+                              src={img}
+                              alt={`Selected product image ${index + 1}`}
+                              className="h-full w-full rounded-lg object-cover"
+                            />
+                            <button
+                              type="button"
+                              aria-label={`Remove selected image ${index + 1}`}
+                              onClick={() => removeImage(index)}
+                              className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white shadow-sm transition hover:bg-red-600"
+                            >
+                              <FaTimes className="text-xs" />
+                            </button>
+                          </div>
+                        ))}
+
+                        {imagePreviews.length === 0 &&
+                          formData.images?.map((img, index) => (
+                            <div
+                              key={`${img}-${index}`}
+                              className="relative h-32 w-32"
+                            >
                               <img
-                                src={img || "/placeholder.svg"}
-                                alt={`Preview ${index + 1}`}
-                                className="w-full h-24 object-cover rounded-lg border border-gray-300"
-                                onError={(e) =>
-                                  (e.target.src =
-                                    "/placeholder.svg?height=100&width=100")
-                                }
+                                src={img}
+                                alt={`Existing product image ${index + 1}`}
+                                className="h-full w-full rounded-lg object-cover"
+                                onError={(e) => {
+                                  e.currentTarget.src =
+                                    "/placeholder.svg?height=128&width=128";
+                                }}
                               />
-                              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all rounded-lg flex items-center justify-center">
-                                <span className="text-white opacity-0 group-hover:opacity-100 text-xs font-medium">
-                                  Image {index + 1}
-                                </span>
-                              </div>
+                              <button
+                                type="button"
+                                aria-label={`Remove existing image ${index + 1}`}
+                                onClick={() => removeImage(index, true)}
+                                className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-white shadow-sm transition hover:bg-red-600"
+                              >
+                                <FaTimes className="text-xs" />
+                              </button>
                             </div>
                           ))}
-                        </div>
+
+                        {imagePreviews.length +
+                          (imagePreviews.length === 0
+                            ? formData.images?.length || 0
+                            : 0) <
+                          8 && (
+                          <label
+                            htmlFor="product-images"
+                            className="flex h-32 w-32 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-[#dfcfc3] bg-[#fdfaf8] text-center transition hover:border-[#b99984] hover:bg-[#f8f1ec]"
+                          >
+                            <FaUpload className="mb-3 text-2xl text-[#4a2f22]" />
+                            <span className="text-sm font-medium text-[#4a2f22]">
+                              Upload Images
+                            </span>
+                            <input
+                              id="product-images"
+                              type="file"
+                              accept="image/jpeg,image/png,image/webp,image/gif"
+                              multiple
+                              onChange={handleImageChange}
+                              className="sr-only"
+                            />
+                          </label>
+                        )}
                       </div>
-                    )}
+
+                      <p className="mt-4 text-xs text-[#806f64]">
+                        Select up to 8 JPG, PNG, WEBP, or GIF images. Maximum
+                        8MB each.
+                      </p>
+                    </div>
 
                     {/* Tags Input */}
                     <div className="space-y-2">
@@ -1208,7 +1314,7 @@ const EnhancedManageProducts = () => {
                 <div className="flex gap-3 pt-4 border-t flex-col sm:flex-row">
                   <Button
                     type="submit"
-                    disabled={loading || !formData.category}
+                    disabled={loading || uploadingImages || !formData.category}
                     className={`flex-1 ${
                       editProduct
                         ? "bg-blue-600 hover:bg-blue-700"
@@ -1222,11 +1328,13 @@ const EnhancedManageProducts = () => {
                     ) : (
                       <FaPlus className="mr-2" />
                     )}
-                    {loading
-                      ? "Processing..."
-                      : editProduct
-                      ? "Update Product"
-                      : "Add Product"}
+                    {uploadingImages
+                      ? "Uploading images..."
+                      : loading
+                        ? "Processing..."
+                        : editProduct
+                          ? "Update Product"
+                          : "Add Product"}
                   </Button>
 
                   <Button
@@ -1418,8 +1526,8 @@ const EnhancedManageProducts = () => {
                                 } else {
                                   setSelectedProducts(
                                     selectedProducts.filter(
-                                      (id) => id !== product.id
-                                    )
+                                      (id) => id !== product.id,
+                                    ),
                                   );
                                 }
                               }}
@@ -1583,7 +1691,7 @@ const EnhancedManageProducts = () => {
                           >
                             {page}
                           </Button>
-                        )
+                        ),
                       )}
                     </div>
 

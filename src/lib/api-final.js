@@ -11,7 +11,7 @@ async function enhancedFetch(url, options = {}) {
     const timeoutId = setTimeout(() => controller.abort(), timeout);
 
     try {
-      console.log(`🌐 API Request (Attempt ${attempt}/${retries}): ${url}`);
+      console.log(`API Request (Attempt ${attempt}/${retries}): ${url}`);
 
       const response = await fetch(url, {
         ...options,
@@ -27,7 +27,7 @@ async function enhancedFetch(url, options = {}) {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         const error = new Error(
-          errorData.error || `HTTP ${response.status}: ${response.statusText}`
+          errorData.error || `HTTP ${response.status}: ${response.statusText}`,
         );
         error.status = response.status;
         error.data = errorData;
@@ -35,23 +35,23 @@ async function enhancedFetch(url, options = {}) {
       }
 
       const data = await response.json();
-      console.log(`✅ API Success: ${url}`);
+      console.log(`API Success: ${url}`);
       return data;
     } catch (error) {
       clearTimeout(timeoutId);
 
       if (error.name === "AbortError") {
-        console.error(`⏰ API Timeout (Attempt ${attempt}/${retries}): ${url}`);
+        console.error(`API Timeout (Attempt ${attempt}/${retries}): ${url}`);
         if (attempt === retries) {
           throw new Error("Request timeout - please check your connection");
         }
       } else if (error.status >= 500 && attempt < retries) {
         console.warn(
-          `🔄 Retrying API call (Attempt ${attempt}/${retries}): ${url}`
+          `Retrying API call (Attempt ${attempt}/${retries}): ${url}`,
         );
         // Wait before retry (exponential backoff)
         await new Promise((resolve) =>
-          setTimeout(resolve, Math.pow(2, attempt) * 1000)
+          setTimeout(resolve, Math.pow(2, attempt) * 1000),
         );
       } else {
         console.error(`🚫 API Failed: ${url}`, error.message);
@@ -218,6 +218,27 @@ export async function deleteProduct(id) {
   });
 }
 
+export async function uploadProductImages(files) {
+  const formData = new FormData();
+
+  files.forEach((file) => formData.append("images", file));
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL || ""}/api/products/upload/images`,
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Image upload failed");
+  }
+
+  return data.urls || data.images.map((image) => image.url);
+}
 // Export all functions as default
 export default {
   fetchProducts,
@@ -232,4 +253,5 @@ export default {
   createProduct,
   updateProduct,
   deleteProduct,
+  uploadProductImages,
 };
