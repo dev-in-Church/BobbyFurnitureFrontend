@@ -9,23 +9,19 @@ import { CartProvider } from "./contexts/cart-context";
 import { WishlistProvider } from "./contexts/wishlist-context";
 import { AuthProvider, AuthContext } from "./contexts/auth-context";
 import ScrollToTop from "./components/scroll-to-top.jsx";
-// import { ToastContainer } from "react-toastify";
 import { ToastContainer } from "./components/ui/toast";
 import "react-toastify/dist/ReactToastify.css";
 import PageLoader from "./components/ui/PageLoader";
 import CookieConsentPopup from "./components/CookieConsentPopup.jsx";
 
 // Layout Components
-import Navbar from "./components/Navbar"; //fix this disturbing fucking shit
-import EnhancedFooter from "./components/enhanced-footer";
-
+import Navbar from "./components/Navbar";
+import Footer from "./components/footer";
 // Page Components
-import HomeDynamic from "./pages/home-dynamic";
-import AllProductsPage from "./pages/AllProductsPage";
+import Home from "./pages/home.jsx";
+import ProductsPage from "./pages/products";
 import CatalogPage from "./pages/CatalogPage";
-// import CategoryPage from "./pages/category/[category]";
 import ProductDetailPage from "./pages/product-detail";
-import SearchResultsPage from "./pages/search-results-dynamic";
 import CartPage from "./pages/cart-page";
 import WishlistPage from "./pages/wishlist-page";
 import CheckoutPage from "./pages/checkout-page";
@@ -43,8 +39,8 @@ import ShippingPolicy from "./pages/shipping-policy.jsx";
 import ReturnPolicy from "./pages/return-policy.jsx";
 
 // Admin Components
-import AdminDashboard from "./pages/admin-dashboard-enhanced";
-import EnhancedManageProducts from "./components/enhanced-manage-products-updated";
+import AdminDashboard from "./pages/admin-dashboard.jsx";
+import ManageProducts from "./components/manage-products.jsx";
 import AdminOrderList from "./pages/admin-order-list";
 import AdminUserManagement from "./pages/admin-user-management";
 import AdminOrderDetail from "./pages/admin-order-details";
@@ -59,7 +55,6 @@ import NotFoundPage from "./pages/not-found";
 import ErrorBoundary from "./components/error-boundary";
 
 ///others
-import UploadComponent from "./components/UploadComponent";
 import GenericProductPage from "./pages/GenericProductPage";
 import WhatsAppFloat from "./components/WhatsAppFloat.jsx";
 
@@ -115,7 +110,7 @@ const Layout = ({ children }) => {
     <div className="flex flex-col min-h-screen bg-[#f1f1f2] text-[#313133] text-[0.875rem] font-['Roboto','-apple-system','BlinkMacSystemFont','Segoe UI','Helvetica Neue','Arial','sans-serif'] antialiased">
       <Navbar />
       <main className="min-h-screen">{children}</main>
-      <EnhancedFooter />
+      <Footer />
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -135,7 +130,6 @@ const Layout = ({ children }) => {
 const App = () => {
   return (
     <ErrorBoundary>
-      {/* <Router> */}
       <QueryClientProvider client={queryClient}>
         <ScrollToTop />
         <WhatsAppFloat />
@@ -145,35 +139,28 @@ const App = () => {
               <Layout>
                 <Routes>
                   {/* Public Routes */}
-                  <Route path="/" element={<HomeDynamic />} />
-                  {/* Category page - dynamic route */}
-                  <Route path="/products" element={<AllProductsPage />} />
-                  <Route path="/all-products" element={<AllProductsPage />} />
-                  {/* <Route
-                    path="/category/:category"
-                    element={<CategoryPage />}
-                  /> */}
+                  <Route path="/" element={<Home />} />
+                  <Route path="/products" element={<ProductsPage />} />
+                  <Route path="/all-products" element={<ProductsPage />} />
 
                   {/*Category pages */}
                   <Route
                     path="/category/:category"
                     element={<GenericProductPage type="category" />}
                   />
-                  {/*Featured page */}
+
                   <Route
                     path="/featured"
                     element={<GenericProductPage type="featured" />}
                   />
 
-                  {/*New arrivals page */}
                   <Route
                     path="/new-arrivals"
                     element={<GenericProductPage type="new-arrivals" />}
                   />
-                  {/* Search/Catalog page */}
+
                   <Route path="/catalog" element={<CatalogPage />} />
                   <Route path="/product/:id" element={<ProductDetailPage />} />
-                  <Route path="/search" element={<SearchResultsPage />} />
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="/wishlist" element={<WishlistPage />} />
                   <Route path="/contact" element={<ContactPage />} />
@@ -253,7 +240,7 @@ const App = () => {
                     path="/admin/manage-products"
                     element={
                       <ProtectedRoute requireAdmin>
-                        <EnhancedManageProducts />
+                        <ManageProducts />
                       </ProtectedRoute>
                     }
                   />
@@ -273,14 +260,7 @@ const App = () => {
                       </ProtectedRoute>
                     }
                   />
-                  <Route
-                    path="/upload-img"
-                    element={
-                      <ProtectedRoute requireAdmin>
-                        <UploadComponent />
-                      </ProtectedRoute>
-                    }
-                  />
+
                   <Route
                     path="/admin/manage-users"
                     element={
@@ -299,7 +279,6 @@ const App = () => {
         </AuthProvider>
         <CookieConsentPopup />
       </QueryClientProvider>
-      {/* </Router> */}
     </ErrorBoundary>
   );
 };

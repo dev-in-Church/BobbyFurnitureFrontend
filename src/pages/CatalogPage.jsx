@@ -7,8 +7,6 @@ import FilterSidebar from "../components/category/FilterSidebar";
 import SortDropdown from "../components/category/SortDropdown";
 import Pagination from "../components/category/Pagination";
 import MobileFilterButton from "../components/category/MobileFilterButton";
-import SearchBar from "../components/products/SearchBar";
-import CategoryFilter from "../components/products/CategoryFilter";
 import { searchProducts, fetchCategories } from "../services/api";
 import { Search, ArrowLeft } from "lucide-react";
 
@@ -108,12 +106,17 @@ const CatalogPage = () => {
           pagination.page,
           pagination.limit,
           sort,
-          filters
+          filters,
         );
 
         setProducts(response.products || []);
         setPagination(
-          response.pagination || { page: 1, limit: 20, total: 0, totalPages: 0 }
+          response.pagination || {
+            page: 1,
+            limit: 20,
+            total: 0,
+            totalPages: 0,
+          },
         );
       } catch (err) {
         console.error("Error searching products:", err);
@@ -147,12 +150,6 @@ const CatalogPage = () => {
   // Handle search
   const handleSearch = (searchQuery) => {
     setFilters((prev) => ({ ...prev, search: searchQuery }));
-    setPagination((prev) => ({ ...prev, page: 1 }));
-  };
-
-  // Handle category filter
-  const handleCategoryFilter = (category) => {
-    setFilters((prev) => ({ ...prev, category }));
     setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
@@ -224,25 +221,6 @@ const CatalogPage = () => {
                 )}
               </div>
             </div>
-
-            {/* Search Bar */}
-            <div className="max-w-2xl">
-              <SearchBar
-                onSearch={handleSearch}
-                initialValue={filters.search}
-              />
-            </div>
-
-            {/* Category Filter Tabs */}
-            {filters.search && (
-              <div className="mt-4">
-                <CategoryFilter
-                  categories={categories}
-                  selectedCategory={filters.category}
-                  onCategoryChange={handleCategoryFilter}
-                />
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -357,18 +335,6 @@ const CatalogPage = () => {
                 {hasActiveFilters && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <div className="flex flex-wrap gap-2">
-                      {filters.category && (
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                          Category: {filters.category.replace(/-/g, " ")}
-                          <button
-                            onClick={() => handleCategoryFilter("")}
-                            className="ml-2 text-blue-600 hover:text-blue-800"
-                          >
-                            ×
-                          </button>
-                        </span>
-                      )}
-
                       {(filters.minPrice || filters.maxPrice) && (
                         <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                           Price: KSh {filters.minPrice || "0"} - KSh{" "}

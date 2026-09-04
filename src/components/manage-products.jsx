@@ -39,35 +39,25 @@ import {
 } from "react-icons/fa";
 import { MdWifiOff } from "react-icons/md";
 
-import { Button } from "../components/ui/button";
-import { Input } from "../components/ui/input";
-import { Badge } from "../components/ui/badge";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Badge } from "./ui/badge";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../components/ui/select";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "../components/ui/tabs";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../components/ui/card";
+} from "./ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../components/ui/dialog";
+} from "./ui/dialog";
 import {
   fetchProducts as apiFetchProducts,
   createProduct,
@@ -269,7 +259,7 @@ const getPaginationNumbers = (currentPage, totalPages, isMobile, isTablet) => {
   return pages;
 };
 
-const EnhancedManageProducts = () => {
+const ManageProducts = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -1727,4 +1717,4 @@ const EnhancedManageProducts = () => {
   );
 };
 
-export default EnhancedManageProducts;
+export default ManageProducts;

@@ -96,12 +96,12 @@ const AdminDashboard = () => {
       // Calculate metrics from products data
       const totalProducts = products.length;
       const lowStockProducts = products.filter(
-        (p) => p.stock <= 5 && p.stock > 0
+        (p) => p.stock <= 5 && p.stock > 0,
       ).length;
       const featuredProducts = products.filter((p) => p.featured).length;
       const totalValue = products.reduce(
         (sum, p) => sum + p.price * p.stock,
-        0
+        0,
       );
 
       // Calculate category distribution
@@ -118,7 +118,7 @@ const AdminDashboard = () => {
 
       // Mock data for orders and users (replace with real API calls when available)
       const mockOrdersData = await fetch(
-        `${import.meta.env.NEXT_PUBLIC_API_URL}/api/orders/stats`
+        `${import.meta.env.NEXT_PUBLIC_API_URL}/api/orders/stats`,
       )
         .then((res) => res.json())
         .catch(() => ({
@@ -128,7 +128,7 @@ const AdminDashboard = () => {
         }));
 
       const mockUsersData = await fetch(
-        `${import.meta.env.NEXT_PUBLIC_API_URL}/api/users/stats`
+        `${import.meta.env.NEXT_PUBLIC_API_URL}/api/users/stats`,
       )
         .then((res) => res.json())
         .catch(() => ({
@@ -176,7 +176,7 @@ const AdminDashboard = () => {
           {
             method: "GET",
             credentials: "include", // 🔥 VERY IMPORTANT: sends cookies
-          }
+          },
         );
 
         const data = await res.json();
@@ -198,7 +198,7 @@ const AdminDashboard = () => {
           {
             method: "GET",
             credentials: "include", // 🔥 required for cookies
-          }
+          },
         );
 
         const data = await res.json();
@@ -228,7 +228,7 @@ const AdminDashboard = () => {
       amount: Math.floor(Math.random() * 50000) + 10000,
       status: statuses[Math.floor(Math.random() * statuses.length)],
       date: new Date(
-        Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000
+        Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000,
       ).toISOString(),
     }));
   };
@@ -283,7 +283,7 @@ const AdminDashboard = () => {
         time: new Date(now - 2 * 60 * 60 * 1000).toISOString(),
         icon: Users,
         color: "purple",
-      }
+      },
     );
 
     return activities
@@ -328,9 +328,12 @@ const AdminDashboard = () => {
 
   // Auto-refresh every 5 minutes
   useEffect(() => {
-    const interval = setInterval(() => {
-      fetchDashboardData(true);
-    }, 5 * 60 * 1000);
+    const interval = setInterval(
+      () => {
+        fetchDashboardData(true);
+      },
+      5 * 60 * 1000,
+    );
 
     return () => clearInterval(interval);
   }, [fetchDashboardData]);
@@ -625,7 +628,7 @@ const AdminDashboard = () => {
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               Quick Actions
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <DashboardLink
                 to="/admin/manage-products"
                 icon={<Settings className="w-5 h-5" />}
@@ -646,13 +649,6 @@ const AdminDashboard = () => {
                 label="Manage Orders"
                 description="Process and track customer orders"
                 color="amber"
-              />
-              <DashboardLink
-                to="/upload-img"
-                icon={<Upload className="w-5 h-5" />}
-                label="Upload Images"
-                description="Upload product images to gallery"
-                color="pink"
               />
             </div>
           </div>

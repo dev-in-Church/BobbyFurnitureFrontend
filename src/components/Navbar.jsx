@@ -1025,16 +1025,17 @@ export default function Navbar() {
               {/* Logo */}
               <Link to="/" className="flex items-center">
                 <div className="flex items-center">
-                  <span className="hidden lg:block text-xl font-bold text-primary">
-                    Bobby Furniture
-                  </span>
-                  <div className="ml-1">
+                  <div className="mr-2">
                     <img
                       src="/logo5.png"
                       alt="Bobby Furniture Logo"
                       className="h-6"
                     />
                   </div>
+
+                  <span className="hidden lg:block text-xl font-bold text-primary">
+                    Bobby Furniture
+                  </span>
                 </div>
               </Link>
             </div>

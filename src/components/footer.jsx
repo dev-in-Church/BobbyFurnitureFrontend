@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { Button } from "./ui/button";
 
-const EnhancedFooter = () => {
+const Footer = () => {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -493,4 +493,4 @@ const EnhancedFooter = () => {
   );
 };
 
-export default EnhancedFooter;
+export default Footer;

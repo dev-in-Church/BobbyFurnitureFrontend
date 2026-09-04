@@ -18,7 +18,7 @@ import { useCart } from "../contexts/cart-context";
 import { useWishlist } from "../contexts/wishlist-context";
 import { useQuery } from "@tanstack/react-query";
 
-export default function ProductSectionDynamic({
+export default function ProductSection({
   title,
   viewMoreLink,
   color = "blue-500",
@@ -210,7 +210,7 @@ export default function ProductSectionDynamic({
                 Math.round(
                   ((product.original_price - product.price) /
                     product.original_price) *
-                    100
+                    100,
                 );
 
               const productInWishlist = isInWishlist(product.id);

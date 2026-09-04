@@ -65,8 +65,11 @@ class ApiCache {
 const apiCache = new ApiCache();
 
 // Cleanup expired entries every 10 minutes
-setInterval(() => {
-  apiCache.cleanup();
-}, 10 * 60 * 1000);
+setInterval(
+  () => {
+    apiCache.cleanup();
+  },
+  10 * 60 * 1000,
+);
 
 export default apiCache;

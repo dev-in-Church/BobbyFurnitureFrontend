@@ -2,12 +2,12 @@
 
 import { useEffect } from "react";
 import HeroSection from "../components/HeroSection";
-import ProductSectionDynamic from "../components/product-section-dynamic";
+import ProductSection from "../components/product-section";
 import QuickLinks from "../components/home/QuickLinks";
 import InfoSection from "../components/info-section";
 import { categories } from "../lib/categoryData"; // Ensure categories data is imported
 
-export default function HomeDynamic() {
+export default function Home() {
   // ================= SCHEMA DATA =================
   const organizationSchema = {
     "@context": "https://schema.org",
@@ -263,7 +263,7 @@ export default function HomeDynamic() {
 
         {/* ================= FEATURED / SPONSORED ================= */}
         <div className="mt-2">
-          <ProductSectionDynamic
+          <ProductSection
             title={
               <>
                 Featured <span className="sr-only">Furniture in Kenya</span>
@@ -279,7 +279,7 @@ export default function HomeDynamic() {
 
         {/* ================= NEW ARRIVALS ================= */}
         <div className="mt-2">
-          <ProductSectionDynamic
+          <ProductSection
             title={
               <>
                 New Arrivals <span className="sr-only">Furniture in Kenya</span>
@@ -295,7 +295,7 @@ export default function HomeDynamic() {
 
         {/* ================= KIDS FURNITURE ================= */}
         <div className="mt-2">
-          <ProductSectionDynamic
+          <ProductSection
             title={
               <>
                 Kids Furniture{" "}
@@ -312,7 +312,7 @@ export default function HomeDynamic() {
         </div>
 
         <div className="mt-2">
-          <ProductSectionDynamic
+          <ProductSection
             title={
               <>
                 Bunk Beds & Double Deckers{" "}
@@ -330,7 +330,7 @@ export default function HomeDynamic() {
 
         {/* ================= LIVING ROOM ================= */}
         <div className="mt-2">
-          <ProductSectionDynamic
+          <ProductSection
             title={
               <>
                 Sofa sets <span className="sr-only">for Sale in Kenya</span>
@@ -346,7 +346,7 @@ export default function HomeDynamic() {
         </div>
 
         <div className="mt-2">
-          <ProductSectionDynamic
+          <ProductSection
             title={
               <>
                 Living Room Furniture{" "}
@@ -364,7 +364,7 @@ export default function HomeDynamic() {
 
         {/* ================= DINING ROOM ================= */}
         <div className="mt-2">
-          <ProductSectionDynamic
+          <ProductSection
             title={
               <>
                 Dining Tables and Sets{" "}

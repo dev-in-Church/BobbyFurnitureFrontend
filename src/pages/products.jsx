@@ -8,12 +8,11 @@ import FilterSidebar from "../components/category/FilterSidebar";
 import SortDropdown from "../components/category/SortDropdown";
 import Pagination from "../components/category/Pagination";
 import MobileFilterButton from "../components/category/MobileFilterButton";
-import SearchBar from "../components/products/SearchBar";
 import CategoryFilter from "../components/products/CategoryFilter";
 import { fetchAllProducts, fetchCategories } from "../services/api";
 import { Search } from "lucide-react";
 
-const AllProductsPage = () => {
+const ProductsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Local UI state
@@ -155,19 +154,6 @@ const AllProductsPage = () => {
                 {hasActiveFilters && " (filtered)"}
               </p>
             </div>
-
-            {/* Desktop Search */}
-            <div className="hidden lg:block">
-              <SearchBar
-                onSearch={handleSearch}
-                initialValue={filters.search}
-              />
-            </div>
-          </div>
-
-          {/* Mobile Search */}
-          <div className="lg:hidden mt-4">
-            <SearchBar onSearch={handleSearch} initialValue={filters.search} />
           </div>
 
           {/* Categories */}
@@ -284,4 +270,4 @@ const AllProductsPage = () => {
   );
 };
 
-export default AllProductsPage;
+export default ProductsPage;
